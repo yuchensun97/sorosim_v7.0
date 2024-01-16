@@ -9,11 +9,6 @@ function Phi_rho = Phi_Rho_LegendrePolynomial(X, Bdof, Bodr)
 dof = sum(Bdof.*(Bodr+1));
 Phi_rho = zeros(1, dof);
 
-% TODO: if Bdof = 0, then rho(x) = 1, always
-if dof == 0
-    return
-end
-
 X = 2*X - 1; % transform from [0, 1] to [-1, 1]	
 k = 1;
 P0 = 1;
