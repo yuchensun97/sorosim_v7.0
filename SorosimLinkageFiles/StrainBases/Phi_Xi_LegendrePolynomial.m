@@ -1,7 +1,36 @@
-function [outputArg1,outputArg2] = Phi_Xi_LegendrePoly(inputArg1,inputArg2)
-%PHI_XI_LEGENDREPOLY Summary of this function goes here
-%   Detailed explanation goes here
-outputArg1 = inputArg1;
-outputArg2 = inputArg2;
+function Phi_Xi = Phi_Xi_LegendrePolynomial(X,Bdof, Bodr)
+%PHI_XI_LEGENDREPOLY generate the strain basis of Legendre
+% X varies from 0 to 1
+% Bdof tells which deformation modes are enabled
+% eg. Bdof = [1 1 1 0 0 0]' implies all 3 rotational modes are enabled
+% Bodr defines the order of each strains
+% eg. Bodr = [0 1 1 0 0 0]' implies linear bending strains while other are
+% constant strains
+
+dof = sum(Bdof.*(Bodr+1));
+Phi_Xi   = zeros(6,dof);
+
+k = 1;
+X = 2*X-1; %transform from [0,1] to [-1 1]
+for i=1:6
+    P0 = 1;
+    P1 = X;
+    for j=1:Bdof(i)*(Bodr(i)+1)
+        if j==1
+            Phi_Xi(i,k) = P0;
+        end
+        if j==2
+            Phi_Xi(i,k) = P1; 
+        end
+        if j>=3
+            n=j-2;
+            P1t = P1;
+            P1 = ((2*n+1)*X*P1-n*P0)/(n+1);
+            P0 = P1t;
+            Phi_Xi(i,k) = P1;
+        end
+        k = k+1;
+    end
 end
 
+end
