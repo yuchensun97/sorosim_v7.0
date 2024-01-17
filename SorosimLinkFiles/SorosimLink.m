@@ -42,7 +42,9 @@ classdef SorosimLink
                 data = jsondecode(str);
                 %assign values
                 Li.L = data.length;
-                Li.r = str2func(['@(X1)' data.radius]);
+                r_base = data.base_radius;
+                r_tip = data.tip_radius;
+                Li.r = @(X1) X1.*(r_tip-r_base) + r_base;
                 Li.E = data.young;
                 Li.Poi = data.poisson;
                 Li.G = Li.E/(2*(1+Li.Poi));
@@ -51,7 +53,7 @@ classdef SorosimLink
                 Li.color = data.color;
                 Li.n_l = data.cs;
                 Li.n_p = data.points;
-                Li.Lscale = data.scale;
+                A0 = pi*r_base^2;
 
             elseif nargin == 0
                 %default values, same as SimpleLinkage.L1
@@ -65,11 +67,14 @@ classdef SorosimLink
                 Li.color = rand(1,3);
                 Li.n_l = 25;
                 Li.n_p = 10;
-                Li.Lscale = 0.1122;
+                r_base = Li.r(0);
+                A0 = pi*r_base^2;
             else
                 error('Wrong number of input arguments')
             end
-                
+
+            Lscale = (A0 * Li.L)^(1/3);
+            Li.Lscale = Lscale;     
         end
     end
 end

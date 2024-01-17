@@ -1,6 +1,7 @@
 {
     "length": 0.5,
-    "radius": "X1.*(-1.0/1.0e+2) + 3.0/1.0e+2",
+    "base_radius": 0.015,
+    "tip_radius": 0.004,
     "young": 1.0e6,
     "poisson": 0.5,
     "density": 1e3,
