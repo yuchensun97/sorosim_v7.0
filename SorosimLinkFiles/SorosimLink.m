@@ -9,6 +9,8 @@ classdef SorosimLink
         %Geometric Properties
         L          %length of the link
         r          %radius as a function of X1 (X1=X/L, X1 varies from 0 to 1)[m]
+        r_base     %radius at the base [m]
+        r_tip      %radius at the tip [m]
         gi=eye(4); %Transformation from joint to center of area
         gf=eye(4); %Transformation to joint from center of area
         rho=1;     %inflation ratio at the joint, scalar
@@ -44,6 +46,8 @@ classdef SorosimLink
                 Li.L = data.length;
                 r_base = data.base_radius;
                 r_tip = data.tip_radius;
+                Li.r_base = r_base;
+                Li.r_tip = r_tip;
                 Li.r = @(X1) X1.*(r_tip-r_base) + r_base;
                 Li.E = data.young;
                 Li.Poi = data.poisson;
@@ -76,6 +80,52 @@ classdef SorosimLink
             Lscale = (A0 * Li.L)^(1/3);
             Li.Lscale = Lscale;     
         end
+    end
+
+    methods
+        function Update(Li)
+            r_fn = @(X1) X1.*(Li.r_tip-Li.r_base) + Li.r_base;
+            Li.r = r_fn;
+        end
+
+        function UpdateG(Li)
+            if isempty(Li.color)
+                return
+            end
+            Li.G = Li.E/(2*(1+Li.Poi));
+        end
+
+        %% set properties
+        function set.r_base(Li, val)
+            Li.r_base = val;
+            Li.Update();
+        end
+
+        function set.r_tip(Li, val)
+            Li.r_tip = val;
+            Li.Update();
+        end
+
+        function set.L(Li, val)
+            Li.L = val;
+            Li.Update();
+        end
+
+        function set.Rho0(Li, val)
+            Li.Rho0 = val;
+            Li.Update();
+        end
+
+        function set.E(Li, val)
+            Li.E = val;
+            Li.UpdateG();
+        end
+
+        function set.Poi(Li, val)
+            Li.Poi = val;
+            Li.UpdateG();
+        end
+
     end
 end
 
