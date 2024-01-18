@@ -161,7 +161,7 @@ classdef SorosimTwist
 
     methods
         %% set and property update fuctions
-        function UpdateBh(T)
+        function T = UpdateBh(T)
             if isempty(T.dof_xi) || isempty(T.dof_rho)
                 return
             end
@@ -172,7 +172,7 @@ classdef SorosimTwist
         end
 
         %% updates np, Xs, Ws, and dof
-        function UpdateIntegration(T, nGauss)
+        function T = UpdateIntegration(T, nGauss)
             if isempty(T.dof_xi) || isempty(T.dof_rho)
                 return
             end
@@ -183,7 +183,7 @@ classdef SorosimTwist
         end
 
         %% updates dof
-        function Updatedof(T)
+        function T = Updatedof(T)
             if isempty(T.dof_xi) || isempty(T.dof_rho)
                 return
             end
@@ -225,7 +225,7 @@ classdef SorosimTwist
         end
 
         %% updates viscoleastic matrix
-        function UpdateMEG(T)
+        function T = UpdateMEG(T)
             if isempty(T.dof_xi) || isempty(T.dof_rho)
                 return
             end
@@ -234,7 +234,7 @@ classdef SorosimTwist
 
         %% updates initial position
         % TODO: update CUSTOMIZED initial position
-        function UpdateXRStar(T)
+        function T= UpdateXRStar(T)
             if isempty(T.dof_xi) || isempty(T.dof_rho)
                 return
             end
@@ -243,7 +243,7 @@ classdef SorosimTwist
             T.rho_star = ones(T.nip, 1);
         end
 
-        function Add_more_X(T)
+        function T = Add_more_X(T)
             for k = 1:size(T.Xadd)
                 X1 = T.Xadd(k);
                 if ~any(T.Xs == X1)
@@ -274,39 +274,39 @@ classdef SorosimTwist
             T.UpdateMEG();
         end
 
-        function set.B_xi_dof(T, val)
+        function T = set.B_xi_dof(T, val)
             T.B_xi_dof = val;
             T.Updatedof();
             T.UpdateBs();
         end
 
-        function set.B_rho_dof(T, val)
+        function T = set.B_rho_dof(T, val)
             T.B_rho_dof = val;
             T.Updatedof();
             T.UpdateBs();
         end
 
-        function set.B_xi_odr(T, val)
+        function T = set.B_xi_odr(T, val)
             T.B_xi_odr = val;
             T.UpdateBs();
         end
 
-        function set.B_rho_odr(T, val)
+        function T = set.B_rho_odr(T, val)
             T.B_rho_odr = val;
             T.UpdateBs();
         end
 
-        function set.Bh_xi(T, val)
+        function T = set.Bh_xi(T, val)
             T.Bh_xi = val;
             T.UpdateAll();
         end
 
-        function set.Bh_rho(T, val)
+        function T = set.Bh_rho(T, val)
             T.Bh_rho = val;
             T.UpdateAll();
         end
 
-        function set.Xadd(T, val)
+        function T = set.Xadd(T, val)
             T.Xadd = val;
             T.Add_more_X();
             T.UpdateAll();

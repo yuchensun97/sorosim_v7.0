@@ -114,7 +114,7 @@ classdef SorosimLink
     end
 
     methods
-        function Update(Li)
+        function Li = Update(Li)
             r_fn = @(X1) X1.*(Li.r_tip-Li.r_base) + Li.r_base;
             Li.r = r_fn;
 
@@ -123,7 +123,7 @@ classdef SorosimLink
             Li.Lscale = Lscale_now;
         end
 
-        function UpdateG(Li)
+        function Li = UpdateG(Li)
             if isempty(Li.color)
                 return
             end
@@ -131,32 +131,32 @@ classdef SorosimLink
         end
 
         %% set properties
-        function set.r_base(Li, val)
+        function Li = set.r_base(Li, val)
             Li.r_base = val;
             Li.Update();
         end
 
-        function set.r_tip(Li, val)
+        function Li = set.r_tip(Li, val)
             Li.r_tip = val;
             Li.Update();
         end
 
-        function set.L(Li, val)
+        function Li = set.L(Li, val)
             Li.L = val;
             Li.Update();
         end
 
-        function set.Rho0(Li, val)
+        function Li = set.Rho0(Li, val)
             Li.Rho0 = val;
             Li.Update();
         end
 
-        function set.E(Li, val)
+        function Li = set.E(Li, val)
             Li.E = val;
             Li.UpdateG();
         end
 
-        function set.Poi(Li, val)
+        function Li = set.Poi(Li, val)
             Li.Poi = val;
             Li.UpdateG();
         end
