@@ -71,7 +71,7 @@ classdef SorosimLink
                 if data.points <= 0
                     error('points per cross section must be positive')
                 end
-                
+
 
                 %assign values
                 Li.L = data.length;
@@ -117,6 +117,10 @@ classdef SorosimLink
         function Update(Li)
             r_fn = @(X1) X1.*(Li.r_tip-Li.r_base) + Li.r_base;
             Li.r = r_fn;
+
+            A0 = pi*Li.r_base^2;
+            Lscale_now = (A0 * Li.L)^(1/3);
+            Li.Lscale = Lscale_now;
         end
 
         function UpdateG(Li)
