@@ -13,7 +13,7 @@ classdef SorosimLink
         r_tip      %radius at the tip [m]
         gi=eye(4); %Transformation from joint to center of area
         gf=eye(4); %Transformation to joint from center of area
-        rho=1;     %inflation ratio at the joint, scalar
+        rhoi=1;     %inflation ratio at the joint, scalar
 
         %Material Properties
         E          %Young's modulus [Pa]
@@ -21,6 +21,10 @@ classdef SorosimLink
         G          %Shear modulus [Pa]
         Rho0       %density of the material [kg/m^3]
         Eta        %viscosity [Pa.s]
+
+        %Motion Properties
+        B_xi       %motions allowed and their order, (6x2)
+        B_rho      %allowable inflation and its order, (1x2)
 
         %Plot Properties
         color      %color of the link (random by default)
@@ -71,7 +75,24 @@ classdef SorosimLink
                 if data.points <= 0
                     error('points per cross section must be positive')
                 end
-
+                if size(data.motion, 1)~=1 || size(data.motion, 2)~=6
+                    error('motion must be a (1x6) vector')
+                end
+                if ~all(data.motion == 0 | data.motion == 1)
+                    error('motion must be a binary vector')
+                end
+                if size(data.motion_order, 1)~=1 || size(data.motion_order, 2)~=6
+                    error('motion_order must be a (1x6) vector')
+                end
+                if ~all(data.motion_order >= 0)
+                    error('motion_order must be a positive vector')
+                end
+                if data.inflation~=0 || data.inflation~=1
+                    error('inflation must be 0 or 1')
+                end
+                if data.inflation_ratio <= 0
+                    error('inflation_ratio must be positive')
+                end
 
                 %assign values
                 Li.L = data.length;
@@ -80,6 +101,8 @@ classdef SorosimLink
                 Li.r_base = r_base;
                 Li.r_tip = r_tip;
                 Li.r = @(X1) X1.*(r_tip-r_base) + r_base;
+                Li.B_xi = [data.motion' data.motion_order'];
+                Li.B_rho = [data.inflation data.inflation_ratio];
                 Li.E = data.young;
                 Li.Poi = data.poisson;
                 Li.G = Li.E/(2*(1+Li.Poi));
@@ -93,7 +116,9 @@ classdef SorosimLink
             elseif nargin == 0
                 %default values, same as SimpleLinkage.L1
                 Li.L = 0.5;
-                Li.r = @(X1) X1.*(-1.0/1.0e+2) + 3.0/1.0e+2;
+                Li.r_base = 0.03;
+                Li.r_tip = 0.02;
+                Li.r = @(X1) X1.*(Li.r_tip - Li.r_base) + Li.r_base;
                 Li.E = 1e6;
                 Li.Poi = 0.5;
                 Li.G = Li.E/(2*(1+Li.Poi));
@@ -104,6 +129,7 @@ classdef SorosimLink
                 Li.n_p = 10;
                 r_base = Li.r(0);
                 A0 = pi*r_base^2;
+                % TODO: add motion and inflation
             else
                 error('Wrong number of input arguments')
             end
@@ -161,6 +187,13 @@ classdef SorosimLink
             Li.UpdateG();
         end
 
+        function Li = set.B_xi(Li, val)
+            Li.B_xi = val;
+        end
+
+        function Li = set.B_rho(Li, val)
+            Li.B_rho = val;
+        end
+
     end
 end
-
