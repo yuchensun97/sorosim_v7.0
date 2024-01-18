@@ -263,7 +263,8 @@ if exist('.\CablePoints.mat','file')
 end
 
 disp('Welcome to SoRoSim Toolbox')
-disp('Type LinkName=SorosimLink to create the links (joint and body)')
-disp('Type LinkageName=SorosimLinkage(LinkName1,LinkName2,...,LinkNameN) to create linkages by combining links')
+disp('Provide the soft link properties file. See ./Custom/example.json for an example')
+disp('Type LinkName=SorosimLink(filename) to create the link (joint and body)')
+disp('Type LinkageName=SorosimLinkage(LinkName) to create linkages')
 disp('For static equilibrium problem type [q,u]=LinkageName.statics')
 disp('For dynamics problem type [t,qqd] = LinkageName.dynamics')
