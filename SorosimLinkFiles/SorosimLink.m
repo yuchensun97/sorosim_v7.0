@@ -42,6 +42,37 @@ classdef SorosimLink
                 str = char(raw');
                 fclose(fid);
                 data = jsondecode(str);
+
+                % check if input values are valid
+                if data.length <= 0
+                    error('length must be positive')
+                end
+                if data.base_radius <= 0
+                    error('base_radius must be positive')
+                end
+                if data.tip_radius < 0
+                    error('tip_radius must be positive')
+                end
+                if data.young <= 0
+                    error('young must be positive')
+                end
+                if data.poisson < 0 || data.poisson > 0.5
+                    error('poisson must be between 0 and 0.5')
+                end
+                if data.density <= 0
+                    error('density must be positive')
+                end
+                if data.viscousity < 0
+                    error('viscousity must be positive')
+                end
+                if data.cs <= 0
+                    error('cross sections per link must be positive')
+                end
+                if data.points <= 0
+                    error('points per cross section must be positive')
+                end
+                
+
                 %assign values
                 Li.L = data.length;
                 r_base = data.base_radius;
