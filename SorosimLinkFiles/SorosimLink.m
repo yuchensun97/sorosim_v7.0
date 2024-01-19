@@ -75,23 +75,23 @@ classdef SorosimLink
                 if data.points <= 0
                     error('points per cross section must be positive')
                 end
-                if size(data.motion, 1)~=1 || size(data.motion, 2)~=6
-                    error('motion must be a (1x6) vector')
+                if size(data.motion, 1)~=6 || size(data.motion, 2)~=1
+                    error('motion must be a (6x1) vector')
                 end
                 if ~all(data.motion == 0 | data.motion == 1)
                     error('motion must be a binary vector')
                 end
-                if size(data.motion_order, 1)~=1 || size(data.motion_order, 2)~=6
-                    error('motion_order must be a (1x6) vector')
+                if size(data.motion_order, 1)~=6 || size(data.motion_order, 2)~=1
+                    error('motion_order must be a (6x1) vector')
                 end
                 if ~all(data.motion_order >= 0)
                     error('motion_order must be a positive vector')
                 end
-                if data.inflation~=0 || data.inflation~=1
+                if ~(data.inflation==0 || data.inflation==1)
                     error('inflation must be 0 or 1')
                 end
-                if data.inflation_ratio <= 0
-                    error('inflation_ratio must be positive')
+                if data.inflation_order <= 0
+                    error('inflation_order must be positive')
                 end
 
                 %assign values
@@ -101,8 +101,8 @@ classdef SorosimLink
                 Li.r_base = r_base;
                 Li.r_tip = r_tip;
                 Li.r = @(X1) X1.*(r_tip-r_base) + r_base;
-                Li.B_xi = [data.motion' data.motion_order'];
-                Li.B_rho = [data.inflation data.inflation_ratio];
+                Li.B_xi = [data.motion data.motion_order];
+                Li.B_rho = [data.inflation data.inflation_order];
                 Li.E = data.young;
                 Li.Poi = data.poisson;
                 Li.G = Li.E/(2*(1+Li.Poi));
@@ -114,7 +114,7 @@ classdef SorosimLink
                 A0 = pi*r_base^2;
 
             elseif nargin == 0
-                %default values, same as SimpleLinkage.L1
+                %default values, same as SimpleLinkage.L1 in Anup's code
                 Li.L = 0.5;
                 Li.r_base = 0.03;
                 Li.r_tip = 0.02;
@@ -130,6 +130,9 @@ classdef SorosimLink
                 r_base = Li.r(0);
                 A0 = pi*r_base^2;
                 % TODO: add motion and inflation
+                Li.B_xi = [1 1 1 1 1 1;
+                           2 2 1 1 1 2]';
+                Li.B_rho = [0, 0];
             else
                 error('Wrong number of input arguments')
             end
