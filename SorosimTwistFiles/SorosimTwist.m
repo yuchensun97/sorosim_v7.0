@@ -67,6 +67,10 @@ classdef SorosimTwist
                 [Xs, Ws, nip] = GaussQuadrature(nGauss);
 
                 % load B_xi_dof, B_rho_dof, B_xi_odr, B_rho_odr 
+                B_xi_dof = B_xi_in(:, 1);
+                B_rho_dof = B_rho_in(1,1);
+                B_xi_odr = B_xi_in(:, 2);
+                B_rho_odr = B_rho_in(1, 2);
                 T.B_xi_dof = B_xi_in(:,1);
                 T.B_rho_dof = B_rho_in(1,1);
                 T.B_xi_odr = B_xi_in(:,2);
@@ -86,11 +90,11 @@ classdef SorosimTwist
                     X = Xs(ii);
                     B_xi((ii-1)*6+1:ii*6, :) = Phi_Xi_LegendrePolynomial(X, B_xi_dof, B_xi_odr);
                     X = Xs(ii-1)+Z1*(Xs(ii)-Xs(ii-1));
-                    B_xi_Z1((ii-2)*6+1:ii*6, :) = Phi_Xi_LegendrePolynomial(X, B_xi_dof, B_xi_odr);
+                    B_xi_Z1((ii-2)*6+1:(ii-1)*6, :) = Phi_Xi_LegendrePolynomial(X, B_xi_dof, B_xi_odr);
                     X = Xs(ii-1)+Z2*(Xs(ii)-Xs(ii-1));
-                    B_xi_Z2((ii-2)*6+1:ii*6, :) = Phi_Xi_LegendrePolynomial(X, B_xi_dof, B_xi_odr);
+                    B_xi_Z2((ii-2)*6+1:(ii-1)*6, :) = Phi_Xi_LegendrePolynomial(X, B_xi_dof, B_xi_odr);
                     X = Xs(ii-1)+Z*(Xs(ii)-Xs(ii-1));
-                    B_xi_Z((ii-2)*6+1:ii*6, :) = Phi_Xi_LegendrePolynomial(X, B_xi_dof, B_xi_odr);
+                    B_xi_Z((ii-2)*6+1:(ii-1)*6, :) = Phi_Xi_LegendrePolynomial(X, B_xi_dof, B_xi_odr);
                 end
                 file = 'Phi_Xi_LegendrePolynomial';
                 Bh_xi = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);	
@@ -110,14 +114,14 @@ classdef SorosimTwist
 
                 % initial position, simpilified to the undeformed position
                 xi_star = zeros(6*nip, 4); % precomputation at all gauss and zannah guess points
-                xi_star(6:6:end, :) = ones(4, 4);
+                xi_star(6:6:end, :) = ones(nip, 4);
                 rho_star = ones(nip, 1);
 
                 xi_starfn = @(X)[0 0 0 0 0 1];
                 rho_starfn = @(X)1;
 
                 % TODO: precompute Ms, Es, Gs
-                [Ms, Es, Gs] = MEG(Link, Xs);
+                [Ms, Es, Gs] = MEG(link, Xs);
 
                 T.xi_starfn = xi_starfn;
                 T.rho_starfn = rho_starfn;
