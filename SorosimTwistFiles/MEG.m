@@ -27,7 +27,5 @@ function [Ms,Es,Gs]= MEG(Link, Xs)
         Es((ii-1)*6+1:ii*6,:) = diag([E*Ix_p(ii),E*Iy_p(ii),G*Iz_p(ii),G*A_p(ii),G*A_p(ii),E*A_p(ii)]);
         Gs((ii-1)*6+1:ii*6,:) = Eta*diag([3*Ix_p(ii),3*Iy_p(ii),Iz_p(ii),A_p(ii),A_p(ii),3*A_p(ii)]);
     end
-       
     
-    
-    %eof
+end %eof
