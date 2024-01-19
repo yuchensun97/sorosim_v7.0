@@ -10,17 +10,21 @@ function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
 
     % initialization
     nsig = Tr.nsig;
-    ndof_xi = Tr.ndof;
+    ndof_xi = Tr.ndof_xi;
     ndof_rho = Tr.ndof_rho;
+
     g_here = Tr.g_base; % g at base
     rho_here = Tr.rho_base; % rho at base
-    J_xi_here = zeros(6, ndof_xi); % Jacobian of twist at base
-    J_rho_here = zeros(1, ndof_xi); % Jacobian of rho at base, the base for rho itself is 0
+
+    xi_star = Tr.Twists(2).xi_star; % xi_star at initial pose
+    rho_star = Tr.Twists(2).rho_star; % rho_star at initial pose
+
     g = zeros(4*nsig, 4);
     rho = zeros(nsig, 1);
     g(1:4, :) = g_here;
     rho(1) = rho_here;
     Xs = Tr.Twist(2).Xs;
+    Lscale = Tr.Link.L;
 
     if Tr.Z_order==4
         B_Z1 = Tr.Twist(2).B_Z1_xi;
@@ -29,9 +33,49 @@ function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
         B_Z = Tr.Twist(2).B_Z_xi;
     end
 
+    B_rho = Tr.Twist(2).B_rho;
+
     for ii = 2:nsig
-        %TODO: kinematics and Jacobian updates here
+        H = Xs(ii) - Xs(ii-1);
+
+        %% update g
+        if Tr.Z_order==4
+            xi_Z1here = xi_star(6*(ii-2)+1:6*(ii-1), 2);
+            xi_Z2here = xi_star(6*(ii-2)+1:6*(ii-1), 3);
+            xi_Z1here(1:3) = xi_Z1here(1:3)*Lscale; % why scaling
+            xi_Z2here(1:3) = xi_Z2here(1:3)*Lscale;
+            if ndof_xi > 0
+                B_Z1here = B_Z1(6*(ii-2)+1:6*(ii-1), :);
+                B_Z2here = B_Z2(6*(ii-2)+1:6*(ii-1), :);
+                xi_Z1here = B_Z1here*q_xi + xi_Z1here;
+                xi_Z2here = B_Z2here*q_xi + xi_Z2here;
+            end
+            ad_xi_Z1here = dinamico_adj(xi_Z1here);
+            Gamma_here = (H/2)*(xi_Z1here + xi_Z2here) +...
+                         ((sqrt(3)*H^2)/12)*ad_xi_Z1here*xi_Z2here;
+        else % Z_order==2
+            xi_Zhere = xi_star(6*(ii-2)+1:6*(ii-1), 4);
+            xi_Zhere(1:3) = xi_Zhere(1:3)*Lscale; %scaling
+            if ndof_xi > 0
+                B_Zhere = B_Z(6*(ii-2)+1:6*(ii-1), :);
+                xi_Zhere = B_Zhere*q_xi + xi_Zhere;
+            end
+            Gamma_here = H*xi_Zhere;
+        end
+        Gamma_here(4:6) = Gamma_here(4:6)*Lscale;
+        gh = variable_expmap_g(Gamma_here);
+
+        g_here = g_here*gh;
+        g(4*(ii-1)+1:4*ii, :) = g_here;
+
+        %% update rho
+        if ndof_rho > 0
+            rho_here = rho_star(ii) + B_rho(ii)*q_rho;
+        else % if ndof_rho ==0, then rho is always 1
+            rho_here = 1;
+        end
+        
+        rho(ii) = rho_here;
     end
 
 end %eof
-

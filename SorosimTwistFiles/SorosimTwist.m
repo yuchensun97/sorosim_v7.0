@@ -23,7 +23,7 @@ classdef SorosimTwist
         B_rho       %(1xdof) Base matrix calculated at lumped joints or ((1xnGauss)xdof) base matrices computed at every significant points of a soft division
 
         % initial position
-        xi_star     %(6x1) Reference strain vector at the initial position
+        xi_star     %(6nx1) Reference strain vector at the initial position
         rho_star    %Reference inflation ratio at the initial position
         xi_starfn   %Function handler for xi_star
         rho_starfn  %Function handler for rho_star
