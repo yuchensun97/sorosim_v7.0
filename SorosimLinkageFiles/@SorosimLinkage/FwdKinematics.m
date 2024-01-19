@@ -16,6 +16,33 @@ function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
     g_here = Tr.g_base; % g at base
     rho_here = Tr.rho_base; % rho at base
 
+    % joint
+    dof_xi_joint = Tr.Twists(1).dof_xi;
+    dof_rho_joint = Tr.Twists(1).dof_rho;
+    B_xi_joint = Tr.Twists(1).B_xi;
+    B_rho_joint = Tr.Twists(1).B_rho;
+    q_xi_joint = q_xi(1:dof_xi_joint);
+    q_rho_joint = q_rho(1:dof_rho_joint);
+    xi_star_joint = Tr.Twists(1).xi_star;
+    rho_star_joint = Tr.Twists(1).rho_star;
+
+    if dof_xi_joint == 0
+        g_joint = eye(4);
+    else
+        xi = B_xi_joint*q_xi_joint + xi_star_joint;
+        g_joint = variable_expmap_g(xi);
+    end
+
+    if dof_rho_joint == 0
+        rho_joint = 1;
+    else
+        rho_joint = B_rho_joint*q_rho_joint + rho_star_joint;
+    end
+
+    g_here = g_here*g_joint;
+    rho_here = rho_joint;
+
+    % soft body
     xi_star = Tr.Twists(2).xi_star; % xi_star at initial pose
     rho_star = Tr.Twists(2).rho_star; % rho_star at initial pose
 
