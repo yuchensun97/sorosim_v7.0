@@ -243,7 +243,7 @@ classdef SorosimTwist
                 return
             end
             T.xi_star = zeros(6*T.nip, 4); % precomputation at all gauss and zannah guess points
-            T.xi_star(3:6:end, :) = ones(4, 4);
+            T.xi_star(4:6:end, :) = ones(4, 4);
             T.rho_star = ones(T.nip, 1);
         end
 
