@@ -90,5 +90,40 @@ classdef SorosimLinkage
         %% Methods
         [g, rho] = FwdKinematics(Tr, q_xi, q_rho);
     end
-end
 
+    methods
+        %% setter
+        function Tr = Update(Tr)
+            if isempty(Tr.Z_order)
+                return
+            end
+            Tr.ndof_xi = Tr.Twists(1).dof_xi + ...
+                        Tr.Twists(2).dof_xi;
+            Tr.ndof_rho = Tr.Twists(1).dof_rho + ...
+                        Tr.Twists(2).dof_rho;
+            Tr.nsig = Tr.Twists(2).nip;
+        end
+
+        function Tr = UpdateTwist(Tr)
+            Tr.Twists(2) = SorosimTwist(Tr.Link, Tr.Link.B_xi, Tr.Link.B_rho);
+            Tr.Update();
+        end
+
+        function Tr = set.Link(Tr, val)
+            if ~isa(val,'SorosimLink')
+                error('Input must be a SorosimLink object')
+            end
+            Tr.Link = val;
+            Tr.UpdateTwist();
+        end
+
+        function Tr = set.Twists(Tr, val)
+            if ~isa(val,'SorosimTwist')
+                error('Input must be a SorosimTwist object')
+            end
+            Tr.Twists = val;
+            Tr.Update();
+        end
+
+    end
+end
