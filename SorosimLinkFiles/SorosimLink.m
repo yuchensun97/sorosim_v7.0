@@ -13,7 +13,7 @@ classdef SorosimLink
         r_tip      %radius at the tip [m]
         gi=eye(4); %Transformation from joint to center of area
         gf=eye(4); %Transformation to joint from center of area
-        rhoi=1;     %inflation ratio at the joint, scalar
+        rhoi=1;    %inflation ratio at the joint, scalar
 
         %Material Properties
         E          %Young's modulus [Pa]
@@ -32,7 +32,6 @@ classdef SorosimLink
         n_p        %number of points per cross section
 
         Lscale     %scaling factor for plotting symbols or axes
-
     end
     
     methods
@@ -131,7 +130,7 @@ classdef SorosimLink
                 A0 = pi*r_base^2;
                 % TODO: add motion and inflation
                 Li.B_xi = [1 1 1 1 1 1;
-                           2 2 1 1 1 2]';
+                           0 0 0 0 0 0]';
                 Li.B_rho = [0, 0];
             else
                 error('Wrong number of input arguments')
