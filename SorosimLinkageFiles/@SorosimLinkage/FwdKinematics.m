@@ -1,7 +1,7 @@
 function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
 %FwdKinematics: numericallly map general coordinates to Euclidean space
 %   Detailed explanation goes here
-%   Tr      : SorosimTwist class
+%   Tr      : SorosimTwists class
 %   q_xi    : general coordinates for strains
 %   q_rho   : general coordinates for inflation ratio
 %   returns:
@@ -46,21 +46,24 @@ function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
     xi_star = Tr.Twists(2).xi_star; % xi_star at initial pose
     rho_star = Tr.Twists(2).rho_star; % rho_star at initial pose
 
+    q_xi = q_xi(dof_xi_joint+1:end);
+    q_rho = q_rho(dof_rho_joint:end);
+
     g = zeros(4*nsig, 4);
     rho = zeros(nsig, 1);
     g(1:4, :) = g_here;
     rho(1) = rho_here;
-    Xs = Tr.Twist(2).Xs;
+    Xs = Tr.Twists(2).Xs;
     Lscale = Tr.Link.L;
 
     if Tr.Z_order==4
-        B_Z1 = Tr.Twist(2).B_Z1_xi;
-        B_Z2 = Tr.Twist(2).B_Z2_xi;
+        B_Z1 = Tr.Twists(2).B_Z1_xi;
+        B_Z2 = Tr.Twists(2).B_Z2_xi;
     else    % Z_order==2
-        B_Z = Tr.Twist(2).B_Z_xi;
+        B_Z = Tr.Twists(2).B_Z_xi;
     end
 
-    B_rho = Tr.Twist(2).B_rho;
+    B_rho = Tr.Twists(2).B_rho;
 
     for ii = 2:nsig
         H = Xs(ii) - Xs(ii-1);
