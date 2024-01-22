@@ -47,7 +47,7 @@ function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
     rho_star = Tr.Twists(2).rho_star; % rho_star at initial pose
 
     q_xi = q_xi(dof_xi_joint+1:end);
-    q_rho = q_rho(dof_rho_joint:end);
+    q_rho = q_rho(dof_rho_joint+1:end);
 
     g = zeros(4*nsig, 4);
     rho = zeros(nsig, 1);
