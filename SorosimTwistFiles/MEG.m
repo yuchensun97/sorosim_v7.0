@@ -9,9 +9,9 @@ function [Ms,Es,Gs]= MEG(Link, Xs)
     for ii=1:np
         r_nGauss(ii) = r_fn(Xs(ii));
     end
-    Ix_p = (pi/4)*r_nGauss.^4;
-    Iy_p = Ix_p;
-    Iz_p = Ix_p+Iy_p;
+    Iy_p = (pi/4)*r_nGauss.^4;
+    Iz_p = Iy_p;
+    Ix_p = Iy_p+Iz_p;
     A_p  = pi*r_nGauss.^2;
     
     Ms = zeros(6*np,6); %inertia
@@ -24,8 +24,8 @@ function [Ms,Es,Gs]= MEG(Link, Xs)
     Eta  = Link.Eta;
     for ii=1:np
         Ms((ii-1)*6+1:ii*6,:) = Rho0*diag([Ix_p(ii),Iy_p(ii),Iz_p(ii),A_p(ii),A_p(ii),A_p(ii)]);
-        Es((ii-1)*6+1:ii*6,:) = diag([E*Ix_p(ii),E*Iy_p(ii),G*Iz_p(ii),G*A_p(ii),G*A_p(ii),E*A_p(ii)]);
-        Gs((ii-1)*6+1:ii*6,:) = Eta*diag([3*Ix_p(ii),3*Iy_p(ii),Iz_p(ii),A_p(ii),A_p(ii),3*A_p(ii)]);
+        Es((ii-1)*6+1:ii*6,:) = diag([G*Ix_p(ii),E*Iy_p(ii),E*Iz_p(ii),E*A_p(ii),G*A_p(ii),G*A_p(ii)]);
+        Gs((ii-1)*6+1:ii*6,:) = Eta*diag([Ix_p(ii),3*Iy_p(ii),3*Iz_p(ii),3*A_p(ii),A_p(ii),A_p(ii)]);
     end
     
 end %eof

@@ -114,10 +114,10 @@ classdef SorosimTwist
 
                 % initial position, simpilified to the undeformed position
                 xi_star = zeros(6*nip, 4); % precomputation at all gauss and zannah guess points
-                xi_star(6:6:end, :) = ones(nip, 4);
+                xi_star(4:6:end, :) = ones(nip, 4);
                 rho_star = ones(nip, 1);
 
-                xi_starfn = @(X)[0 0 0 0 0 1];
+                xi_starfn = @(X)[0 0 0 1 0 0];
                 rho_starfn = @(X)1;
 
                 % TODO: precompute Ms, Es, Gs
@@ -146,7 +146,7 @@ classdef SorosimTwist
                 T.B_xi = varargin{1};
                 T.B_rho = varargin{2};
             elseif nargin == 0
-                xi_starfn = @(X)[0 0 0 0 0 1];
+                xi_starfn = @(X)[0 0 0 1 0 0];
                 rho_starfn = @(X)1;
                 T.xi_starfn = xi_starfn;
                 T.rho_starfn = rho_starfn;
@@ -243,7 +243,7 @@ classdef SorosimTwist
                 return
             end
             T.xi_star = zeros(6*T.nip, 4); % precomputation at all gauss and zannah guess points
-            T.xi_star(6:6:end, :) = ones(4, 4);
+            T.xi_star(3:6:end, :) = ones(4, 4);
             T.rho_star = ones(T.nip, 1);
         end
 
