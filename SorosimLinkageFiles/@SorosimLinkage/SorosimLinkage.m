@@ -60,8 +60,8 @@ classdef SorosimLinkage
 
             VTwists(2) = SorosimTwist(Link, Link.B_xi, Link.B_rho);
             Tr.Twists = VTwists;
-            Tr.ndof_xi = VTwists(2).dof_xi;
-            Tr.ndof_rho = VTwists(2).dof_rho;
+            Tr.ndof_xi = VTwists(1).dof_xi + VTwists(2).dof_xi;
+            Tr.ndof_rho =VTwists(1).dof_rho + VTwists(2).dof_rho;
             Tr.nsig = VTwists(2).nip;
 
             %% Plot parameters
