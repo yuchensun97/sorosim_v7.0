@@ -128,7 +128,6 @@ classdef SorosimLink
                 Li.n_p = 10;
                 r_base = Li.r(0);
                 A0 = pi*r_base^2;
-                % TODO: add motion and inflation
                 Li.B_xi = [1 1 1 1 1 1;
                            0 0 0 0 0 0]';
                 Li.B_rho = [0, 0];

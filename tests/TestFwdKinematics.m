@@ -12,7 +12,6 @@ classdef TestFwdKinematics < matlab.unittest.TestCase
         function setup(testCase)
             % Create test links
             baseLink = SorosimLink();
-            baseLink.r_base = 0.02;
             testCase.VLinks(1) = baseLink;
 
             testCase.VLinks(2) = testCase.VLinks(1);
