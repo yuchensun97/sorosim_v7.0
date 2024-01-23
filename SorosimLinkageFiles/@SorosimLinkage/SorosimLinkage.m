@@ -47,7 +47,7 @@ classdef SorosimLinkage
             Tr.Link = Link;
             Tr.g_base = Link.gi;
             Tr.rho_base = Link.rhoi;
-            Lscale = Link.Lscale;
+            Lscale = Link.L;
             Tr.Z_order = 4;
 
             % Twists for base and the body
@@ -89,6 +89,7 @@ classdef SorosimLinkage
     methods
         %% Methods
         [g, rho] = FwdKinematics(Tr, q_xi, q_rho);
+        fh = plotq(Tr, q_xi, q_rho);
     end
 
     methods

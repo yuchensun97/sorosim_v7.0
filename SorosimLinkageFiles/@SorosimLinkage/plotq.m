@@ -1,4 +1,4 @@
-function plotq(Tr, q_xi, q_rho)
+function fh = plotq(Tr, q_xi, q_rho)
     if nargin==1
         q_xi = zeros(Tr.ndof_xi, 1);
         q_rho = zeros(Tr.ndof_rho, 1);
@@ -32,7 +32,6 @@ function plotq(Tr, q_xi, q_rho)
         camlight(PlottingParameters.Az_light, PlottingParameters.El_light)
     end
 
-    %view(0, 90)
     axis equal
     grid on
     hold on
@@ -81,10 +80,16 @@ function plotq(Tr, q_xi, q_rho)
     % soft body starts here
     q_xi = q_xi(dof_xi_joint+1:end);
     q_rho = q_rho(dof_rho_joint+1:end);
+    dof_xi = Tr.Twists(2).dof_xi;
+    dof_rho = Tr.Twists(2).dof_rho;
     xi_starfn = Tr.Twists(2).xi_starfn;
     rho_starfn = Tr.Twists(2).rho_starfn;
     Bh_xi = Tr.Twists(2).Bh_xi;
     Bh_rho = Tr.Twists(2).Bh_rho;
+    B_xi_dof = Tr.Twists(2).B_xi_dof;
+    B_xi_odr = Tr.Twists(2).B_xi_odr;
+    B_rho_dof = Tr.Twists(2).B_rho_dof;
+    B_rho_odr = Tr.Twists(2).B_rho_odr;
     L = Tr.Link.L;
 
     Xs = linspace(0, 1, n_l);
@@ -109,6 +114,8 @@ function plotq(Tr, q_xi, q_rho)
     x_here = pos_here(1, :);
     y_here = pos_here(2, :);
     z_here = pos_here(3, :);
+    plot3(x_here, y_here, z_here)
+    hold on
 
     Xpatch(:, i_patch) = x_here';
     Ypatch(:, i_patch) = y_here';
@@ -124,14 +131,14 @@ function plotq(Tr, q_xi, q_rho)
     for ii=1:n_l-1
         r = r_fn(Xs(ii+1));
         theta = linspace(0, 2*pi, n_r);
-        if ~isempty(q_rho)
-            rho_here = Bh_rho(Xs(ii+1))*q_rho + rho_starfn(Xs(ii+1));
+        if dof_rho~=0
+            rho_here = Bh_rho(Xs(ii+1), B_rho_dof, B_rho_odr)*q_rho + rho_starfn(Xs(ii+1));
         else
             rho_here = 1;
         end
         x = zeros(1, n_r);
-        y = rho_here*r*cos(theta);
-        z = rho_here*r*sin(theta);
+        y = r*cos(theta);
+        z = r*sin(theta);
         pos = [x; y; z;ones(1, n_r)];
 
         X = Xs(ii);
@@ -140,21 +147,26 @@ function plotq(Tr, q_xi, q_rho)
         xi_Zhere = xi_starfn(X_Z);
         xi_Zhere(1:3) = xi_Zhere(1:3) * L;
 
-        if ~isempty(q_xi)
-            xi_Zhere = Bh_xi(X_Z)*q_xi + xi_Zhere;
+        if dof_xi~=0
+            xi_Zhere = Bh_xi(X_Z, B_xi_dof, B_xi_odr)*q_xi + xi_Zhere;
         end
         Gamma_here = H * xi_Zhere;
         Gamma_here(4:6) = Gamma_here(4:6) * Lscale;
         gh = variable_expmap_g(Gamma_here);
         g_here = g_here*gh;
-
-        pos_here = g_here*pos;
+        
+        g_rho = [rho_here * g_here(1:3,1:3), g_here(1:3,4);
+                0 0 0 1];
+        pos_here = g_rho*pos;
         x_here = pos_here(1, :);
         y_here = pos_here(2, :);
         z_here = pos_here(3, :);
 
+        % for debug only
+        plot3(x_here, y_here, z_here)
+        hold on
         % plot soft link here
-        for jj=1:n_r
+        for jj=1:n_r-1
             Xpatch(1:5,i_patch)   = [x_pre(jj) x_here(jj) x_here(jj+1) x_pre(jj+1) x_pre(jj)]';
             Xpatch(6:end,i_patch) = x_pre(jj)*ones(n_r-5,1);
             Ypatch(1:5,i_patch)   = [y_pre(jj) y_here(jj) y_here(jj+1) y_pre(jj+1) y_pre(jj)]';
@@ -173,5 +185,6 @@ function plotq(Tr, q_xi, q_rho)
     Zpatch(:, i_patch) = z_here';
 
     patch(Xpatch, Ypatch, Zpatch, color, 'EdgeColor', 'none');
+    % drawnow
 
 end

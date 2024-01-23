@@ -8,7 +8,7 @@ classdef SorosimLink
 
         %Geometric Properties
         L          %length of the link
-        r          %radius as a function of X1 (X1=X/L, X1 varies from 0 to 1)[m]
+        r_fn          %radius as a function of X1 (X1=X/L, X1 varies from 0 to 1)[m]
         r_base     %radius at the base [m]
         r_tip      %radius at the tip [m]
         gi=eye(4); %Transformation from joint to center of area
@@ -29,7 +29,7 @@ classdef SorosimLink
         %Plot Properties
         color      %color of the link (random by default)
         n_l        %number of cross sections per link
-        n_p        %number of points per cross section
+        n_r        %number of points per cross section
 
         Lscale     %scaling factor for plotting symbols or axes
     end
@@ -99,7 +99,7 @@ classdef SorosimLink
                 r_tip = data.tip_radius;
                 Li.r_base = r_base;
                 Li.r_tip = r_tip;
-                Li.r = @(X1) X1.*(r_tip-r_base) + r_base;
+                Li.r_fn = @(X1) X1.*(r_tip-r_base) + r_base;
                 Li.B_xi = [data.motion data.motion_order];
                 Li.B_rho = [data.inflation data.inflation_order];
                 Li.E = data.young;
@@ -109,7 +109,7 @@ classdef SorosimLink
                 Li.Eta = data.viscousity;
                 Li.color = data.color;
                 Li.n_l = data.cs;
-                Li.n_p = data.points;
+                Li.n_r = data.points;
                 A0 = pi*r_base^2;
 
             elseif nargin == 0
@@ -117,7 +117,7 @@ classdef SorosimLink
                 Li.L = 0.5;
                 Li.r_base = 0.02;
                 Li.r_tip = 0.02;
-                Li.r = @(X1) X1.*(Li.r_tip - Li.r_base) + Li.r_base;
+                Li.r_fn = @(X1) X1.*(Li.r_tip - Li.r_base) + Li.r_base;
                 Li.E = 1e6;
                 Li.Poi = 0.5;
                 Li.G = Li.E/(2*(1+Li.Poi));
@@ -125,8 +125,8 @@ classdef SorosimLink
                 Li.Eta = 1e-3;
                 Li.color = rand(1,3);
                 Li.n_l = 25;
-                Li.n_p = 10;
-                r_base = Li.r(0);
+                Li.n_r = 50;
+                r_base = Li.r_fn(0);
                 A0 = pi*r_base^2;
                 Li.B_xi = [1 1 1 1 1 1;
                            0 0 0 0 0 0]';
@@ -142,8 +142,8 @@ classdef SorosimLink
 
     methods
         function Li = Update(Li)
-            r_fn = @(X1) X1.*(Li.r_tip-Li.r_base) + Li.r_base;
-            Li.r = r_fn;
+            r_fn_new = @(X1) X1.*(Li.r_tip-Li.r_base) + Li.r_base;
+            Li.r_fn = r_fn_new;
 
             A0 = pi*Li.r_base^2;
             Lscale_now = (A0 * Li.L)^(1/3);

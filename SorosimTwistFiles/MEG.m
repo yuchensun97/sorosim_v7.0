@@ -3,7 +3,7 @@
 
 function [Ms,Es,Gs]= MEG(Link, Xs)
     np = length(Xs);
-    r_fn     = Link.r;
+    r_fn     = Link.r_fn;
     %updating:
     r_nGauss = zeros(np,1);
     for ii=1:np
