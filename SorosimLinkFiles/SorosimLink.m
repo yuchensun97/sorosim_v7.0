@@ -115,7 +115,7 @@ classdef SorosimLink
             elseif nargin == 0
                 %default values, same as SimpleLinkage.L1 in Anup's code
                 Li.L = 0.5;
-                Li.r_base = 0.03;
+                Li.r_base = 0.02;
                 Li.r_tip = 0.02;
                 Li.r = @(X1) X1.*(Li.r_tip - Li.r_base) + Li.r_base;
                 Li.E = 1e6;

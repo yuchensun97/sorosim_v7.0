@@ -109,14 +109,6 @@ classdef SorosimLinkage
             Tr.Update();
         end
 
-        function Tr = set.Link(Tr, val)
-            if ~isa(val,'SorosimLink')
-                error('Input must be a SorosimLink object')
-            end
-            Tr.Link = val;
-            Tr.UpdateTwist();
-        end
-
         function Tr = set.Twists(Tr, val)
             if ~isa(val,'SorosimTwist')
                 error('Input must be a SorosimTwist object')

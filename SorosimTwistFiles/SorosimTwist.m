@@ -146,6 +146,11 @@ classdef SorosimTwist
                 T.B_xi = varargin{1};
                 T.B_rho = varargin{2};
             elseif nargin == 0
+                nGauss = 10;
+                [Xs, Ws, nip] = GaussQuadrature(nGauss);
+                T.nip = nip;
+                T.Xs = Xs;
+                T.Ws = Ws;
                 xi_starfn = @(X)[0 0 0 1 0 0];
                 rho_starfn = @(X)1;
                 T.xi_starfn = xi_starfn;

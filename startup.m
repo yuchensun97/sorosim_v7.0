@@ -250,7 +250,7 @@ addpath('Custom')
 addpath('SorosimLinkFiles')
 addpath('SorosimTwistFiles')
 addpath(genpath('SorosimLinkageFiles')) %include subfolders
-addpath('tests')
+addpath(genpath('tests'))
 
 
 if exist('.\Basis_properties.mat','file')

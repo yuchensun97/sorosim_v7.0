@@ -103,7 +103,7 @@ function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
 
         %% update rho
         if ndof_rho > 0
-            rho_here = rho_star(ii) + B_rho(ii)*q_rho;
+            rho_here = rho_star(ii) + B_rho(ii,:)*q_rho;
         else % if ndof_rho ==0, then rho is always 1
             rho_here = 1;
         end
