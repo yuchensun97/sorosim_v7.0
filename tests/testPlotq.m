@@ -26,13 +26,14 @@ B_rho{6} = [1 1];
 B_rho{7} = [1 2];
 B_rho{8} = [1 2];
 
-for i=1:4
+for i=5:8
     S = createLink(B_xi{i}, B_rho{i});
     [L, q_xi, q_rho] = createLinkage(S);
+%     figure(i);
     f = L.plotq(q_xi, q_rho);
 %     filename = sprintf('./figures/plotq_%d.pdf', i);
 %     saveas(gcf, filename);
-    close(f);
+%     close(f);
 end
 
 function S = createLink(B_xi, B_rho)
