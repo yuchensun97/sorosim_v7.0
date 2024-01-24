@@ -117,7 +117,7 @@ classdef SorosimTwist
                 xi_star(4:6:end, :) = ones(nip, 4);
                 rho_star = ones(nip, 1);
 
-                xi_starfn = @(X)[0 0 0 1 0 0];
+                xi_starfn = @(X)[0 0 0 1 0 0]';
                 rho_starfn = @(X)1;
 
                 % TODO: precompute Ms, Es, Gs
@@ -151,7 +151,7 @@ classdef SorosimTwist
                 T.nip = nip;
                 T.Xs = Xs;
                 T.Ws = Ws;
-                xi_starfn = @(X)[0 0 0 1 0 0];
+                xi_starfn = @(X)[0 0 0 1 0 0]';
                 rho_starfn = @(X)1;
                 T.xi_starfn = xi_starfn;
                 T.rho_starfn = rho_starfn;

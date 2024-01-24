@@ -185,6 +185,7 @@ function fh = plotq(Tr, q_xi, q_rho)
     Zpatch(:, i_patch) = z_here';
 
     patch(Xpatch, Ypatch, Zpatch, color, 'EdgeColor', 'none');
+    hold off
     % drawnow
 
 end

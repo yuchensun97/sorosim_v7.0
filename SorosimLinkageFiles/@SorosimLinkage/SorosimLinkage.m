@@ -72,11 +72,11 @@ classdef SorosimLinkage
             PlotParameters.Light          = true;
             PlotParameters.Az_light       = 0;
             PlotParameters.El_light       = 0;
-            PlotParameters.X_lim          = [-1.2*Lscale 1.2*Lscale];
-            PlotParameters.Y_lim          = [-1.2*Lscale 1.2*Lscale];
-            PlotParameters.Z_lim          = [-1.2*Lscale 1.2*Lscale];
+            PlotParameters.X_lim          = [-2*Lscale 2*Lscale];
+            PlotParameters.Y_lim          = [-2*Lscale 2*Lscale];
+            PlotParameters.Z_lim          = [-2*Lscale 2*Lscale];
             PlotParameters.FrameRateValue = 50;
-            PlotParameters.ClosePrevious  = true;
+            PlotParameters.ClosePrevious  = false;
             PlotParameters.Position       = [0.1300 0.1100 0.7750 0.8150]; %default value (normalized)
 
             Tr.PlotParameters = PlotParameters;
