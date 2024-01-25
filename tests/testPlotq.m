@@ -26,7 +26,7 @@ B_rho{6} = [1 1];
 B_rho{7} = [1 2];
 B_rho{8} = [1 2];
 
-for i=5:8
+for i=1:4
     S = createLink(B_xi{i}, B_rho{i});
     [L, q_xi, q_rho] = createLinkage(S);
 %     figure(i);
