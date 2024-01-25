@@ -1,4 +1,4 @@
-function [J_xi J_rho] = Jacobian(Tr, q_xi, q_rho)
+function [J_xi, J_rho] = Jacobian(Tr, q_xi, q_rho)
 
     if isrow(q_xi)
         q_xi = q_xi';
@@ -55,5 +55,86 @@ function [J_xi J_rho] = Jacobian(Tr, q_xi, q_rho)
     J_xi_here = dinamico_Adjoint(ginv(g_joint))*...
                 (TgB_joint + J_xi_here);
     J_rho_here = J_rho_joint;
+
+    ndof_xi = ndof_xi - dof_xi_joint;
+    ndof_rho = ndof_rho - dof_rho_joint;
+
+    % soft body
+    xi_star = Tr.Twists(2).xi_star; % xi_star at initial pose
+    rho_star = Tr.Twists(2).rho_star; % rho_star at initial pose
+
+    ndof_xi = ndof_xi - dof_xi_joint;
+    ndof_rho = ndof_rho - dof_rho_joint;
+
+    q_xi = q_xi(dof_xi_joint+1:end);
+    q_rho = q_rho(dof_rho_joint+1:end);
+
+    Xs = Tr.Twists(2).Xs;
+    Lscale = Tr.Link.L;
+
+    if Tr.Z_order==4
+        B_Z1 = Tr.Twists(2).B_Z1_xi;
+        B_Z2 = Tr.Twists(2).B_Z2_xi;
+    else    % Z_order==2
+        B_Z = Tr.Twists(2).B_Z_xi;
+    end
+
+    B_rho = Tr.Twists(2).B_rho;
+
+    % update g, Jacobian and eta at X = 0
+    % gi = Tr.Link.gi;
+    % g_here = g_here * gi;
+    % J_xi_here = dinamico_Adjoint(ginv(gi))*J_xi_here;
+    % J_rho_here = B_rho(1, :);
+
+    J_xi(1:6, :) = J_xi_here;
+    J_rho(1, :) = J_rho_here;
+
+    g_here = g_here(1:3, 4)/Lscale;
+    J_xi_here = J_xi_here(4:6, :)/Lscale;
+
+    for ii=2:nsig
+        H = Xs(ii) - Xs(ii-1);
+        % xi
+        if Tr.Z_order == 4
+            xi_Z1here = xi_star(6*(ii-2)+1:6*(ii-1), 2);
+            xi_Z2here = xi_star(6*(ii-2)+1:6*(ii-1), 3);
+            xi_Z1here(1:3) = xi_Z1here(1:3) * Lscale;
+            xi_Z2here(1:3) = xi_Z2here(1:3) * Lscale;
+            
+            B_Z1here = B_Z1(6*(ii-2)+1:6*(ii-1), :);
+            B_Z2here = B_Z2(6*(ii-2)+1:6*(ii-1), :);
+            if ndof_xi > 0
+                xi_Z1here = B_Z1here*q_xi + xi_Z1here;
+                xi_Z2here = B_Z2here*q_xi + xi_Z2here;
+            end
+            ad_xi_Z1here = dinamico_adj(xi_Z1here);
+            BGamma_here = (H/2)*(B_Z1here + B_Z2here)+...
+                          ((sqrt(3)*H^2)/12)*(ad_xi_Z1here*B_Z2here-dinamico_adj(xi_Z2here)*B_Z1here);
+            Gamma_here = (H/2)*(xi_Z1here + xi_Z2here)+...
+                         ((sqrt(3)*H^2)/12)*ad_xi_Z1here*xi_Z2here;
+        else    % Z_order == 2
+            xi_Zhere = xi_star(6*(ii-2)+1:6*(ii-1), 4);
+            xi_Zhere(1:3) = xi_Zhere(1:3) * Lscale;
+            B_Zhere = B_Z(6*(ii-2)+1:6*(ii-1), :);
+            if ndof_xi > 0
+                xi_Zhere = B_Zhere*q_xi + xi_Zhere;
+            end
+            BGamma_here = H*B_Zhere;
+            Gamma_here = H*xi_Zhere;
+        end
+        [gh, TGamma_here] = variable_expmap_gTg(Gamma_here);
+        TBGamma_here = zeros(6, ndof_xi);
+        TBGamma_here(:, ndof_xi:end) = TGamma_here*BGamma_here;
+
+        % updating g, Jacobian_xi
+        g_here = g_here*gh;
+        J_xi_here = dinamico_Adjoint(ginv(gh))*(J_xi_here + TBGamma_here);
+        J_heret = J_xi_here;
+        J_heret(4:6, :) = J_heret(4:6, :)*Lscale;
+        J_xi(6*(ii-1)+1:6*ii, :) = J_heret;
+
+        % TODO: complete rho
+    end
 
 end

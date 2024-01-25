@@ -13,14 +13,14 @@ classdef SorosimTwist
 
         % for twist
         Bh_xi       %Function handler for base
-        B_xi        %(6xdof) Base matrix calculated at lumped joints or ((6xnGauss)xdof) base matrices computed at every significant points of a soft division
+        B_xi        %(6nxdof) Base matrix calculated at lumped joints or ((6xnGauss)xdof) base matrices computed at every significant points of a soft division
         B_Z1_xi     %Base calculated at 4th order first Zanna point (Xs+Z1*(delta(Xs)))
         B_Z2_xi     %Base calculated at 4th order second Zanna point (Xs+Z2*(delta(Xs)))
         B_Z_xi      %Base calculated at 2nd order Zanna point
         
         % for inflation ratio
         Bh_rho      %Function handler for base
-        B_rho       %(1xdof) Base matrix calculated at lumped joints or ((1xnGauss)xdof) base matrices computed at every significant points of a soft division
+        B_rho       %(nxdof) Base matrix calculated at lumped joints or ((1xnGauss)xdof) base matrices computed at every significant points of a soft division
 
         % initial position
         xi_star     %(6nx1) Reference strain vector at the initial position
