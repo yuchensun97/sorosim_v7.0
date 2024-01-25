@@ -90,7 +90,7 @@ classdef SorosimLinkage
         %% Methods
         [g, rho] = FwdKinematics(Tr, q_xi, q_rho);
         fh = plotq(Tr, q_xi, q_rho);
-        [J_xi, J_rho] = Jacobian(Tr, q_xi, q_rho);
+        [J_xi, J_rho] = Jacobian(Tr, q_xi);
     end
 
     methods

@@ -1,35 +1,23 @@
-function [J_xi, J_rho] = Jacobian(Tr, q_xi, q_rho)
+function [J_xi, J_rho] = Jacobian(Tr, q_xi)
 
     if isrow(q_xi)
         q_xi = q_xi';
     end
 
-    if isrow(q_rho)
-        q_rho = q_rho';
-    end
-
     nsig = Tr.nsig;
     ndof_xi = Tr.ndof_xi;
-    ndof_rho = Tr.ndof_rho;
 
     g_here = Tr.g_base; % g at base
-    rho_here = Tr.rho_base; % rho at base
 
     J_xi = zeros(6*nsig, ndof_xi);
-    J_rho = zeros(nsig, ndof_rho);
 
     J_xi_here = zeros(6, ndof_xi);
-    J_rho_here = zeros(1, ndof_rho);
 
     % joint
     dof_xi_joint = Tr.Twists(1).dof_xi;
-    dof_rho_joint = Tr.Twists(1).dof_rho;
     B_xi_joint = Tr.Twists(1).B_xi;
-    B_rho_joint = Tr.Twists(1).B_rho;
     q_xi_joint = q_xi(1:dof_xi_joint);
-    q_rho_joint = q_rho(1:dof_rho_joint);
     xi_star_joint = Tr.Twists(1).xi_star;
-    rho_star_joint = Tr.Twists(1).rho_star;
 
     if dof_xi_joint == 0
         g_joint = eye(4);
@@ -41,33 +29,19 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi, q_rho)
         TgB_joint(:, 1:dof_xi_joint) = Tg*B_xi_joint;
     end
 
-    if dof_rho_joint == 0
-        rho_joint = 1;
-        J_rho_joint = zeros(1, ndof_rho);
-    else
-        rho_joint = B_rho_joint*q_rho_joint + rho_star_joint;
-        J_rho_joint = B_rho_joint;
-    end
-
     g_here = g_here*g_joint;
-    rho_here = rho_joint;
     
     J_xi_here = dinamico_Adjoint(ginv(g_joint))*...
                 (TgB_joint + J_xi_here);
-    J_rho_here = J_rho_joint;
 
     ndof_xi = ndof_xi - dof_xi_joint;
-    ndof_rho = ndof_rho - dof_rho_joint;
 
     % soft body
     xi_star = Tr.Twists(2).xi_star; % xi_star at initial pose
-    rho_star = Tr.Twists(2).rho_star; % rho_star at initial pose
 
     ndof_xi = ndof_xi - dof_xi_joint;
-    ndof_rho = ndof_rho - dof_rho_joint;
 
     q_xi = q_xi(dof_xi_joint+1:end);
-    q_rho = q_rho(dof_rho_joint+1:end);
 
     Xs = Tr.Twists(2).Xs;
     Lscale = Tr.Link.L;
@@ -81,14 +55,7 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi, q_rho)
 
     B_rho = Tr.Twists(2).B_rho;
 
-    % update g, Jacobian and eta at X = 0
-    % gi = Tr.Link.gi;
-    % g_here = g_here * gi;
-    % J_xi_here = dinamico_Adjoint(ginv(gi))*J_xi_here;
-    % J_rho_here = B_rho(1, :);
-
     J_xi(1:6, :) = J_xi_here;
-    J_rho(1, :) = J_rho_here;
 
     g_here = g_here(1:3, 4)/Lscale;
     J_xi_here = J_xi_here(4:6, :)/Lscale;
@@ -110,7 +77,8 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi, q_rho)
             end
             ad_xi_Z1here = dinamico_adj(xi_Z1here);
             BGamma_here = (H/2)*(B_Z1here + B_Z2here)+...
-                          ((sqrt(3)*H^2)/12)*(ad_xi_Z1here*B_Z2here-dinamico_adj(xi_Z2here)*B_Z1here);
+                          ((sqrt(3)*H^2)/12)*(ad_xi_Z1here*B_Z2here-...
+                          dinamico_adj(xi_Z2here)*B_Z1here);
             Gamma_here = (H/2)*(xi_Z1here + xi_Z2here)+...
                          ((sqrt(3)*H^2)/12)*ad_xi_Z1here*xi_Z2here;
         else    % Z_order == 2
@@ -133,8 +101,6 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi, q_rho)
         J_heret = J_xi_here;
         J_heret(4:6, :) = J_heret(4:6, :)*Lscale;
         J_xi(6*(ii-1)+1:6*ii, :) = J_heret;
-
-        % TODO: complete rho
     end
-
+    J_rho = B_rho;
 end
