@@ -1,4 +1,11 @@
 function [J_xi, J_rho] = Jacobian(Tr, q_xi)
+%Jacobian: iterative Jacobian of the soft link
+%   Detailed explanation goes here
+%   Tr      : SorosimLinkage class
+%   q_xi    : general coordinates for strains
+%   returns:
+%   J_xi    : 6nip x ndof_xi Jacobian for strain variables
+%   J_rho   : nip x ndof_rho Jacobian for inflation ratio
 
     if isrow(q_xi)
         q_xi = q_xi';

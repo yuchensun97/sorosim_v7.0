@@ -5,8 +5,8 @@ function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
 %   q_xi    : general coordinates for strains
 %   q_rho   : general coordinates for inflation ratio
 %   returns:
-%   g       : 4x4 homogeneous transformation matrix
-%   rho     : inflation ratio
+%   g       : 4nip x 4 homogeneous transformation matrix
+%   rho     : nip x 1 inflation ratio
 
     % initialization
     nsig = Tr.nsig;
