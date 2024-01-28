@@ -1,7 +1,10 @@
 classdef TestPhiRhoPrime < matlab.unittest.TestCase
 
-    properties
-        x = linspace(-1, 1, 100);
+    methods(TestClassSetup)
+        % Test class setup
+        function setup(testCase)
+            rng(34);
+        end
     end
     
     methods(TestMethodSetup)
@@ -29,33 +32,48 @@ classdef TestPhiRhoPrime < matlab.unittest.TestCase
                 pn_prime(i+1) = i * pn(i) + x * pn_prime(i);
             end
         end
-
-        function pn_prime = legrendrePrimeFunc(n)
-           pn_prime = @(x) legrendrePrime(n, x);
-        end
-
     end
     
     methods(Test)
         % Test methods
         function testConstant(testCase)
-            testCase.verifyFail("Unimplemented test");
+            n = 0;
+            x = 2 * rand() - 1;
+            prime_true = testCase.legrendrePrime(n, x);
+            prime = Phi_Prime_Rho_LegendrePolynomial(n, x);
+            testCase.verifyEqual(prime, prime_true, 'AbsTol', 1e-10); 
         end
 
         function testLinear(testCase)
-            testCase.verifyFail("Unimplemented test");
+            n = 1;
+            x = 2 * rand() - 1;
+            prime_true = testCase.legrendrePrime(n, x);
+            prime = Phi_Prime_Rho_LegendrePolynomial(n, x);
+            testCase.verifyEqual(prime, prime_true, 'AbsTol', 1e-10);
         end
 
         function testQuadratic(testCase)
-            testCase.verifyFail("Unimplemented test");
+            n = 2;
+            x = 2 * rand() - 1;
+            prime_true = testCase.legrendrePrime(n, x);
+            prime = Phi_Prime_Rho_LegendrePolynomial(n, x);
+            testCase.verifyEqual(prime, prime_true, 'AbsTol', 1e-10);
         end
 
         function testCubic(testCase)
-            testCase.verifyFail("Unimplemented test");
+            n = 3;
+            x = 2 * rand() - 1;
+            prime_true = testCase.legrendrePrime(n, x);
+            prime = Phi_Prime_Rho_LegendrePolynomial(n, x);
+            testCase.verifyEqual(prime, prime_true, 'AbsTol', 1e-10);
         end
 
         function testRandomOrder(testCase)
-            testCase.verifyFail("Unimplemented test");
+            n = randi(10);
+            x = 2 * rand() - 1;
+            prime_true = testCase.legrendrePrime(n, x);
+            prime = Phi_Prime_Rho_LegendrePolynomial(n, x);
+            testCase.verifyEqual(prime, prime_true, 'AbsTol', 1e-10);
         end
     end
 end
