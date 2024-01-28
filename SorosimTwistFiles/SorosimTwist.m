@@ -21,6 +21,7 @@ classdef SorosimTwist
         % for inflation ratio
         Bh_rho      %Function handler for base
         B_rho       %(nxdof) Base matrix calculated at lumped joints or ((1xnGauss)xdof) base matrices computed at every significant points of a soft division
+        B_rho_prime %(nxdof) Derivative of B_rho
 
         % initial position
         xi_star     %(6nx1) Reference strain vector at the initial position
@@ -105,9 +106,11 @@ classdef SorosimTwist
                 B_rho = zeros(nip, dof_rho);
                 X = Xs(1);
                 B_rho(1, :) = Phi_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
+                B_rho_prime(1, :) = Phi_Rho_LegendrePolynomial_prime(X, B_rho_dof, B_rho_odr);
                 for ii=2:nip
                     X = Xs(ii);
                     B_rho(ii, :) = Phi_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
+                    B_rho_prime(ii, :) = Phi_Rho_LegendrePolynomial_prime(X, B_rho_dof, B_rho_odr);
                 end
                 file = 'Phi_Rho_LegendrePolynomial';
                 Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
@@ -136,6 +139,7 @@ classdef SorosimTwist
                 T.B_Z_xi = B_xi_Z;
                 T.Bh_xi = Bh_xi;
                 T.B_rho = B_rho;
+                T.B_rho_prime = B_rho_prime;
                 T.Bh_rho = Bh_rho;
                 T.dof_xi = dof_xi;
                 T.dof_rho = dof_rho;
