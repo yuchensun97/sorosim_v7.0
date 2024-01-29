@@ -106,11 +106,11 @@ classdef SorosimTwist
                 B_rho = zeros(nip, dof_rho);
                 X = Xs(1);
                 B_rho(1, :) = Phi_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
-                B_rho_prime(1, :) = Phi_Rho_LegendrePolynomial_prime(X, B_rho_dof, B_rho_odr);
+                B_rho_prime(1, :) = Phi_Prime_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
                 for ii=2:nip
                     X = Xs(ii);
                     B_rho(ii, :) = Phi_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
-                    B_rho_prime(ii, :) = Phi_Rho_LegendrePolynomial_prime(X, B_rho_dof, B_rho_odr);
+                    B_rho_prime(ii, :) = Phi_Prime_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
                 end
                 file = 'Phi_Rho_LegendrePolynomial';
                 Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);

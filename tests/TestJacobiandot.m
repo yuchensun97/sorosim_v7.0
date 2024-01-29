@@ -41,7 +41,7 @@ classdef TestJacobiandot < matlab.unittest.TestCase
             L = SorosimLinkage(testCase.VLinks(1));
             q = testCase.Vq{1};
             qdot = testCase.Vqdot{1};
-            Jd_true = testCase.VJ_xi_true{1};
+            Jd_true = testCase.VJd_true{1};
             Jd = L.Jacobiandot(q, qdot);
             testCase.verifyEqual(Jd, Jd_true, 'AbsTol', 1e-10);
         end
@@ -50,7 +50,7 @@ classdef TestJacobiandot < matlab.unittest.TestCase
             L = SorosimLinkage(testCase.VLinks(2));
             q = testCase.Vq{2};
             qdot = testCase.Vqdot{2};
-            Jd_true = testCase.VJ_xi_true{2};
+            Jd_true = testCase.VJd_true{2};
             Jd = L.Jacobiandot(q, qdot);
             testCase.verifyEqual(Jd, Jd_true, 'AbsTol', 1e-10);
         end
@@ -59,7 +59,7 @@ classdef TestJacobiandot < matlab.unittest.TestCase
             L = SorosimLinkage(testCase.VLinks(3));
             q = testCase.Vq{3};
             qdot = testCase.Vqdot{3};
-            Jd_true = testCase.VJ_xi_true{3};
+            Jd_true = testCase.VJd_true{3};
             Jd = L.Jacobiandot(q, qdot);
             testCase.verifyEqual(Jd, Jd_true, 'AbsTol', 1e-10);
         end
@@ -68,7 +68,7 @@ classdef TestJacobiandot < matlab.unittest.TestCase
             L = SorosimLinkage(testCase.VLinks(4));
             q = testCase.Vq{4};
             qdot = testCase.Vqdot{4};
-            Jd_true = testCase.VJ_xi_true{4};
+            Jd_true = testCase.VJd_true{4};
             Jd = L.Jacobiandot(q, qdot);
             testCase.verifyEqual(Jd, Jd_true, 'AbsTol', 1e-10);
         end

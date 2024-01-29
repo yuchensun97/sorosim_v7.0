@@ -53,11 +53,11 @@ function Jd = Jacobiandot(Tr, q_xi, qd_xi)
 
     % soft body
     dof_here = ndof - dof_joint;
-    q_here = q_xi(dof_here+1:end);
-    qd_here = qd_xi(dof_here+1:end);
+    q_here = q_xi(dof_joint+1:end);
+    qd_here = qd_xi(dof_joint+1:end);
     xi_star = Tr.Twists(2).xi_star;
-    L = Tr.Twists(2).L;
-    gi = Tr.Link.g_i;
+    L = Tr.Link.L;
+    gi = Tr.Link.gi;
     Xs = Tr.Twists(2).Xs;
     nip = Tr.Twists(2).nip;
 
