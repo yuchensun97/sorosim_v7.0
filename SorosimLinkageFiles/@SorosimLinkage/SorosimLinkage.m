@@ -15,6 +15,10 @@ classdef SorosimLinkage
         rho_base    %initial inflation ratio
         Z_order     %order of Zannah collocation (2, 4 or 6) defualt value is 4
 
+        %External Force Properties
+        Gravity     %logical 1 if gravity is present, 0 if not. (default value: 1)
+        G           %gravity vector [gx gy gz] (default value: [0 0 -9.81])
+
         %% Plotting Properties
         PlotParameters    %struct containing plotting parameters
         %%%PlotParameters is a struct with following elements%%%
@@ -64,6 +68,9 @@ classdef SorosimLinkage
             Tr.ndof_rho =VTwists(1).dof_rho + VTwists(2).dof_rho;
             Tr.nsig = VTwists(2).nip;
 
+            %% External Force Properties
+            
+
             %% Plot parameters
             PlotParameters.Lscale         = Lscale;
             PlotParameters.CameraPosition = [Lscale*2 -Lscale/2 Lscale/2];
@@ -80,8 +87,6 @@ classdef SorosimLinkage
             PlotParameters.Position       = [0.1300 0.1100 0.7750 0.8150]; %default value (normalized)
 
             Tr.PlotParameters = PlotParameters;
-
-            % ignore other properties for Kinematics
 
         end %end of class constructor
     end
