@@ -64,8 +64,8 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi)
 
     J_xi(1:6, :) = J_xi_here;
 
-    g_here = g_here(1:3, 4)/Lscale;
-    J_xi_here = J_xi_here(4:6, :)/Lscale;
+    g_here(1:3, 4) = g_here(1:3, 4)/Lscale;
+    J_xi_here(4:6, :) = J_xi_here(4:6, :)/Lscale;
 
     for ii=2:nsig
         H = Xs(ii) - Xs(ii-1);
@@ -100,7 +100,7 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi)
         end
         [gh, TGamma_here] = variable_expmap_gTg(Gamma_here);
         TBGamma_here = zeros(6, ndof_xi);
-        TBGamma_here(:, ndof_xi:end) = TGamma_here*BGamma_here;
+        TBGamma_here(:, dof_xi_joint+1:end) = TGamma_here*BGamma_here;
 
         % updating g, Jacobian_xi
         g_here = g_here*gh;
