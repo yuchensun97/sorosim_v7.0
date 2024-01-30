@@ -1,0 +1,1 @@
+% elastic matrix in the lateral equation

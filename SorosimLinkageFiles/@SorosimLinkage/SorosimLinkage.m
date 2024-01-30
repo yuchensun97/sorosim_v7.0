@@ -19,6 +19,16 @@ classdef SorosimLinkage
         Gravity     %logical 1 if gravity is present, 0 if not. (default value: 1)
         G           %gravity vector [gx gy gz] (default value: [0 0 -9.81])
 
+        %Pre-computed elastic Properties
+        K_xi        %Generalized stiffness matrix for strains
+        D_xi        %Generalized damping matrix for strains
+        K_xi_bar    %Generalized stiffness matrix for the \rho term in strain equation
+        D_xi_bar    %Generalized damping matrix for the \rho term in strain equation
+        K_rho       %Generalized stiffness matrix for lateral equation
+        D_rho       %Generalized damping matrix for lateral equation
+        K_rho_bar   %Generalized stiffness matrix for the strain term in the lateral equation
+        D_rho_bar   %Generalized damping matrix for the strain term in the lateral equation
+
         %% Plotting Properties
         PlotParameters    %struct containing plotting parameters
         %%%PlotParameters is a struct with following elements%%%
@@ -69,7 +79,8 @@ classdef SorosimLinkage
             Tr.nsig = VTwists(2).nip;
 
             %% External Force Properties
-            
+            Tr.Gravity = true;
+            Tr.G = [0 0 -9.81];
 
             %% Plot parameters
             PlotParameters.Lscale         = Lscale;

@@ -1,0 +1,1 @@
+%elastic matrix for the \rho term in strain equation

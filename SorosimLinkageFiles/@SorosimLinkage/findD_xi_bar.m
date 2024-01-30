@@ -1,0 +1,1 @@
+% damping matrix for the lateral term in the strain equation

@@ -62,6 +62,8 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi)
 
     B_rho = Tr.Twists(2).B_rho;
 
+    %TODO: update J(0) of the body
+
     J_xi(1:6, :) = J_xi_here;
 
     g_here(1:3, 4) = g_here(1:3, 4)/Lscale;
@@ -99,7 +101,7 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi)
             Gamma_here = H*xi_Zhere;
         end
         [gh, TGamma_here] = variable_expmap_gTg(Gamma_here);
-        TBGamma_here = zeros(6, ndof_xi);
+        TBGamma_here = zeros(6, ndof_xi+dof_xi_joint);
         TBGamma_here(:, dof_xi_joint+1:end) = TGamma_here*BGamma_here;
 
         % updating g, Jacobian_xi

@@ -1,0 +1,1 @@
+% damping matrix for the strain equation
