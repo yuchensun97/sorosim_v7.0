@@ -20,6 +20,7 @@ classdef SorosimLinkage
         G           %gravity vector [gx gy gz] (default value: [0 0 -9.81])
 
         %Pre-computed elastic Properties
+        Damped      %1 if the soft links are elastically damped 0 if not
         K_xi        %Generalized stiffness matrix for strains
         D_xi        %Generalized damping matrix for strains
         K_xi_bar    %Generalized stiffness matrix for the \rho term in strain equation
@@ -82,6 +83,20 @@ classdef SorosimLinkage
             Tr.Gravity = true;
             Tr.G = [0 0 -9.81];
 
+            %% Constant coefficients
+            % stiffness
+            K_xi = findK_xi(Tr);
+            K_xi_bar = findK_xi_bar(Tr);
+            Tr.K_xi = K_xi;
+            Tr.K_xi_bar = K_xi_bar;
+
+            %damping
+            D_xi = findD_xi(Tr);
+            D_xi_bar = findD_xi_bar(Tr);
+            Tr.D_xi = D_xi;
+            Tr.D_xi_bar = D_xi_bar;
+            Tr.Damped = true;
+
             %% Plot parameters
             PlotParameters.Lscale         = Lscale;
             PlotParameters.CameraPosition = [Lscale*2 -Lscale/2 Lscale/2];
@@ -109,6 +124,10 @@ classdef SorosimLinkage
         [J_xi, J_rho] = Jacobian(Tr, q_xi);
         Jd_xi = Jacobiandot(Tr, q_xi, qd_xi);
         Jp_rho = Jacobianprime(Tr);
+        K_xi = findK_xi(Tr);
+        K_xi_bar = findK_xi_bar(Tr);
+        D_xi = findD_xi(Tr);
+        D_xi_bar = findD_xi_bar(Tr);
     end
 
     methods

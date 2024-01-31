@@ -173,19 +173,13 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
         %updating rho, Jacobian, Jacobian_prime, rho_dot
         if ndof_rho > 0
             rho_here = rho_star(ii) + J_rho(ii,:)*q_rho;
+            rhod_here = J_rho(ii,:)*qd_rho;
         else
             rho_here = 1;
-        end
-
-        rho(ii) = rho_here;
-        J_here_rho = J_rho(ii, :);
-
-        if ndof_rho>0
-            rhod_here = J_here_rho * qd_rho;
-        else
             rhod_here = 0;
         end
 
+        rho(ii) = rho_here;
         rhod(ii) = rhod_here;
 
         %integrals evaluation
@@ -208,14 +202,29 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
                    ld*W_here*J_here_xi'*Ms_dot_here*J_here_xi+...
                    ld*W_here*J_here_xi'*dinamico_coadj(eta_here)*Ms_here*J_here_xi;
 
-            % TODO: add M terms related to rho
+            % TODO: add other terms
         end
     end
 
-    % TODO: currently ignore point force
     Bq_xi = 0;
     u_xi = 0;
     Bq_rho = 0;
     u_rho = 0;
+
+    if Tr.Damped
+        D_xi = Tr.D;
+        D_xi_bar = Tr.D_xi_bar;
+    else
+        D_xi = 0;
+        D_xi_bar = 0;
+    end
+
+    K_xi = Tr.K_xi;
+    K_xi_bar = Tr.K_xi_bar;
+    qdd_xi = M_xi\(Bq_xi*u_xi+F_xi-K_xi*q_xi-(C_xi+D_xi)*qd_xi-...
+            K_xi_bar*q_rho - D_xi_bar*qd_rho);
+    ydot_xi = [qd_xi;qdd_xi];
+
+    % TODO: add lateral traction terms
 
 end
