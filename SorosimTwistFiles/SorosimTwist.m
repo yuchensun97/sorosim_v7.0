@@ -20,6 +20,7 @@ classdef SorosimTwist
         
         % for inflation ratio
         Bh_rho      %Function handler for base
+        Bh_rho_prime%Function handler for base
         B_rho       %(nxdof) Base matrix calculated at lumped joints or ((1xnGauss)xdof) base matrices computed at every significant points of a soft division
         B_rho_prime %(nxdof) Derivative of B_rho
 
@@ -113,7 +114,9 @@ classdef SorosimTwist
                     B_rho_prime(ii, :) = Phi_Prime_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
                 end
                 file = 'Phi_Rho_LegendrePolynomial';
+                file_prime = 'Phi_Prime_Rho_LegendrePolynomial';
                 Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
+                Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
 
                 % initial position, simpilified to the undeformed position
                 xi_star = zeros(6*nip, 4); % precomputation at all gauss and zannah guess points
@@ -141,6 +144,7 @@ classdef SorosimTwist
                 T.B_rho = B_rho;
                 T.B_rho_prime = B_rho_prime;
                 T.Bh_rho = Bh_rho;
+                T.Bh_rho_prime = Bh_rho_prime;
                 T.dof_xi = dof_xi;
                 T.dof_rho = dof_rho;
                 T.Ms = Ms;
@@ -149,6 +153,7 @@ classdef SorosimTwist
             elseif nargin == 2
                 T.B_xi = varargin{1};
                 T.B_rho = varargin{2};
+                T.B_rho_prime = [];
             elseif nargin == 0
                 nGauss = 10;
                 [Xs, Ws, nip] = GaussQuadrature(nGauss);
@@ -161,6 +166,7 @@ classdef SorosimTwist
                 T.rho_starfn = rho_starfn;
                 T.B_xi = [];
                 T.B_rho = [];
+                T.B_rho_prime = [];
                 T.B_xi_dof = zeros(6, 1);
                 T.B_rho_dof = 0;
                 T.B_xi_odr = zeros(6, 1);
@@ -180,8 +186,10 @@ classdef SorosimTwist
             end
             file_xi = 'Phi_Xi_LegendrePolynomial';
             file_rho = 'Phi_Rho_LegendrePolynomial';
+            file_prime = 'Phi_Prime_Rho_LegendrePolynomial';
             T.Bh_xi = str2func(['@(X, Bdof, Bodr)', file_xi, '(X, Bdof, Bodr)']);
             T.Bh_rho = str2func(['@(X, Bdof, Bodr)', file_rho, '(X, Bdof, Bodr)']);
+            T.Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
         end
 
         %% updates np, Xs, Ws, and dof
@@ -224,6 +232,7 @@ classdef SorosimTwist
             X = T.Xs(ii);
             T.B_xi(1:6, :) = T.Bh_xi(X, T.B_xi_dof, T.B_xi_odr);
             T.B_rho(ii, :) = T.Bh_rho(X, T.B_rho_dof, T.B_rho_odr);
+            T.B_rho_prime(ii, :) = T.Bh_rho_prime(X, T.B_rho_dof, T.B_rho_odr);
             for ii=2:T.nip
                 X = T.Xs(ii);
                 T.B_xi((ii-1)*6+1:ii*6, :) = T.Bh_xi(X, T.B_xi_dof, T.B_xi_odr);
@@ -234,6 +243,7 @@ classdef SorosimTwist
                 X = T.Xs(ii-1)+Z*(T.Xs(ii)-T.Xs(ii-1));
                 T.B_Z_xi((ii-2)*6+1:ii*6, :) = T.Bh_xi(X, T.B_xi_dof, T.B_xi_odr);
                 T.B_rho(ii, :) = T.Bh_rho(X, T.B_rho_dof, T.B_rho_odr);
+                T.B_rho_prime(ii, :) = T.Bh_rho_prime(X, T.B_rho_dof, T.B_rho_odr);
             end
         end
 
@@ -339,6 +349,7 @@ classdef SorosimTwist
             s.B_Z2_xi = T.B_Z2_xi;
             s.B_Z_xi = T.B_Z_xi;
             s.B_rho = T.B_rho;
+            s.B_rho_prime = T.B_rho_prime;
             s.Bh_xi = T.Bh_xi;
             s.Bh_rho = T.Bh_rho;
             s.xi_star = T.xi_star;
