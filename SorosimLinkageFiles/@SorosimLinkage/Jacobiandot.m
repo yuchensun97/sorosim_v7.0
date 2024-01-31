@@ -125,9 +125,9 @@ function Jd = Jacobiandot(Tr, q_xi, qd_xi)
         end
 
         [gh, TGamma_here, TGammad_here] = variable_expmap_gTgTgd_mex(Gamma_here, Gammad_here);
-        TBGamma_here = zeros(6, ndof);
+        TBGamma_here = zeros(6, ndof+dof_joint);
         TBGamma_here(:, dof_joint+1:end) = TGamma_here*BGamma_here;
-        TBGammad_here = zeros(6, ndof);
+        TBGammad_here = zeros(6, ndof+dof_joint);
         TBGammad_here(:, dof_joint+1:end) = dinamico_adj(eta_here)*TBGamma_here(:, dof_joint+1:end)+TGammad_here*BGamma_here;
 
         if Tr.Z_order==4

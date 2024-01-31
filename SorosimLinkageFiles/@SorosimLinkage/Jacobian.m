@@ -13,10 +13,12 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi)
 
     nsig = Tr.nsig;
     ndof_xi = Tr.ndof_xi;
+    ndof_rho = Tr.ndof_rho;
 
     g_here = Tr.g_base; % g at base
 
     J_xi = zeros(6*nsig, ndof_xi);
+    J_rho = zeros(nsig, ndof_rho);
 
     J_xi_here = zeros(6, ndof_xi);
 
@@ -26,6 +28,9 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi)
     q_xi_joint = q_xi(1:dof_xi_joint);
     xi_star_joint = Tr.Twists(1).xi_star;
 
+    dof_rho_joint = Tr.Twists(1).dof_rho;
+    B_rho_joint = Tr.Twists(1).B_rho;
+
     if dof_xi_joint == 0
         g_joint = eye(4);
         TgB_joint = zeros(6, ndof_xi);
@@ -34,6 +39,10 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi)
         [g_joint, Tg] = variable_expmap_gTg(xi);
         TgB_joint = zeros(6, ndof_xi);
         TgB_joint(:, 1:dof_xi_joint) = Tg*B_xi_joint;
+    end
+
+    if dof_rho_joint > 0
+        J_rho(:, 1:dof_rho_joint) = B_rho_joint;
     end
 
     g_here = g_here*g_joint;
@@ -61,8 +70,6 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi)
     end
 
     B_rho = Tr.Twists(2).B_rho;
-
-    %TODO: update J(0) of the body
 
     J_xi(1:6, :) = J_xi_here;
 
@@ -111,5 +118,5 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi)
         J_heret(4:6, :) = J_heret(4:6, :)*Lscale;
         J_xi(6*(ii-1)+1:6*ii, :) = J_heret;
     end
-    J_rho = B_rho;
+    J_rho(:, 1+dof_rho_joint:end) = B_rho;
 end
