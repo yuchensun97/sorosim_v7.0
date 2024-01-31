@@ -37,6 +37,8 @@ classdef SorosimTwist
         Ms          %(6nipx6) Inertia matrix of cross section.
         Es          %(6nipx6) Stiffness matrix.
         Gs          %(6nipx6) Damping matrix.
+        sigma_xi    %(nipx1) stiffness term for rho in strain equation
+        gamma_xi    %(nipx1) damping term for rho in strain equation
 
         Xadd        %additional integration points(nx1)
     end
@@ -128,6 +130,7 @@ classdef SorosimTwist
 
                 % TODO: precompute Ms, Es, Gs
                 [Ms, Es, Gs] = MEG(link, Xs);
+                [sigma_xi, gamma_xi] = EG_xi_bar(link, Xs);
 
                 T.xi_starfn = xi_starfn;
                 T.rho_starfn = rho_starfn;
@@ -150,6 +153,8 @@ classdef SorosimTwist
                 T.Ms = Ms;
                 T.Es = Es;
                 T.Gs = Gs;
+                T.sigma_xi = sigma_xi;
+                T.gamma_xi = gamma_xi;
             elseif nargin == 2
                 T.B_xi = varargin{1};
                 T.B_rho = varargin{2};
@@ -253,6 +258,7 @@ classdef SorosimTwist
                 return
             end
             [T.Ms, T.Es, T.Gs] = MEG(T.Link, T.Xs);
+            [T.sigma_xi, T.gamma_xi] = EG_xi_bar(T.Link, T.Xs);
         end
 
         %% updates initial position
@@ -352,6 +358,7 @@ classdef SorosimTwist
             s.B_rho_prime = T.B_rho_prime;
             s.Bh_xi = T.Bh_xi;
             s.Bh_rho = T.Bh_rho;
+            s.Bh_rho_prime = T.Bh_rho_prime;
             s.xi_star = T.xi_star;
             s.xi_starfn = T.xi_starfn;
             s.rho_star = T.rho_star;
@@ -363,6 +370,8 @@ classdef SorosimTwist
             s.Ms = T.Ms;
             s.Es = T.Es;
             s.Gs = T.Gs;
+            s.sigma_xi = T.sigma_xi;
+            s.gamma_xi = T.gamma_xi;
             s.Xadd = T.Xadd;
         end
     end
@@ -384,8 +393,10 @@ classdef SorosimTwist
             T.B_Z2_xi = s.B_Z2_xi;
             T.B_Z_xi = s.B_Z_xi;
             T.B_rho = s.B_rho;
+            T.B_rho_prime = s.B_rho_prime;
             T.Bh_xi = s.Bh_xi;
             T.Bh_rho = s.Bh_rho;
+            T.Bh_rho_prime = s.Bh_rho_prime;
             T.xi_star = s.xi_star;
             T.xi_starfn = s.xi_starfn;
             T.rho_star = s.rho_star;
@@ -397,6 +408,8 @@ classdef SorosimTwist
             T.Ms = s.Ms;
             T.Es = s.Es;
             T.Gs = s.Gs;
+            T.sigma_xi = s.sigma_xi;
+            T.gamma_xi = s.gamma_xi;
             T.Xadd = s.Xadd;
         end
     end
