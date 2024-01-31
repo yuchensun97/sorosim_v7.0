@@ -49,34 +49,66 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
     
     % joint
     dof_xi_joint = Tr.Twists(1).dof_xi;
+    dof_rho_joint = Tr.Twists(1).dof_rho;
     B_xi_joint = Tr.Twists(1).B_xi;
+    B_rho_joint = Tr.Twists(1).B_rho;
     q_xi_joint = q_xi(1:dof_xi_joint);
+    q_rho_joint = q_rho(1:dof_rho_joint);
+    qd_xi_joint = qd_xi(1:dof_xi_joint);
+    qd_rho_joint = qd_rho(1:dof_rho_joint);
     xi_star_joint = Tr.Twists(1).xi_star;
+    rho_star_joint = Tr.Twists(1).rho_star;
+    eta_joint = zeros(6,1);
+    Jd_joint_xi = zeros(6,1);
 
     if dof_xi_joint == 0
         g_joint = eye(4);
         TgB_joint = zeros(6, ndof_xi);
+        TgBd_joint = zeros(6, ndof_xi);
     else
         xi = B_xi_joint*q_xi_joint + xi_star_joint;
-        [g_joint, Tg] = variable_expmap_gTg(xi);
+        xid = B_xi_joint * qd_xi_joint;
+        [g_joint, Tg, Tgd] = variable_expmap_gTg(xi, xid);
         TgB_joint = zeros(6, ndof_xi);
         TgB_joint(:, 1:dof_xi_joint) = Tg*B_xi_joint;
+        TgBd_joint = zeros(6, ndof_xi);
+        TgBd_joint(:, 1:dof_xi_joint) = dinamico_adj(eta_joint)*Tg*B_xi_joint+...
+                                        + Tgd*B_xi_joint;
+    end
+
+    if dof_rho_joint == 0
+        rho_joint = 1;
+        rhod_joint = 0;
+    else
+        rho_joint = B_rho_joint*q_rho_joint+rho_star_joint;
+        rhod_joint = B_rho_joint*qd_rho_joint;
     end
 
     g_here = g_here*g_joint;
+    rho(1) = rho_joint;
+    rhod(1) = rhod_joint;
 
     G = Tr.G; % gravity
-
-    J_here_xi = dinamico_Adjoint(ginv(g_joint))*...
+    Ad_g_joint_inv = dinamico_Adjoint(ginv(g_joint));
+    J_here_xi = Ad_g_joint_inv*...
                 (TgB_joint + J_here_xi);
-    Jd_here_xi = zeros(6, ndof_xi);
-    eta_here = zeros(6, 1);
+    Jd_here_xi = Ad_g_joint_inv*(Jd_joint_xi + TgBd_joint);
+    eta_here = Ad_g_joint_inv*(eta_joint + TgB_joint(:, 1:dof_xi_joint)*qd_xi_joint);
 
     % soft body
     ndof_xi = ndof_xi - dof_xi_joint;
     q_xi = q_xi(dof_xi_joint+1:end);
+    qd_xi = qd_xi(dof_xi_joint+1:end);
+    q_rho = q_rho(dof_xi_joint+1:end);
+    qd_rho = qd_rho(dof_xi_joint+1:end);
+
+    gi = Tr.Link.gi;
+    g_here = g_here*gi;
+    Ad_gi_inv = dinamico_Adjoint(ginv(gi));
+    J_here_xi = Ad_gi_inv *J_here_xi;
+    Jd_here_xi = Ad_gi_inv * Jd_here_xi;
+    eta_here = Ad_gi_inv*eta_here;
     
-    % TODO: update J(0) of the body
     J_here_rho = J_rho(1, :);
     
     g(1:4, :) = g_here;
