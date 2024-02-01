@@ -116,7 +116,7 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
     Jd_xi(1:6, :) = Jd_here_xi;
     eta(1:6) = eta_here;
 
-    rho(1) = J_here_rho * q_rho + rho_star;
+    rho(1) = J_here_rho * q_rho + rho_star(1);
     rhod(1) = J_here_rho * qd_rho;
 
     q_here_xi = q_xi;
@@ -181,11 +181,18 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
 
         rho(ii) = rho_here;
         rhod(ii) = rhod_here;
+        rho_star_here = rho_star(ii);
 
         %integrals evaluation
         if Ws(ii)>0
             W_here = Ws(ii);
             Ms_here = Ms(6*(ii-1)+1:6*ii,:);
+            I11 = Ms_here(2, 2);
+            I22 = Ms_here(3, 3);
+            omega_1 = eta_here(2);
+            omega_2 = eta_here(3);
+            omega_3 = eta_here(1);
+            MI_here = I11*(omega_2^2+omega_3^2)+I22*(omega_1^2+omega_3^2);
             Ms_here(1:3,1:3) = rho_here^4 * Ms_here(1:3, 1:3);
             Ms_here(4:6,4:6) = rho_here^2 * Ms_here(4:6, 4:6);
             Ms_dot_here = Ms_here;
@@ -202,7 +209,7 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
                    ld*W_here*J_here_xi'*Ms_dot_here*J_here_xi+...
                    ld*W_here*J_here_xi'*dinamico_coadj(eta_here)*Ms_here*J_here_xi;
 
-            % TODO: add other terms
+            % Todo: add other terms
         end
     end
 
@@ -225,6 +232,9 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
             K_xi_bar*q_rho - D_xi_bar*qd_rho);
     ydot_xi = [qd_xi;qdd_xi];
 
-    % TODO: add lateral traction terms
+    if ndof_rho+dof_rho_joint == 0
+        ydot_rho = zeros(ndof_rho+dof_rho_joint,1);
+        return
+    end
 
 end

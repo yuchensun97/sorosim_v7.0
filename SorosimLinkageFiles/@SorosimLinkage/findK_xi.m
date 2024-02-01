@@ -1,7 +1,7 @@
 % elastic matrix in strain equations
 function K_xi = findK_xi(Tr)
     ndof = Tr.ndof_xi;
-    K_xi = zeros(ndof_xi, ndof_xi);
+    K_xi = zeros(ndof, ndof);
 
     % joint
     dof_joint = Tr.Twists(1).dof_xi;

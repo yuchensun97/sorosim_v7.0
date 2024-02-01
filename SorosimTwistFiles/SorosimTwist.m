@@ -37,8 +37,10 @@ classdef SorosimTwist
         Ms          %(6nipx6) Inertia matrix of cross section.
         Es          %(6nipx6) Stiffness matrix.
         Gs          %(6nipx6) Damping matrix.
-        sigma_xi    %(nipx1) stiffness term for rho in strain equation
-        gamma_xi    %(nipx1) damping term for rho in strain equation
+        sigma_xi    %(nipx1) stiffness term for rho in strain equation, or for nu in lateral equation
+        gamma_xi    %(nipx1) damping term for rho in strain equation, or for nu in lateral equation
+        sigma_rho   %(nipx1) stiffness term for rho in lateral equation
+        gamma_rho   %(nipx1) damping term for rho in lateral equation
 
         Xadd        %additional integration points(nx1)
     end
@@ -131,6 +133,7 @@ classdef SorosimTwist
                 % TODO: precompute Ms, Es, Gs
                 [Ms, Es, Gs] = MEG(link, Xs);
                 [sigma_xi, gamma_xi] = EG_xi_bar(link, Xs);
+                [sigma_rho, gamma_rho] = EG_rho_bar(link, Xs);
 
                 T.xi_starfn = xi_starfn;
                 T.rho_starfn = rho_starfn;
@@ -155,6 +158,8 @@ classdef SorosimTwist
                 T.Gs = Gs;
                 T.sigma_xi = sigma_xi;
                 T.gamma_xi = gamma_xi;
+                T.sigma_rho = sigma_rho;
+                T.gamma_rho = gamma_rho;
             elseif nargin == 2
                 T.B_xi = varargin{1};
                 T.B_rho = varargin{2};
@@ -259,6 +264,7 @@ classdef SorosimTwist
             end
             [T.Ms, T.Es, T.Gs] = MEG(T.Link, T.Xs);
             [T.sigma_xi, T.gamma_xi] = EG_xi_bar(T.Link, T.Xs);
+            [T.sigma_rho, T.gamma_rho] = EG_rho_bar(T.Link, T.Xs);
         end
 
         %% updates initial position
@@ -372,6 +378,8 @@ classdef SorosimTwist
             s.Gs = T.Gs;
             s.sigma_xi = T.sigma_xi;
             s.gamma_xi = T.gamma_xi;
+            s.sigma_rho = T.sigma_rho;
+            s.gamma_rho = T.gamma_rho;
             s.Xadd = T.Xadd;
         end
     end
@@ -410,6 +418,8 @@ classdef SorosimTwist
             T.Gs = s.Gs;
             T.sigma_xi = s.sigma_xi;
             T.gamma_xi = s.gamma_xi;
+            T.sigma_rho = s.sigma_rho;
+            T.gamma_rho = s.gamma_rho;
             T.Xadd = s.Xadd;
         end
     end
