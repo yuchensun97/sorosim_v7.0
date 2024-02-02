@@ -174,11 +174,13 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
 
         %updating rho, Jacobian, Jacobian_prime, rho_dot
         if ndof_rho > 0
-            rho_here = rho_star(ii) + J_rho(ii,:)*q_rho;
+            J_rho_here = J_rho(dof_joint_rho+ii,:);
+            rho_here = rho_star(ii) + J_rho_here*q_rho;
             rhod_here = J_rho(ii,:)*qd_rho;
         else
             rho_here = 1;
             rhod_here = 0;
+            J_rho_here = zeros(1, dof_joint_rho+ndof_rho);
         end
 
         rho(ii) = rho_here;
@@ -210,8 +212,8 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
             C_xi = C_xi + Qtemp*Jd_here +...
                    ld*W_here*J_here_xi'*Ms_dot_here*J_here_xi+...
                    ld*W_here*J_here_xi'*dinamico_coadj(eta_here)*Ms_here*J_here_xi;
-
-            % Todo: add other terms
+            K_rho_temp = K_rho - ld*W_here*J_rho_here'*MI_here*J_rho_here;% last term of K_rho
+            F_rho = F_rho + ld*W_here*J_rho_here'*MI_here*rho_star_here;
         end
     end
 
