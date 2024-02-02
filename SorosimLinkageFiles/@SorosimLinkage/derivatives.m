@@ -18,6 +18,8 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
         disp(['t = ', num2str(t)]);
     end
 
+    density = Tr.Link.Rho0;
+
     ndof_xi = Tr.ndof_xi;
     q_xi = qqd_xi(1:ndof_xi);
     qd_xi = qqd_xi(ndof_xi+1:end);
@@ -30,7 +32,7 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
     C_xi = zeros(ndof_xi, ndof_xi);
     F_xi = zeros(ndof_xi, 1);
 
-    M_rho = zeros(ndof_rho, ndof_rho);
+    K_rho = zeros(ndof_rho, ndof_rho);
     F_rho = zeros(ndof_rho, 1);
 
     g = zeros(4*nsig, 4);
@@ -192,7 +194,7 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
             omega_1 = eta_here(2);
             omega_2 = eta_here(3);
             omega_3 = eta_here(1);
-            MI_here = I11*(omega_2^2+omega_3^2)+I22*(omega_1^2+omega_3^2);
+            MI_here = density*(I11*(omega_2^2+omega_3^2)+I22*(omega_1^2+omega_3^2));
             Ms_here(1:3,1:3) = rho_here^4 * Ms_here(1:3, 1:3);
             Ms_here(4:6,4:6) = rho_here^2 * Ms_here(4:6, 4:6);
             Ms_dot_here = Ms_here;
