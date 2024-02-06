@@ -43,7 +43,6 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
     rho = zeros(nsig, 1);
     J_rho = Tr.Twists(2).B_rho;
     rhod = zeros(nsig, ndof_rho);
-    Jp_rho = Tr.Jacobianprime();
     rho_star = Tr.Twists(2).rho_star;
 
     g_here = Tr.g_base;
@@ -221,9 +220,7 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
     end
 
     Bq_xi = 0;
-    u_xi = 0;
     Bq_rho = 0;
-    u_rho = 0;
 
     if Tr.Damped
         D_xi = Tr.D;
@@ -239,7 +236,7 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
 
     K_xi = Tr.K_xi;
     K_xi_bar = Tr.K_xi_bar;
-    qdd_xi = M_xi\(Bq_xi*u_xi+F_xi-K_xi*q_xi-(C_xi+D_xi)*qd_xi-...
+    qdd_xi = M_xi\(Bq_xi*uqt_xi+F_xi-K_xi*q_xi-(C_xi+D_xi)*qd_xi-...
             K_xi_bar*q_rho - D_xi_bar*qd_rho);
     ydot_xi = [qd_xi;qdd_xi];
 
@@ -251,7 +248,7 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
     K_rho_bar = Tr.K_rho_bar;
     M_rho = Tr.M_rho;
 
-    qdd_rho = M_rho\(Bq_rho*u_rho+F_rho-K_rho*q_rho-D_rho*qd_rho-...
+    qdd_rho = M_rho\(Bq_rho*uqt_rho+F_rho-K_rho*q_rho-D_rho*qd_rho-...
                     K_rho_bar*q_xi-D_rho_bar*qd_xi);
     ydot_rho = [qd_rho;qdd_rho];
 end
