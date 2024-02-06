@@ -25,10 +25,11 @@ classdef SorosimLinkage
         D_xi        %Generalized damping matrix for strains
         K_xi_bar    %Generalized stiffness matrix for the \rho term in strain equation
         D_xi_bar    %Generalized damping matrix for the \rho term in strain equation
-        K_rho       %Generalized stiffness matrix for lateral equation
+        K_rho_part  %Generalized stiffness matrix for lateral equation
         D_rho       %Generalized damping matrix for lateral equation
         K_rho_bar   %Generalized stiffness matrix for the strain term in the lateral equation
         D_rho_bar   %Generalized damping matrix for the strain term in the lateral equation
+        M_rho       %Generalized mass matrix for the lateral equation.
 
         %% Plotting Properties
         PlotParameters    %struct containing plotting parameters
@@ -87,15 +88,27 @@ classdef SorosimLinkage
             % stiffness
             K_xi = findK_xi(Tr);
             K_xi_bar = findK_xi_bar(Tr);
+            K_rho_part = findK_rho_part(Tr);
+            K_rho_bar = findK_rho_bar(Tr);
             Tr.K_xi = K_xi;
             Tr.K_xi_bar = K_xi_bar;
+            Tr.K_rho_part = K_rho_part;
+            Tr.K_rho_bar = K_rho_bar;
 
             %damping
             D_xi = findD_xi(Tr);
             D_xi_bar = findD_xi_bar(Tr);
+            D_rho = findD_rho(Tr);
+            D_rho_bar = findD_rho_bar(Tr);
             Tr.D_xi = D_xi;
             Tr.D_xi_bar = D_xi_bar;
+            Tr.D_rho_bar = D_rho_bar;
+            Tr.D_rho = D_rho;
             Tr.Damped = true;
+
+            % mass
+            M_rho = findM_rho(Tr);
+            Tr.M_rho = M_rho;
 
             %% Plot parameters
             PlotParameters.Lscale         = Lscale;
@@ -126,8 +139,13 @@ classdef SorosimLinkage
         Jp_rho = Jacobianprime(Tr);
         K_xi = findK_xi(Tr);
         K_xi_bar = findK_xi_bar(Tr);
+        K_rho_part = findK_rho_part(Tr);
+        K_rho_bar = findK_rho_bar(Tr);
         D_xi = findD_xi(Tr);
         D_xi_bar = findD_xi_bar(Tr);
+        D_rho = findD_rho(Tr);
+        D_rho_bar = findD_rho_bar(Tr);
+        M_rho = findM_rho(Tr);
     end
 
     methods

@@ -130,6 +130,9 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
     Ws = Tr.Twists(2).Ws;
     nip = Tr.Twists(2).nip;
 
+    % todo: modify sorosim linkage.
+    K_rho = Tr.findK_rho_part();
+
     for ii = 2:nip
         H = (Xs(ii) - Xs(ii-1)) *ld;
 
@@ -212,7 +215,7 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
             C_xi = C_xi + Qtemp*Jd_here +...
                    ld*W_here*J_here_xi'*Ms_dot_here*J_here_xi+...
                    ld*W_here*J_here_xi'*dinamico_coadj(eta_here)*Ms_here*J_here_xi;
-            K_rho_temp = K_rho - ld*W_here*J_rho_here'*MI_here*J_rho_here;% last term of K_rho
+            K_rho = K_rho - ld*W_here*J_rho_here'*MI_here*J_rho_here;% last term of K_rho
             F_rho = F_rho + ld*W_here*J_rho_here'*MI_here*rho_star_here;
         end
     end
@@ -225,9 +228,13 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
     if Tr.Damped
         D_xi = Tr.D;
         D_xi_bar = Tr.D_xi_bar;
+        D_rho = Tr.D_rho;
+        D_rho_bar = Tr.D_rho_bar;
     else
         D_xi = 0;
         D_xi_bar = 0;
+        D_rho = 0;
+        D_rho_bar = 0;
     end
 
     K_xi = Tr.K_xi;
@@ -241,4 +248,10 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
         return
     end
 
+    K_rho_bar = Tr.K_rho_bar;
+    M_rho = Tr.M_rho;
+
+    qdd_rho = M_rho\(Bq_rho*u_rho+F_rho-K_rho*q_rho-D_rho*qd_rho-...
+                    K_rho_bar*q_xi-D_rho_bar*qd_xi);
+    ydot_rho = [qd_rho;qdd_rho];
 end
