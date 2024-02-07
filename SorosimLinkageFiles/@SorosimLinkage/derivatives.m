@@ -1,13 +1,11 @@
-function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_rho)
+function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho)
 % compute the time derivatives of q_xi and q_rho
 % t is the time
-% qqd_xi = [q_xi, qdot_xi]
-% qqd_rho = [q_rho, qdot_rho]
+% qqd = [q_xi, q_rho, qd_xi, qd_rho]
 % uqt_xi = TODO: fill me in future
 % uqt_rho = TODO: fill me in future
 % returns:
-% ydot_xi = [qdot_xi, qddot_xi]
-% ydot_rho = [qdot_rho, qddot_rho]
+% ydot = [qd_xi, qd_rho, qdd_xi, qdd_rho]
 
     persistent tlast
     if t==0
@@ -21,11 +19,11 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
     density = Tr.Link.Rho0;
 
     ndof_xi = Tr.ndof_xi;
-    q_xi = qqd_xi(1:ndof_xi);
-    qd_xi = qqd_xi(ndof_xi+1:end);
     ndof_rho = Tr.ndof_rho;
-    q_rho = qqd_rho(1:ndof_rho);
-    qd_rho = qqd_rho(ndof_rho+1:end);
+    q_xi = qqd(1:ndof_xi);
+    q_rho = qqd(ndof_xi+1:ndof_rho+ndof_xi);
+    qd_xi = qqd(ndof_xi+ndof_rho+1:2*ndof_xi+ndof_rho);
+    qd_rho = qqd(2*ndof_xi+ndof_rho+1:end);
 
     nsig = Tr.nsig;
     M_xi = zeros(ndof_xi, ndof_xi);
@@ -98,10 +96,11 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
 
     % soft body
     ndof_xi = ndof_xi - dof_xi_joint;
+    ndof_rho = ndof_rho - dof_rho_joint;
     q_xi = q_xi(dof_xi_joint+1:end);
     qd_xi = qd_xi(dof_xi_joint+1:end);
-    q_rho = q_rho(dof_xi_joint+1:end);
-    qd_rho = qd_rho(dof_xi_joint+1:end);
+    q_rho = q_rho(dof_rho_joint+1:end);
+    qd_rho = qd_rho(dof_rho_joint+1:end);
 
     gi = Tr.Link.gi;
     g_here = g_here*gi;
@@ -112,6 +111,7 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
     
     J_here_rho = J_rho(1, :);
     
+    %at X=0
     g(1:4, :) = g_here;
     J_xi(1:6, :) = J_here_xi;
     Jd_xi(1:6, :) = Jd_here_xi;
@@ -130,12 +130,12 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
     nip = Tr.Twists(2).nip;
 
     % todo: modify sorosim linkage.
-    K_rho = Tr.findK_rho_part();
+    K_rho = Tr.K_rho_part;
 
     for ii = 2:nip
         H = (Xs(ii) - Xs(ii-1)) *ld;
 
-        xi_Z1here = [0 0 0 1 0 0]';
+        xi_Z1here = [0 0 0 1 0 0]'; %modify later to include xi_star
         xi_Z2here = [0 0 0 1 0 0]';
         
         B_Z1here = Tr.Twists(2).B_Z1(6*(ii-2)+1:6*(ii-1),:);
@@ -177,7 +177,7 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
         %updating rho, Jacobian, Jacobian_prime, rho_dot
         if ndof_rho > 0
             J_rho_here = J_rho(dof_joint_rho+ii,:);
-            rho_here = rho_star(ii) + J_rho_here*q_rho;
+            rho_here = rho_star(ii) + J_rho_here*q_rho; %J is Phi
             rhod_here = J_rho(ii,:)*qd_rho;
         else
             rho_here = 1;
@@ -191,6 +191,7 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
 
         %integrals evaluation
         if Ws(ii)>0
+
             W_here = Ws(ii);
             Ms_here = Ms(6*(ii-1)+1:6*ii,:);
             I11 = Ms_here(2, 2);
@@ -223,7 +224,7 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
     Bq_rho = 0;
 
     if Tr.Damped
-        D_xi = Tr.D;
+        D_xi = Tr.D_xi;
         D_xi_bar = Tr.D_xi_bar;
         D_rho = Tr.D_rho;
         D_rho_bar = Tr.D_rho_bar;
@@ -238,10 +239,10 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
     K_xi_bar = Tr.K_xi_bar;
     qdd_xi = M_xi\(Bq_xi*uqt_xi+F_xi-K_xi*q_xi-(C_xi+D_xi)*qd_xi-...
             K_xi_bar*q_rho - D_xi_bar*qd_rho);
-    ydot_xi = [qd_xi;qdd_xi];
+    % ydot = [qd_xi;qdd_xi];
 
     if ndof_rho+dof_rho_joint == 0
-        ydot_rho = zeros(ndof_rho+dof_rho_joint,1);
+        ydot = [qd_xi; zeros(ndof_rho+dof_rho_joint,1); qdd_xi; zeros(ndof_rho+dof_rho_joint,1)];
         return
     end
 
@@ -250,5 +251,5 @@ function [ydot_xi, ydot_rho] = derivatives(Tr, t, qqd_xi, qqd_rho, uqt_xi, uqt_r
 
     qdd_rho = M_rho\(Bq_rho*uqt_rho+F_rho-K_rho*q_rho-D_rho*qd_rho-...
                     K_rho_bar*q_xi-D_rho_bar*qd_xi);
-    ydot_rho = [qd_rho;qdd_rho];
+    ydot = [qd_xi;qd_rho;qdd_xi;qdd_rho];
 end
