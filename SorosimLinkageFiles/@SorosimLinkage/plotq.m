@@ -35,9 +35,9 @@ function fh = plotq(Tr, q_xi, q_rho)
     axis equal
     grid on
     hold on
-    xlabel('X (m)')
-    ylabel('Y (m)')
-    zlabel('Z (m)')
+    xlabel('S (m)')
+    ylabel('X1 (m)')
+    zlabel('X2 (m)')
 
     axis([PlottingParameters.X_lim PlottingParameters.Y_lim PlottingParameters.Z_lim])
 
