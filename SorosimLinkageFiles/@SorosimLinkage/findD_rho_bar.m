@@ -6,7 +6,7 @@ function D_rho_bar = findD_rho_bar(Tr)
 
     % joint
     dof_joint_xi = Tr.Twists(1).dof_xi;
-    dof_joint_rho = Tr.Twists(2).dof_rho;
+    dof_joint_rho = Tr.Twists(1).dof_rho;
     D_rho_bar(1:dof_joint_rho, 1:dof_joint_xi) = zeros(dof_joint_rho, dof_joint_xi);
 
     % soft body
@@ -24,9 +24,8 @@ function D_rho_bar = findD_rho_bar(Tr)
     for ii=1:nip
         if Ws(ii)>0
             gamma_here = gamma(ii);
-            psi = zeros(6, ndof_xi);
-            psi(4, :) = ones(1, ndof_xi);
-            psi = psi * phi_xi((ii-1)*6+1:ii*6,:);
+            phi_xi_here = phi_xi((ii-1)*6+1:ii*6,:);
+            psi = phi_xi_here(4,:);
             Dtemp = Dtemp + ld*Ws(ii)*phi_rho(ii,:)'*gamma_here*psi;
         end
     end

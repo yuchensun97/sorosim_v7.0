@@ -7,7 +7,7 @@ function D_xi_bar = findD_xi_bar(Tr)
 
     % joint
     dof_joint_xi = Tr.Twists(1).dof_xi;
-    dof_joint_rho = Tr.Twists(2).dof_rho;
+    dof_joint_rho = Tr.Twists(1).dof_rho;
     D_xi_bar(1:dof_joint_xi, 1:dof_joint_rho) = zeros(dof_joint_xi, dof_joint_rho);
 
     % soft body
