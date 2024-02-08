@@ -129,7 +129,7 @@ classdef SorosimLink
                 Li.Poi = 0.5;
                 Li.G = Li.E/(2*(1+Li.Poi));
                 Li.Rho0 = 1000;
-                Li.Eta = 1e-3;
+                Li.Eta = 1e4;
                 Li.color = rand(1,3);
                 Li.n_l = 25;
                 Li.n_r = 50;
