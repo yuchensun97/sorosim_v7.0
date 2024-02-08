@@ -13,5 +13,6 @@
     "motion": [1, 1, 1, 1, 1, 1],
     "motion_order": [3, 3, 3, 2, 2, 3],
     "inflation": 1,
-    "inflation_order": 3
+    "inflation_order": 3,
+    "basisType": "hermite"
 }

@@ -49,10 +49,11 @@ classdef SorosimTwist
         % TODO: handle multiple constructors
         function T = SorosimTwist(varargin)
             %SorosimTwist Constructor
-            if nargin == 3
+            if nargin == 4
                 link = varargin{1};
                 B_xi_in = varargin{2};
                 B_rho_in = varargin{3};
+                basisType = varargin{4};
                 %   link: current soft link
                 %   B_xi_in: (6x2) array specifying the allowable DoFs and oder of a soft piece.
                 %         1st column: 1 if allowed, 0 if not
@@ -106,21 +107,40 @@ classdef SorosimTwist
                 Bh_xi = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);	
 
                 % for inflation ratio
-                dof_rho = sum(B_rho_dof.*(B_rho_odr+1));
-
-                B_rho = zeros(nip, dof_rho);
-                X = Xs(1);
-                B_rho(1, :) = Phi_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
-                B_rho_prime(1, :) = Phi_Prime_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
-                for ii=2:nip
-                    X = Xs(ii);
-                    B_rho(ii, :) = Phi_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
-                    B_rho_prime(ii, :) = Phi_Prime_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
+                switch basisType
+                    case 'legendre'
+                        dof_rho = sum(B_rho_dof.*(B_rho_odr+1));
+                        B_rho = zeros(nip, dof_rho);
+                        X = Xs(1);
+                        B_rho(1, :) = Phi_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
+                        B_rho_prime(1, :) = Phi_Prime_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
+                        for ii=2:nip
+                            X = Xs(ii);
+                            B_rho(ii, :) = Phi_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
+                            B_rho_prime(ii, :) = Phi_Prime_Rho_LegendrePolynomial(X, B_rho_dof, B_rho_odr);
+                        end
+                        file = 'Phi_Rho_LegendrePolynomial';
+                        file_prime = 'Phi_Prime_Rho_LegendrePolynomial';
+                        Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
+                        Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
+                    case 'hermite'
+                        dof_rho = sum(B_rho_dof.*(2*B_rho_odr));
+                        B_rho = zeros(nip, dof_rho);
+                        X = Xs(1);
+                        B_rho(1, :) = Phi_Rho_Hermitian(X, B_rho_dof, B_rho_odr);
+                        B_rho_prime(1, :) = Phi_Prime_Rho_Hermitian(X, B_rho_dof, B_rho_odr);
+                        for ii=2:nip
+                            X = Xs(ii);
+                            B_rho(ii, :) = Phi_Rho_Hermitian(X, B_rho_dof, B_rho_odr);
+                            B_rho_prime(ii, :) = Phi_Prime_Rho_Hermitian(X, B_rho_dof, B_rho_odr);
+                        end
+                        file = 'Phi_Rho_Hermitian';
+                        file_prime = 'Phi_Prime_Rho_Hermitian';
+                        Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
+                        Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
+                    otherwise
+                        error("Invalid basis type. Must be either 'legendre' or 'hermite'.")
                 end
-                file = 'Phi_Rho_LegendrePolynomial';
-                file_prime = 'Phi_Prime_Rho_LegendrePolynomial';
-                Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
-                Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
 
                 % initial position, simpilified to the undeformed position
                 xi_star = zeros(6*nip, 4); % precomputation at all gauss and zannah guess points

@@ -26,6 +26,9 @@ classdef SorosimLink
         B_xi       %motions allowed and their order, (6x2)
         B_rho      %allowable inflation and its order, (1x2)
 
+        %basis Properties
+        basisType  %basis type for rho
+
         %Plot Properties
         color      %color of the link (random by default)
         n_l        %number of cross sections per link
@@ -92,8 +95,12 @@ classdef SorosimLink
                 if data.inflation_order <= 0
                     error('inflation_order must be positive')
                 end
+                if ~isstring(data.basisType)
+                    error('basisType must be a string')
+                end
 
                 %assign values
+                Li.basisType = data.basisType;
                 Li.L = data.length;
                 r_base = data.base_radius;
                 r_tip = data.tip_radius;
@@ -131,6 +138,7 @@ classdef SorosimLink
                 Li.B_xi = [1 1 1 1 1 1;
                            0 0 0 0 0 0]';
                 Li.B_rho = [0, 0];
+                Li.basisType = 'hermite';
             else
                 error('Wrong number of input arguments')
             end

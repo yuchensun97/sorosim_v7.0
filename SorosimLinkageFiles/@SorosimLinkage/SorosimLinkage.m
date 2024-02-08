@@ -74,7 +74,7 @@ classdef SorosimLinkage
             VTwists(1).dof_xi = 0;
             VTwists(1).dof_rho = 0;
 
-            VTwists(2) = SorosimTwist(Link, Link.B_xi, Link.B_rho);
+            VTwists(2) = SorosimTwist(Link, Link.B_xi, Link.B_rho, Link.basisType);
             Tr.Twists = VTwists;
             Tr.ndof_xi = VTwists(1).dof_xi + VTwists(2).dof_xi;
             Tr.ndof_rho =VTwists(1).dof_rho + VTwists(2).dof_rho;
