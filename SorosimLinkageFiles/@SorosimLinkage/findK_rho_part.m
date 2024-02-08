@@ -10,7 +10,7 @@ function K_rho_part = findK_rho_part(Tr)
     % soft body
     ndof = ndof - dof_joint;
     ld = Tr.Link.L;
-    Gs = Tr.Twists(2).Gs;
+    Es = Tr.Twists(2).Es;
     Ws = Tr.Twists(2).Ws;
     sigma_rho = Tr.Twists(2).sigma_rho;
     nip = Tr.Twists(2).nip;
@@ -21,7 +21,7 @@ function K_rho_part = findK_rho_part(Tr)
 
     for ii=1:nip
         if Ws(ii)>0
-            Es_here = Gs((ii-1)*6+1:ii*6,:);
+            Es_here = Es((ii-1)*6+1:ii*6,:);
             sigma_here = Es_here(1,1);
             sigma_rho_here = sigma_rho(ii);
             Ktemp = Ktemp+ld*Ws(ii)*phi_p(ii,:)'*sigma_here*phi_p(ii,:)-...

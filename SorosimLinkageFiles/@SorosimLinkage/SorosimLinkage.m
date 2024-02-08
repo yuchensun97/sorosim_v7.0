@@ -31,6 +31,9 @@ classdef SorosimLinkage
         D_rho_bar   %Generalized damping matrix for the strain term in the lateral equation
         M_rho       %Generalized mass matrix for the lateral equation.
 
+        % actuation
+        Actuated   %1 if the soft links are actuated, 0 if not
+
         %% Plotting Properties
         PlotParameters    %struct containing plotting parameters
         %%%PlotParameters is a struct with following elements%%%
@@ -82,7 +85,7 @@ classdef SorosimLinkage
 
             %% External Force Properties
             Tr.Gravity = true;
-            Tr.G = [0 0 -9.81];
+            Tr.G = [0 0 0 0 0 -9.81]';
 
             %% Constant coefficients
             % stiffness
@@ -109,6 +112,9 @@ classdef SorosimLinkage
             % mass
             M_rho = findM_rho(Tr);
             Tr.M_rho = M_rho;
+
+            % Actuation
+            Tr.Actuated = false;
 
             %% Plot parameters
             PlotParameters.Lscale         = Lscale;

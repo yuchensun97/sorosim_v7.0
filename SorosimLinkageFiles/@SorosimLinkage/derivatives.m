@@ -138,8 +138,8 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho)
         xi_Z1here = [0 0 0 1 0 0]'; %modify later to include xi_star
         xi_Z2here = [0 0 0 1 0 0]';
         
-        B_Z1here = Tr.Twists(2).B_Z1(6*(ii-2)+1:6*(ii-1),:);
-        B_Z2here = Tr.Twists(2).B_Z2(6*(ii-2)+1:6*(ii-1),:);
+        B_Z1here = Tr.Twists(2).B_Z1_xi(6*(ii-2)+1:6*(ii-1),:);
+        B_Z2here = Tr.Twists(2).B_Z2_xi(6*(ii-2)+1:6*(ii-1),:);
 
         xi_Z1here = B_Z1here * q_here_xi + xi_Z1here;
         xi_Z2here = B_Z2here * q_here_xi + xi_Z2here;
@@ -151,12 +151,12 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho)
                       ((sqrt(3)*H^2)/12)*(ad_xi_Z1here*B_Z2here-dinamico_adj(xi_Z2here)*B_Z1here);
 
         Gammadd_Z4_dq_here = ((sqrt(3)*H^2)/6)*dinamico_adj(xid_Z1here)*B_Z2here;
-        Gammad_here = BGamma_here * qd_here;
+        Gammad_here = BGamma_here * qd_here_xi;
 
         Gamma_here = (H/2)*(xi_Z1here+xi_Z2here)+...
                         ((sqrt(3)*H^2)/12)*ad_xi_Z1here*xi_Z2here;
 
-        [gh, TGamma_here, TGammad_here] = variable_expmap_gTg_mex(Gamma_here, Gammad_here);
+        [gh, TGamma_here, TGammad_here] = variable_expmap_gTgTgd_mex(Gamma_here, Gammad_here);
         TBGamma_here = zeros(6, ndof_xi+dof_xi_joint);
         TBGamma_here(:, dof_xi_joint+1:end) = TGamma_here*BGamma_here;
         TBGammad_here = dinamico_adj(eta_here)*TBGamma_here+TGammad_here*BGamma_here+...
@@ -176,7 +176,7 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho)
 
         %updating rho, Jacobian, Jacobian_prime, rho_dot
         if ndof_rho > 0
-            J_rho_here = J_rho(dof_joint_rho+ii,:);
+            J_rho_here = J_rho(dof_rho_joint+ii,:);
             rho_here = rho_star(ii) + J_rho_here*q_rho; %J is Phi
             rhod_here = J_rho(ii,:)*qd_rho;
         else
@@ -212,7 +212,7 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho)
             end
             Qtemp = ld*W_here*J_here_xi'*Ms_here;
             M_xi = M_xi + Qtemp*J_here_xi;
-            C_xi = C_xi + Qtemp*Jd_here +...
+            C_xi = C_xi + Qtemp*Jd_here_xi +...
                    ld*W_here*J_here_xi'*Ms_dot_here*J_here_xi+...
                    ld*W_here*J_here_xi'*dinamico_coadj(eta_here)*Ms_here*J_here_xi;
             K_rho = K_rho - ld*W_here*J_rho_here'*MI_here*J_rho_here;% last term of K_rho
