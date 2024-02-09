@@ -21,12 +21,12 @@ function [t, qqd] = dynamics(Tr, qqd0, odetype, dt, tmax)
 
     switch odetype
         case 'ode45'
-            options = odeset('RelTol',1e-3,'AbsTol',1e-6);
+            options = odeset('RelTol',1e-3);
             tic
             [t, qqd] = ode45(@(t,qqd)Tr.derivatives(t, qqd,uqt_xi, uqt_rho),0:dt:tmax,qqd0,options);
             toc
         case 'ode23'
-            options = odeset('RelTol',1e-3,'AbsTol',1e-6);
+            options = odeset('RelTol',1e-3);
             tic
             [t, qqd] = ode23(@(t,qqd)Tr.derivatives(t, qqd,uqt_xi, uqt_rho),0:dt:tmax,qqd0,options);
             toc

@@ -13,7 +13,7 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho)
     end
     if cputime-tlast>0.5
         tlast=cputime;
-        disp(['t = ', num2str(t)]);
+        disp(t);
     end
 
     density = Tr.Link.Rho0;
@@ -182,7 +182,7 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho)
         else
             rho_here = 1;
             rhod_here = 0;
-            J_rho_here = zeros(1, dof_joint_rho+ndof_rho);
+            J_rho_here = zeros(1, dof_rho_joint+ndof_rho);
         end
 
         rho(ii) = rho_here;
