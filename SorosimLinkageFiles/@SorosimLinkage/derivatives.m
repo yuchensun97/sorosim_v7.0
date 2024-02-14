@@ -156,7 +156,7 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho)
         Gamma_here = (H/2)*(xi_Z1here+xi_Z2here)+...
                         ((sqrt(3)*H^2)/12)*ad_xi_Z1here*xi_Z2here;
 
-        [gh, TGamma_here, TGammad_here] = variable_expmap_gTgTgd_mex(Gamma_here, Gammad_here);
+        [gh, TGamma_here, TGammad_here] = variable_expmap_gTgTgd(Gamma_here, Gammad_here);
         TBGamma_here = zeros(6, ndof_xi+dof_xi_joint);
         TBGamma_here(:, dof_xi_joint+1:end) = TGamma_here*BGamma_here;
         TBGammad_here = dinamico_adj(eta_here)*TBGamma_here+TGammad_here*BGamma_here+...

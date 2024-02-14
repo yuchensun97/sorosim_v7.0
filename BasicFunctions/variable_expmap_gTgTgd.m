@@ -1,4 +1,4 @@
-function [g,Tg,Tgd]=variable_expmap_gTgTgd(Gamma,Gammad)
+function [g,Tg,Tgd]=variable_expmap_gTgTgd(Gamma,Gammad) %#codegen
 
 k      = Gamma(1:3);
 theta  = norm(k);
