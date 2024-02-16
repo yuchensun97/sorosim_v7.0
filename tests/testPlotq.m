@@ -1,6 +1,7 @@
 clc;
 clear;
-rng(23);
+close all;
+% rng(23);
 
 % initialization
 B_xi = cell(8);
@@ -19,18 +20,21 @@ B_xi{8} = B_xi{4};
 
 B_rho = cell(8);
 for i=1:4
-    B_rho{i} = [0 0];
+    B_rho{i} = [0 1];
 end
-B_rho{5} = [1 0];
+B_rho{5} = [1 3];
 B_rho{6} = [1 1];
 B_rho{7} = [1 2];
 B_rho{8} = [1 2];
+rho_all = cell(4,1);
 
-for i=1:4
+for i=5:8
     S = createLink(B_xi{i}, B_rho{i});
     [L, q_xi, q_rho] = createLinkage(S);
+    [~, rho] = L.FwdKinematics(q_xi, q_rho);
+    rho_all{i-4} = rho;
 %     figure(i);
-    f = L.plotq(q_xi, q_rho);
+%     f = L.plotq(q_xi, q_rho);
 %     filename = sprintf('./figures/plotq_%d.pdf', i);
 %     saveas(gcf, filename);
 %     close(f);
