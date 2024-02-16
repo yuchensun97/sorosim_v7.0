@@ -17,7 +17,7 @@ classdef SorosimLinkage
 
         %External Force Properties
         Gravity     %logical 1 if gravity is present, 0 if not. (default value: 1)
-        G           %gravity vector [gx gy gz] (default value: [0 0 -9.81])
+        G           %gravity vector (default value: [0 0 0 0 0 -9.81])
 
         %Pre-computed elastic Properties
         Damped      %1 if the soft links are elastically damped 0 if not
@@ -32,7 +32,10 @@ classdef SorosimLinkage
         M_rho       %Generalized mass matrix for the lateral equation.
 
         % actuation
-        Actuated   %1 if the soft links are actuated, 0 if not
+        Actuated    %1 if the soft links are actuated, 0 if not
+
+        % point force
+        PointForce  %1 if the soft links are actuated, 0 if not
 
         %% Plotting Properties
         PlotParameters    %struct containing plotting parameters
@@ -84,7 +87,7 @@ classdef SorosimLinkage
             Tr.nsig = VTwists(2).nip;
 
             %% External Force Properties
-            Tr.Gravity = true;
+            Tr.Gravity = false;
             Tr.G = [0 0 0 0 0 -9.81]';
 
             %% Constant coefficients
@@ -115,6 +118,9 @@ classdef SorosimLinkage
 
             % Actuation
             Tr.Actuated = false;
+
+            % point force
+            Tr.PointForce = true;
 
             %% Plot parameters
             PlotParameters.Lscale         = Lscale;

@@ -16,8 +16,6 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
         disp(t);
     end
 
-    density = Tr.Link.Rho0;
-
     ndof_xi = Tr.ndof_xi;
     ndof_rho = Tr.ndof_rho;
     q_xi = qqd(1:ndof_xi);
@@ -199,7 +197,7 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
             omega_1 = eta_here(2);
             omega_2 = eta_here(3);
             omega_3 = eta_here(1);
-            MI_here = density*(I11*(omega_2^2+omega_3^2)+I22*(omega_1^2+omega_3^2));
+            MI_here = I11*(omega_2^2+omega_3^2)+I22*(omega_1^2+omega_3^2);
             Ms_here(1:3,1:3) = rho_here^4 * Ms_here(1:3, 1:3);
             Ms_here(4:6,4:6) = rho_here^2 * Ms_here(4:6, 4:6);
             Ms_dot_here = Ms_here;
@@ -222,6 +220,10 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
 
     Bq_xi = 0;
     Bq_rho = 0;
+
+    if Tr.PointForce
+        F_xi = F_xi + J_xi(end-5:end,:)'*[0 0 0 -1 0 0]';
+    end
 
     if Tr.Damped
         D_xi = Tr.D_xi;

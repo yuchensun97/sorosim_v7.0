@@ -11,7 +11,7 @@ B_rho = [1 1];
 L = createLinkage(B_xi, B_rho);
 ndof_xi = L.ndof_xi;
 ndof_rho = L.ndof_rho;
-qqd = rand(2*(ndof_rho+ndof_xi),1);
+qqd = zeros(2*(ndof_rho+ndof_xi),1);
 dqdt = L.derivatives(0,qqd,0,0);
 
 function L = createLinkage(B_xi, B_rho)
