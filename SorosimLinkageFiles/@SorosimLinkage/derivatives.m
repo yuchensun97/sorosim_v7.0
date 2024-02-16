@@ -1,4 +1,4 @@
-function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho)
+function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
 % compute the time derivatives of q_xi and q_rho
 % t is the time
 % qqd = [q_xi, q_rho, qd_xi, qd_rho]

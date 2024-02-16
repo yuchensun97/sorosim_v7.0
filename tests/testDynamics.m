@@ -1,13 +1,19 @@
 clc;
 clear;
+rng(5);
 
 % initialization
 B_xi = [1 1 1 1 1 1;
         0 1 1 2 1 0]';
 
 B_rho = [0 1];
+d = load('tests/testDerivatives.mat');
+qqd = d.qqd;
 
 L = createLinkage(B_xi, B_rho);
+qqd(1:5) = qqd(1:5)/L.Link.L;
+qqd(12:16) = qqd(12:16)/L.Link.L;
+dqdt = L.derivatives(0,qqd,0,0);
 % [t, qqd] = L.dynamics();
 % ndof_xi = L.ndof_xi;
 % ndof_rho = L.ndof_rho;
@@ -29,7 +35,6 @@ L = createLinkage(B_xi, B_rho);
 
 function L = createLinkage(B_xi, B_rho)
     S = SorosimLink();
-    S.L = 1;
     S.B_xi = B_xi;
     S.B_rho = B_rho;
     L = SorosimLinkage(S);
