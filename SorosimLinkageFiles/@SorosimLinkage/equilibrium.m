@@ -108,7 +108,7 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
         Gamma_here = (H/2)*(xi_Z1here+xi_Z2here)+...
                         ((sqrt(3)*H^2)/12)*ad_xi_Z1here*xi_Z2here;
 
-        [gh, TGamma_here] = variable_expmap_gTg(Gamma_here, Gammad_here);
+        [gh, TGamma_here] = variable_expmap_gTg(Gamma_here);
         TBGamma_here = zeros(6, ndof_xi+dof_xi_joint);
         TBGamma_here(:, dof_xi_joint+1:end) = TGamma_here*BGamma_here;
 
@@ -155,6 +155,6 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
     K_rho = Tr.K_rho_part;
     K_rho_bar = Tr.K_rho_bar;
     E_rho = K_rho*q_rho+K_rho_bar*q_xi-Bq_rho*uqt_rho;
-    err = [E_xi;E_rho];
+    err = [E_xi;E_rho]*1e7;
 end
     
