@@ -1,7 +1,7 @@
 function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
     % compute the time derivatives of q_xi and q_rho
     % t is the time
-    % qu = [q_xi, q_rho, qd_xi, qd_rho]
+    % qu = [q_xi, q_rho]
     % uqt_xi = TODO: fill me in future
     % uqt_rho = TODO: fill me in future
     % returns:
@@ -145,7 +145,14 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
     Bq_rho = 0;
 
     if Tr.PointForce
-        F_xi = F_xi + J_xi(end-5:end,:)'*[0 0 0 -1 0 0]';
+        % hard code
+        % map point force to local frame
+        Fp_vec = [0 0 0 -1 0 0]';
+        g_here = g(end-3:end,:);
+        g_here(1:3,4) = zeros(3,1);
+        Ad_g_here_inv = dinamico_Adjoint(ginv(g_here));
+        Fp_vec = Ad_g_here_inv*Fp_vec;
+        F_xi = F_xi + J_xi(end-5:end,:)'*Fp_vec;
     end
 
     K_xi = Tr.K_xi;
