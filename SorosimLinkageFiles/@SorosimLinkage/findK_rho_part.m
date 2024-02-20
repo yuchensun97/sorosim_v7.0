@@ -24,7 +24,7 @@ function K_rho_part = findK_rho_part(Tr)
             Es_here = Es((ii-1)*6+1:ii*6,:);
             sigma_here = Es_here(1,1);
             sigma_rho_here = sigma_rho(ii);
-            Ktemp = Ktemp+ld*Ws(ii)*phi_p(ii,:)'*sigma_here*phi_p(ii,:)-...
+            Ktemp = Ktemp+ld*Ws(ii)*phi_p(ii,:)'*sigma_here*phi_p(ii,:)+...
                     ld*Ws(ii)*phi(ii,:)'*sigma_rho_here*phi(ii,:);
         end
     end
