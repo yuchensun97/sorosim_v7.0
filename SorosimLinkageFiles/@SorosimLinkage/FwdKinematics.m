@@ -69,14 +69,12 @@ function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
     B_rho = Tr.Twists(2).B_rho;
 
     for ii = 2:nsig
-        H = Xs(ii) - Xs(ii-1);
+        H = Lscale*(Xs(ii) - Xs(ii-1));
 
         %% update g
         if Tr.Z_order==4
             xi_Z1here = xi_star(6*(ii-2)+1:6*(ii-1), 2);
             xi_Z2here = xi_star(6*(ii-2)+1:6*(ii-1), 3);
-            xi_Z1here(1:3) = xi_Z1here(1:3)*Lscale; % why scaling
-            xi_Z2here(1:3) = xi_Z2here(1:3)*Lscale;
             if ndof_xi > 0
                 B_Z1here = B_Z1(6*(ii-2)+1:6*(ii-1), :);
                 B_Z2here = B_Z2(6*(ii-2)+1:6*(ii-1), :);
@@ -88,14 +86,12 @@ function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
                          ((sqrt(3)*H^2)/12)*ad_xi_Z1here*xi_Z2here;
         else % Z_order==2
             xi_Zhere = xi_star(6*(ii-2)+1:6*(ii-1), 4);
-            xi_Zhere(1:3) = xi_Zhere(1:3)*Lscale; %scaling
             if ndof_xi > 0
                 B_Zhere = B_Z(6*(ii-2)+1:6*(ii-1), :);
                 xi_Zhere = B_Zhere*q_xi + xi_Zhere;
             end
             Gamma_here = H*xi_Zhere;
         end
-        Gamma_here(4:6) = Gamma_here(4:6)*Lscale;
         gh = variable_expmap_g(Gamma_here);
 
         g_here = g_here*gh;
@@ -103,7 +99,7 @@ function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
 
         %% update rho
         if ndof_rho > 0
-            rho_here = rho_star(ii) + B_rho(ii,:)*q_rho;
+            rho_here = rho_star(ii) + B_rho(ii,:);
         else % if ndof_rho ==0, then rho is always 1
             rho_here = 1;
         end

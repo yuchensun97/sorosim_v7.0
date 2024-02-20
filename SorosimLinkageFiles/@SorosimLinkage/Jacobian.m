@@ -73,17 +73,14 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi)
 
     J_xi(1:6, :) = J_xi_here;
 
-    g_here(1:3, 4) = g_here(1:3, 4)/Lscale;
-    J_xi_here(4:6, :) = J_xi_here(4:6, :)/Lscale;
-
+    % for xi_star = [0 0 0 1 0 0]' is correct
+    % need to be modified later
     for ii=2:nsig
-        H = Xs(ii) - Xs(ii-1);
+        H = Lscale*(Xs(ii) - Xs(ii-1));
         % xi
         if Tr.Z_order == 4
             xi_Z1here = xi_star(6*(ii-2)+1:6*(ii-1), 2);
             xi_Z2here = xi_star(6*(ii-2)+1:6*(ii-1), 3);
-            xi_Z1here(1:3) = xi_Z1here(1:3) * Lscale;
-            xi_Z2here(1:3) = xi_Z2here(1:3) * Lscale;
             
             B_Z1here = B_Z1(6*(ii-2)+1:6*(ii-1), :);
             B_Z2here = B_Z2(6*(ii-2)+1:6*(ii-1), :);
@@ -99,7 +96,6 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi)
                          ((sqrt(3)*H^2)/12)*ad_xi_Z1here*xi_Z2here;
         else    % Z_order == 2
             xi_Zhere = xi_star(6*(ii-2)+1:6*(ii-1), 4);
-            xi_Zhere(1:3) = xi_Zhere(1:3) * Lscale;
             B_Zhere = B_Z(6*(ii-2)+1:6*(ii-1), :);
             if ndof_xi > 0
                 xi_Zhere = B_Zhere*q_xi + xi_Zhere;

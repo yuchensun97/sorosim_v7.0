@@ -126,8 +126,6 @@ function fh = plotq(Tr, q_xi, q_rho)
     y_pre = y_here;
     z_pre = z_here;
 
-    Lscale = L;
-
     for ii=1:n_l-1
         r = r_fn(Xs(ii+1));
         theta = linspace(0, 2*pi, n_r);
@@ -144,14 +142,12 @@ function fh = plotq(Tr, q_xi, q_rho)
         X = Xs(ii);
         X_Z = X + Z;
 
-        xi_Zhere = xi_starfn(X_Z);
-        xi_Zhere(1:3) = xi_Zhere(1:3) * L;
+        xi_Zhere = [0 0 0 1 0 0]';
 
         if dof_xi~=0
             xi_Zhere = Bh_xi(X_Z, B_xi_dof, B_xi_odr)*q_xi + xi_Zhere;
         end
-        Gamma_here = H * xi_Zhere;
-        Gamma_here(4:6) = Gamma_here(4:6) * Lscale;
+        Gamma_here = H * L * xi_Zhere;
         gh = variable_expmap_g(Gamma_here);
         g_here = g_here*gh;
         
