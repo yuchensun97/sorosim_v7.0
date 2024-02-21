@@ -138,6 +138,21 @@ classdef SorosimTwist
                         file_prime = 'Phi_Prime_Rho_Hermitian';
                         Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
                         Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
+                    case 'hermite full'
+                        dof_rho = sum(B_rho_dof.*(2*B_rho_odr+2));
+                        B_rho = zeros(nip, dof_rho);
+                        X = Xs(1);
+                        B_rho(1, :) = Phi_Rho_Hermitian_Full(X, B_rho_dof, B_rho_odr);
+                        B_rho_prime(1, :) = Phi_Prime_Rho_Hermitian_Full(X, B_rho_dof, B_rho_odr);
+                        for ii=2:nip
+                            X = Xs(ii);
+                            B_rho(ii, :) = Phi_Rho_Hermitian_Full(X, B_rho_dof, B_rho_odr);
+                            B_rho_prime(ii, :) = Phi_Prime_Rho_Hermitian_Full(X, B_rho_dof, B_rho_odr);
+                        end
+                        file = 'Phi_Rho_Hermitian_Full';
+                        file_prime = 'Phi_Prime_Rho_Hermitian_Full';
+                        Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
+                        Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
                     otherwise
                         error("Invalid basis type. Must be either 'legendre' or 'hermite'.")
                 end

@@ -52,13 +52,6 @@ function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
     q_xi = q_xi(dof_xi_joint+1:end);
     q_rho = q_rho(dof_rho_joint+1:end);
 
-    g = zeros(4*nsig, 4);
-    rho = zeros(nsig, 1);
-    g(1:4, :) = g_here;
-    rho(1) = rho_here;
-    Xs = Tr.Twists(2).Xs;
-    Lscale = Tr.Link.L;
-
     if Tr.Z_order==4
         B_Z1 = Tr.Twists(2).B_Z1_xi;
         B_Z2 = Tr.Twists(2).B_Z2_xi;
@@ -67,6 +60,14 @@ function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
     end
 
     B_rho = Tr.Twists(2).B_rho;
+
+    g = zeros(4*nsig, 4);
+    rho = zeros(nsig, 1);
+    g(1:4, :) = g_here;
+    rho_here = B_rho(1,:)*q_rho + rho_star(1);
+    rho(1) = rho_here;
+    Xs = Tr.Twists(2).Xs;
+    Lscale = Tr.Link.L;
 
     for ii = 2:nsig
         H = Lscale*(Xs(ii) - Xs(ii-1));
@@ -99,7 +100,7 @@ function [g, rho] = FwdKinematics(Tr, q_xi, q_rho)
 
         %% update rho
         if ndof_rho > 0
-            rho_here = rho_star(ii) + B_rho(ii,:);
+            rho_here = rho_star(ii) + B_rho(ii,:)*q_rho;
         else % if ndof_rho ==0, then rho is always 1
             rho_here = 1;
         end

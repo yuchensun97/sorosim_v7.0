@@ -17,12 +17,28 @@ ndof_rho = L.ndof_rho;
 q = L.statics(zeros(ndof_rho+ndof_xi,1));
 q_xi = q(1:ndof_xi,:);
 q_rho = q(ndof_xi+1:end,:);
-[~, rho] = L.FwdKinematics(q_xi, q_rho);
+[g,rho]=L.FwdKinematics(q_xi,q_rho);
+% f = L.plotq(q_xi, q_rho);
+
+% compute volume
+V = 0;
+np = length(rho)-1;
+for ii=1:np
+    rb = 0.02*rho(ii);
+    rt = 0.02*rho(ii+1);
+    h = g(4*ii+1,4)-g(4*(ii-1)+1,4);
+    V = V+tCone(rb, rt,h);
+end
 
 function L = createLinkage(B_xi, B_rho)
     S = SorosimLink();
-    S.L = 1;
+    S.basisType = 'hermite full';
+    S.L = 0.5;
     S.B_xi = B_xi;
     S.B_rho = B_rho;
     L = SorosimLinkage(S);
+end
+
+function V = tCone(rb, rt, h)
+    V = pi * h * (rb^2+rb*rt+rb^2)/3;
 end

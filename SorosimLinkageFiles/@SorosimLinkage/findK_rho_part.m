@@ -28,5 +28,7 @@ function K_rho_part = findK_rho_part(Tr)
                     ld*Ws(ii)*phi(ii,:)'*sigma_rho_here*phi(ii,:);
         end
     end
+    %Todo: check this
+    Ktemp = Ktemp-sigma_here*(phi(end,:)'*phi_p(end,:)-phi(1,:)'*phi_p(1,:));
     K_rho_part(1+dof_joint:end, 1+dof_joint:end) = Ktemp;
 end
