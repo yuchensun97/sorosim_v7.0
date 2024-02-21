@@ -111,7 +111,6 @@ function [J_xi, J_rho] = Jacobian(Tr, q_xi)
         g_here = g_here*gh;
         J_xi_here = dinamico_Adjoint(ginv(gh))*(J_xi_here + TBGamma_here);
         J_heret = J_xi_here;
-        J_heret(4:6, :) = J_heret(4:6, :)*Lscale;
         J_xi(6*(ii-1)+1:6*ii, :) = J_heret;
     end
     J_rho(:, 1+dof_rho_joint:end) = B_rho;

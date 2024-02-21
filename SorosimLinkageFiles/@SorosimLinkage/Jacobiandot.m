@@ -70,18 +70,13 @@ function Jd = Jacobiandot(Tr, q_xi, qd_xi)
 
     %scaling
     Lscale = L;
-    g_here(1:3, 4) = g_here(1:3, 4)/Lscale;
-    Jd_here(4:6, :) = Jd_here(4:6, :)/Lscale;
-    eta_here(4:6) = eta_here(4:6)/Lscale;
 
     for ii = 2:nip
-        H = Xs(ii) - Xs(ii-1);
+        H = L*(Xs(ii) - Xs(ii-1));
 
         if Tr.Z_order==4
             xi_Z1here = xi_star(6*(ii-2)+1:6*(ii-1), 2);
             xi_Z2here = xi_star(6*(ii-2)+1:6*(ii-1), 3);
-            xi_Z1here(1:3) = xi_Z1here(1:3)*Lscale;
-            xi_Z2here(1:3) = xi_Z2here(1:3)*Lscale;
 
             B_Z1here = Tr.Twists(2).B_Z1_xi(6*(ii-2)+1:6*(ii-1), :);
             B_Z2here = Tr.Twists(2).B_Z2_xi(6*(ii-2)+1:6*(ii-1), :);
@@ -109,7 +104,6 @@ function Jd = Jacobiandot(Tr, q_xi, qd_xi)
                          ((sqrt(3)*H^2)/12)*ad_xi_Z1here*xi_Z2here;
         else % order 2
             xi_Zhere = xi_star(6*(ii-2)+1:6*(ii-1), 4);
-            xi_Zhere(1:3) = xi_Zhere(1:3)*Lscale;
 
             B_Zhere = Tr.Twists(2).B_Z_xi(6*(ii-2)+1:6*(ii-1), :);
 
@@ -141,7 +135,6 @@ function Jd = Jacobiandot(Tr, q_xi, qd_xi)
         eta_here = Ad_gh_inv*(eta_here + TBGamma_here(:, dof_joint+1:end)*qd_here);
 
         Jd_heret = Jd_here;
-        Jd_heret(4:6,:) = Jd_heret(4:6,:)*Lscale;
         Jd(6*(ii-1)+1:6*ii, :) = Jd_heret;
     end
 

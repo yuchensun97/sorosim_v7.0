@@ -36,6 +36,10 @@ classdef SorosimLinkage
 
         % point force
         PointForce  %1 if the soft links are actuated, 0 if not
+        LocalForce  %1 if point force/moment is a local force, and 0 if it is wrt global frame
+        np          %number of point forces
+        Fp_loc      %cell, location of the point force/moment
+        Fp_vec      %cell, value of the point force/moment
 
         %% Plotting Properties
         PlotParameters    %struct containing plotting parameters
