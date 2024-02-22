@@ -139,7 +139,7 @@ classdef SorosimTwist
                         Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
                         Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
                     case 'hermite full'
-                        dof_rho = sum(B_rho_dof.*(2*B_rho_odr+2));
+                        dof_rho = sum(B_rho_dof.*(2*B_rho_odr));
                         B_rho = zeros(nip, dof_rho);
                         X = Xs(1);
                         B_rho(1, :) = Phi_Rho_Hermitian_Full(X, B_rho_dof, B_rho_odr);

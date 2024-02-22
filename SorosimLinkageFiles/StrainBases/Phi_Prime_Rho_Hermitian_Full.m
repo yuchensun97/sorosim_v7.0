@@ -33,4 +33,7 @@ function Phi_Prime_Rho = Phi_Prime_Rho_Hermitian_Full(X, Bdof, Bodr)
         k=k+2;
         a=a+w;
     end
+    Phi_Rho_1 = Phi_Prime_Rho(2:end-2);
+    Phi_Rho_2 = Phi_Prime_Rho(end);
+    Phi_Prime_Rho = [Phi_Rho_1 Phi_Rho_2];
 end
