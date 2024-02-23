@@ -6,9 +6,9 @@ Bdof = 1;
 Bodr = 2;
 % Remove the line that assigns an empty array to 'results'
 
-results = Phi_Rho_Hermitian_Full(X(1), Bdof, Bodr);
+results = Phi_Rho_Hermitian_robin(X(1), Bdof, Bodr);
 for i = 2:length(X)
-    result = Phi_Rho_Hermitian_Full(X(i), Bdof, Bodr);
+    result = Phi_Rho_Hermitian_robin(X(i), Bdof, Bodr);
     results = [results; result];
 end
 
@@ -26,7 +26,7 @@ end
 legend(legendInfo);
 
 % add title and labels
-title('Phi Rho Hermitian');
+title('Phi Rho robin');
 xlabel('X');
 ylabel('Phi Rho');
 
@@ -35,5 +35,5 @@ ylabel('Phi Rho');
 if ~exist('./figures', 'dir')
     mkdir('./figures');
 end
-exportgraphics(gcf, './figures/Phi_Rho_Hermitian_Full.pdf','ContentType','vector');
+exportgraphics(gcf, './figures/Phi_Rho_robin.pdf','ContentType','vector');
 

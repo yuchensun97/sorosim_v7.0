@@ -123,7 +123,7 @@ classdef SorosimTwist
                         file_prime = 'Phi_Prime_Rho_LegendrePolynomial';
                         Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
                         Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
-                    case 'hermite'
+                    case 'mixed'
                         dof_rho = sum(B_rho_dof.*(2*B_rho_odr));
                         B_rho = zeros(nip, dof_rho);
                         X = Xs(1);
@@ -138,23 +138,53 @@ classdef SorosimTwist
                         file_prime = 'Phi_Prime_Rho_Hermitian';
                         Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
                         Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
-                    case 'hermite full'
+                    case 'dirichlet'
                         dof_rho = sum(B_rho_dof.*(2*B_rho_odr));
                         B_rho = zeros(nip, dof_rho);
                         X = Xs(1);
-                        B_rho(1, :) = Phi_Rho_Hermitian_Full(X, B_rho_dof, B_rho_odr);
-                        B_rho_prime(1, :) = Phi_Prime_Rho_Hermitian_Full(X, B_rho_dof, B_rho_odr);
+                        B_rho(1, :) = Phi_Rho_Hermitian_dirichlet(X, B_rho_dof, B_rho_odr);
+                        B_rho_prime(1, :) = Phi_Prime_Rho_Hermitian_dirichlet(X, B_rho_dof, B_rho_odr);
                         for ii=2:nip
                             X = Xs(ii);
-                            B_rho(ii, :) = Phi_Rho_Hermitian_Full(X, B_rho_dof, B_rho_odr);
-                            B_rho_prime(ii, :) = Phi_Prime_Rho_Hermitian_Full(X, B_rho_dof, B_rho_odr);
+                            B_rho(ii, :) = Phi_Rho_Hermitian_dirichlet(X, B_rho_dof, B_rho_odr);
+                            B_rho_prime(ii, :) = Phi_Prime_Rho_Hermitian_dirichlet(X, B_rho_dof, B_rho_odr);
                         end
-                        file = 'Phi_Rho_Hermitian_Full';
-                        file_prime = 'Phi_Prime_Rho_Hermitian_Full';
+                        file = 'Phi_Rho_Hermitian_dirichlet';
+                        file_prime = 'Phi_Prime_Rho_Hermitian_dirichlet';
+                        Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
+                        Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
+                    case 'robin'
+                        dof_rho = sum(B_rho_dof.*(2*B_rho_odr+2));
+                        B_rho = zeros(nip, dof_rho);
+                        X = Xs(1);
+                        B_rho(1, :) = Phi_Rho_Hermitian_robin(X, B_rho_dof, B_rho_odr);
+                        B_rho_prime(1, :) = Phi_Prime_Rho_Hermitian_robin(X, B_rho_dof, B_rho_odr);
+                        for ii=2:nip
+                            X = Xs(ii);
+                            B_rho(ii, :) = Phi_Rho_Hermitian_robin(X, B_rho_dof, B_rho_odr);
+                            B_rho_prime(ii, :) = Phi_Prime_Rho_Hermitian_robin(X, B_rho_dof, B_rho_odr);
+                        end
+                        file = 'Phi_Rho_Hermitian_robin';
+                        file_prime = 'Phi_Prime_Rho_Hermitian_robin';
+                        Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
+                        Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
+                    case 'neumann'
+                        dof_rho = sum(B_rho_dof.*(2*B_rho_odr));
+                        B_rho = zeros(nip, dof_rho);
+                        X = Xs(1);
+                        B_rho(1, :) = Phi_Rho_Hermitian_neumann(X, B_rho_dof, B_rho_odr);
+                        B_rho_prime(1, :) = Phi_Prime_Rho_Hermitian_neumann(X, B_rho_dof, B_rho_odr);
+                        for ii=2:nip
+                            X = Xs(ii);
+                            B_rho(ii, :) = Phi_Rho_Hermitian_neumann(X, B_rho_dof, B_rho_odr);
+                            B_rho_prime(ii, :) = Phi_Prime_Rho_Hermitian_neumann(X, B_rho_dof, B_rho_odr);
+                        end
+                        file = 'Phi_Rho_Hermitian_neumann';
+                        file_prime = 'Phi_Prime_Rho_Hermitian_neumann';
                         Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
                         Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
                     otherwise
-                        error("Invalid basis type. Must be either 'legendre' or 'hermite'.")
+                        error("Invalid basis type. Must be 'legendre','mixed', 'dirichlet', 'robin', or 'neumann'.")
                 end
 
                 % initial position, simpilified to the undeformed position

@@ -26,7 +26,7 @@ end
 legend(legendInfo);
 
 % add title and labels
-title('Phi Rho Hermitian');
+title('Phi Rho mixed');
 xlabel('X');
 ylabel('Phi Rho');
 
@@ -35,5 +35,5 @@ ylabel('Phi Rho');
 if ~exist('./figures', 'dir')
     mkdir('./figures');
 end
-exportgraphics(gcf, './figures/Phi_Rho_Hermitian.pdf','ContentType','vector');
+exportgraphics(gcf, './figures/Phi_Rho_mixed.pdf','ContentType','vector');
 

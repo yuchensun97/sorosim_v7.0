@@ -1,4 +1,4 @@
-function Phi_Rho = Phi_Rho_Hermitian_Full(X, Bdof, Bodr)
+function Phi_Rho = Phi_Rho_Hermitian_robin(X, Bdof, Bodr)
     %PHI_Rho_Hermitian generate the basis function of Legendre
 %   X -- varites from 0 to 1
 %   Bdof -- tells if the inflation ratio is on or off
@@ -32,7 +32,4 @@ function Phi_Rho = Phi_Rho_Hermitian_Full(X, Bdof, Bodr)
         k=k+2;
         a=a+w;
     end
-    Phi_Rho_1 = Phi_Rho(2:end-2);
-    Phi_Rho_2 = Phi_Rho(end);
-    Phi_Rho = [Phi_Rho_1 Phi_Rho_2];
 end

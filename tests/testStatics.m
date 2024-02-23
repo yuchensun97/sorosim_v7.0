@@ -20,7 +20,7 @@ f = L.plotq(q_xi, q_rho);
 
 function L = createLinkage(B_xi, B_rho)
     S = SorosimLink();
-    S.basisType = 'hermite full';
+    S.basisType = 'robin';
     S.L = 0.5;
     S.B_xi = B_xi;
     S.B_rho = B_rho;
