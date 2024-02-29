@@ -4,6 +4,7 @@ classdef SorosimTwist
     
     % get of the the multiple links loop and base type
     properties
+        basisType   % Base type for rho(dirichlet, neumann, robin, mixed)
         B_xi_dof    %(6x1) array specifying the allowable DoFs of a soft piece. 1 if allowed, 0 if not
         B_xi_odr    %(6x1) array specifying the order of allowed DoFs.(0: constant, 1: linear, 2: quadratic, ...)
         dof_xi      %DoFs of the each twist base
@@ -54,6 +55,7 @@ classdef SorosimTwist
                 B_xi_in = varargin{2};
                 B_rho_in = varargin{3};
                 basisType = varargin{4};
+                T.basisType = basisType;
                 %   link: current soft link
                 %   B_xi_in: (6x2) array specifying the allowable DoFs and oder of a soft piece.
                 %         1st column: 1 if allowed, 0 if not
@@ -184,7 +186,7 @@ classdef SorosimTwist
                         Bh_rho = str2func(['@(X, Bdof, Bodr)', file, '(X, Bdof, Bodr)']);
                         Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
                     otherwise
-                        error("Invalid basis type. Must be 'legendre','mixed', 'dirichlet', 'robin', or 'neumann'.")
+                        error("Invalid basis type. Must be 'legendre','mixed', 'dirichlet', 'robin', or 'neumann'.");
                 end
 
                 % initial position, simpilified to the undeformed position
@@ -260,11 +262,36 @@ classdef SorosimTwist
                 return
             end
             file_xi = 'Phi_Xi_LegendrePolynomial';
-            file_rho = 'Phi_Rho_LegendrePolynomial';
-            file_prime = 'Phi_Prime_Rho_LegendrePolynomial';
             T.Bh_xi = str2func(['@(X, Bdof, Bodr)', file_xi, '(X, Bdof, Bodr)']);
-            T.Bh_rho = str2func(['@(X, Bdof, Bodr)', file_rho, '(X, Bdof, Bodr)']);
-            T.Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
+            switch T.basisType
+                case 'legendre'
+                    file_rho = 'Phi_Rho_LegendrePolynomial';
+                    file_prime = 'Phi_Prime_Rho_LegendrePolynomial';
+                    T.Bh_rho = str2func(['@(X, Bdof, Bodr)', file_rho, '(X, Bdof, Bodr)']);
+                    T.Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
+                case 'dirichlet'
+                    file_rho = 'Phi_Rho_Hermitian_dirichlet';
+                    file_prime = 'Phi_Prime_Rho_Hermitian_dirichlet';
+                    T.Bh_rho = str2func(['@(X, Bdof, Bodr)', file_rho, '(X, Bdof, Bodr)']);
+                    T.Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
+                case 'neumann'
+                    file_rho = 'Phi_Rho_Hermitian_neumann';
+                    file_prime = 'Phi_Prime_Rho_Hermitian_neumann';
+                    T.Bh_rho = str2func(['@(X, Bdof, Bodr)', file_rho, '(X, Bdof, Bodr)']);
+                    T.Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
+                case 'robin'
+                    file_rho = 'Phi_Rho_Hermitian_robin';
+                    file_prime = 'Phi_Prime_Rho_Hermitian_robin';
+                    T.Bh_rho = str2func(['@(X, Bdof, Bodr)', file_rho, '(X, Bdof, Bodr)']);
+                    T.Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
+                case 'mixed'
+                    file_rho = 'Phi_Rho_Hermitian';
+                    file_prime = 'Phi_Prime_Rho_Hermitian';
+                    T.Bh_rho = str2func(['@(X, Bdof, Bodr)', file_rho, '(X, Bdof, Bodr)']);
+                    T.Bh_rho_prime = str2func(['@(X, Bdof, Bodr)', file_prime, '(X, Bdof, Bodr)']);
+                otherwise
+                    error("Invalid basis type. Must be 'legendre','mixed', 'dirichlet', 'robin', or 'neumann'.")
+            end
         end
 
         %% updates np, Xs, Ws, and dof
@@ -284,7 +311,20 @@ classdef SorosimTwist
                 return
             end
             T.dof_xi = sum(T.B_xi_dof.*(T.B_xi_odr+1));
-            T.dof_rho = sum(T.B_rho_dof.*(T.B_rho_odr+1));
+            switch T.basisType
+                case 'legendre'
+                    T.dof_rho = sum(T.B_rho_dof.*(T.B_rho_odr+1));
+                case 'mixed'
+                    T.dof_rho = sum(T.B_rho_dof.*(2*T.B_rho_dof));
+                case 'dirichlet'
+                    T.dof_rho = sum(T.B_rho_dof.*(2*T.B_rho_dof));
+                case 'robin'
+                    T.dof_rho = sum(T.B_rho_dof.*(2*T.B_rho_dof+2));
+                case 'neumann'
+                    T.dof_rho = sum(T.B_rho_dof.*(2*T.B_rho_dof));
+                otherwise
+                    error("Invalid basis type. Must be 'legendre','mixed', 'dirichlet', 'robin', or 'neumann'.");
+            end
         end
 
         %% updates all the bases properties
@@ -346,7 +386,7 @@ classdef SorosimTwist
         function T = Add_more_X(T)
             for k = 1:size(T.Xadd)
                 X1 = T.Xadd(k);
-                if ~any(T.Xs == X1)
+                if ~any(T.Xs == X1) %if already present, don't add
                     iv = find(T.Xs > X1);
                     iX1 = iv(1);
                     T.Xs = [T.Xs(1:iX1-1); X1; T.Xs(iX1:end)];
