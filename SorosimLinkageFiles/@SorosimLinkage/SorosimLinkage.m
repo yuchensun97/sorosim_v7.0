@@ -91,7 +91,7 @@ classdef SorosimLinkage
             Tr.nsig = VTwists(2).nip;
 
             %% External Force Properties
-            Tr.Gravity = false;
+            Tr.Gravity = true;
             Tr.G = [0 0 0 0 0 -9.81]';
 
             %% Constant coefficients
@@ -124,7 +124,7 @@ classdef SorosimLinkage
             Tr.Actuated = false;
 
             % point force
-            Tr.PointForce = true;
+            Tr.PointForce = false;
 
             %% Plot parameters
             PlotParameters.Lscale         = Lscale;
