@@ -455,6 +455,7 @@ classdef SorosimTwist
         function s = saveobj(T)
             % save properties into a struct to avoid set method when loading
             % Pass that struct onto the SAVE command.
+            s.basisType = T.basisType;
             s.B_xi_dof = T.B_xi_dof;
             s.B_rho_dof = T.B_rho_dof;
             s.B_xi_odr = T.B_xi_odr;
@@ -495,6 +496,7 @@ classdef SorosimTwist
             % Construct a new object T
             T = SorosimTwist;
             % Assign the properties saved in s to the new object T
+            T.basisType = s.basisType;
             T.B_xi_dof = s.B_xi_dof;
             T.B_rho_dof = s.B_rho_dof;
             T.B_xi_odr = s.B_xi_odr;

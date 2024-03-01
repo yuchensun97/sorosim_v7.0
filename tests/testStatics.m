@@ -4,7 +4,7 @@ rng(5);
 
 % initialization
 B_xi = [1 1 1 1 1 1;
-        2 2 2 0 0 0]';
+        2 2 2 1 0 0]';
 
 B_rho = [1 1];
 
@@ -24,5 +24,5 @@ function L = createLinkage(B_xi, B_rho)
     S.L = 0.5;
     S.B_xi = B_xi;
     S.B_rho = B_rho;
-    L = SorosimLinkage(S);
+    L = SorosimLinkage(S, Gravity=true);
 end

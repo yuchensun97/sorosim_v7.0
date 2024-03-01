@@ -145,7 +145,7 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
     Bq_rho = 0;
 
     if Tr.PointForce
-        % hard code
+        % hard coding non-follower force
         % map point force to local frame
         Fp_vec = [0 0 0 -500 0 0]';
         g_here = g(end-3:end,:);

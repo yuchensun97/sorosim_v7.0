@@ -59,17 +59,37 @@ classdef SorosimLinkage
     end
     
     methods
-        function Tr = SorosimLinkage(Link)
+        function Tr = SorosimLinkage(Link, varargin)
             %SorosimLinkage Constructor
-            
             % check input
-            if nargin < 1
+            if nargin-1 < 1
                 error('Not enough input arguments')
             end
-            if ~isa(Link,'SorosimLink')
-                error('Input must be a SorosimLink object')
-            end
+            % if ~isa(Link,'SorosimLink')
+            %     error('Input must be a SorosimLink object')
+            % end
 
+            %% input parser
+            p = inputParser;
+            checkLink = @(x)isa(x, 'SorosimLink');
+            defaultGravity = false;
+            defaultDamping = false;
+            defaultActuation = false;
+            defaultPointForce = false;
+            defaultFp_loc = zeros(0, 0); % integration point location
+            defaultFp_vec = zeros(3, 0); % force vector
+
+            addRequired(p, 'Link', checkLink);
+            addOptional(p, 'Damped', defaultDamping, @islogical);
+            addOptional(p, 'Gravity', defaultGravity, @islogical);
+            addOptional(p, 'PointForce', defaultPointForce, @islogical);
+            addOptional(p, 'Actuation', defaultActuation, @islogical);
+            addParameter(p, 'Fp_loc', defaultFp_loc, @isvector);
+            addParameter(p, 'Fp_vec', defaultFp_vec, @ismatrix);
+
+            parse(p, Link, varargin{:});
+
+            %% initialization starts here
             Tr.Link = Link;
             Tr.g_base = Link.gi;
             Tr.rho_base = Link.rhoi;
@@ -91,8 +111,10 @@ classdef SorosimLinkage
             Tr.nsig = VTwists(2).nip;
 
             %% External Force Properties
-            Tr.Gravity = true;
-            Tr.G = [0 0 0 0 0 -9.81]';
+            Tr.Gravity = p.Results.Gravity;
+            if Tr.Gravity
+                Tr.G = [0 0 0 0 0 -9.81]';
+            end
 
             %% Constant coefficients
             % stiffness
@@ -114,17 +136,31 @@ classdef SorosimLinkage
             Tr.D_xi_bar = D_xi_bar;
             Tr.D_rho_bar = D_rho_bar;
             Tr.D_rho = D_rho;
-            Tr.Damped = true;
+            Tr.Damped = p.Results.Damped;
 
             % mass
             M_rho = findM_rho(Tr);
             Tr.M_rho = M_rho;
 
             % Actuation
-            Tr.Actuated = false;
+            Tr.Actuated = p.Results.Actuation;
 
             % point force
-            Tr.PointForce = false;
+            Tr.PointForce = p.Results.PointForce;
+            if Tr.PointForce
+                Fp_loc = p.Results.Fp_loc;
+                nFp = length(Fp_loc);
+                Fp_vec = p.Results.Fp_vec;
+                sz = size(Fp_vec);
+                if sz(1)~= 3
+                    error('Fp_vec must be a 3xn matrix');
+                end
+                if sz(2)~=nFp
+                    error('Mismatch Fp_vec and Fp_loc');
+                end
+                Tr.Fp_loc = Fp_loc;
+                Tr.Fp_vec = Fp_vec;
+            end
 
             %% Plot parameters
             PlotParameters.Lscale         = Lscale;
