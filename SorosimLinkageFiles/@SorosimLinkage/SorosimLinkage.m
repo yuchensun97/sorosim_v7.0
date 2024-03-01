@@ -76,6 +76,7 @@ classdef SorosimLinkage
             defaultDamping = false;
             defaultActuation = false;
             defaultPointForce = false;
+            defaultLocalForce = false;
             defaultFp_loc = zeros(0, 0); % integration point location
             defaultFp_vec = zeros(3, 0); % force vector
 
@@ -83,6 +84,7 @@ classdef SorosimLinkage
             addOptional(p, 'Damped', defaultDamping, @islogical);
             addOptional(p, 'Gravity', defaultGravity, @islogical);
             addOptional(p, 'PointForce', defaultPointForce, @islogical);
+            addOptional(p, 'defaultLocalForce', defaultLocalForce, @islogical);
             addOptional(p, 'Actuation', defaultActuation, @islogical);
             addParameter(p, 'Fp_loc', defaultFp_loc, @isvector);
             addParameter(p, 'Fp_vec', defaultFp_vec, @ismatrix);
@@ -147,16 +149,18 @@ classdef SorosimLinkage
 
             % point force
             Tr.PointForce = p.Results.PointForce;
+            Tr.LocalForce = P.Results.LocalForce;
             if Tr.PointForce
                 Fp_loc = p.Results.Fp_loc;
                 nFp = length(Fp_loc);
+                Tr.np = nFp;
                 Fp_vec = p.Results.Fp_vec;
                 sz = size(Fp_vec);
-                if sz(1)~= 3
-                    error('Fp_vec must be a 3xn matrix');
+                if sz(1)~=6
+                    error('Fp_vec must be a 6xn matrix');
                 end
                 if sz(2)~=nFp
-                    error('Mismatch Fp_vec and Fp_loc');
+                    error('Mismatch size of Fp_vec and Fp_loc');
                 end
                 Tr.Fp_loc = Fp_loc;
                 Tr.Fp_vec = Fp_vec;
@@ -170,9 +174,9 @@ classdef SorosimLinkage
             PlotParameters.Light          = true;
             PlotParameters.Az_light       = 0;
             PlotParameters.El_light       = 0;
-            PlotParameters.X_lim          = [-2*Lscale 2*Lscale];
-            PlotParameters.Y_lim          = [-2*Lscale 2*Lscale];
-            PlotParameters.Z_lim          = [-2*Lscale 2*Lscale];
+            PlotParameters.X_lim          = [-1.2*Lscale 1.2*Lscale];
+            PlotParameters.Y_lim          = [-1.2*Lscale 1.2*Lscale];
+            PlotParameters.Z_lim          = [-1.2*Lscale 1.2*Lscale];
             PlotParameters.FrameRateValue = 50;
             PlotParameters.ClosePrevious  = false;
             PlotParameters.Position       = [0.1300 0.1100 0.7750 0.8150]; %default value (normalized)

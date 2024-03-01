@@ -6,7 +6,7 @@ rng(5);
 B_xi = [1 1 1 1 1 1;
         2 2 2 1 0 0]';
 
-B_rho = [1 1];
+B_rho = [0 1];
 
 L = createLinkage(B_xi, B_rho);
 ndof_xi = L.ndof_xi;
