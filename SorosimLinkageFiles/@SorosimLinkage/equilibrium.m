@@ -145,14 +145,7 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
     Bq_rho = 0;
 
     if Tr.PointForce
-        % hard coding non-follower force
-        % map point force to local frame
-        Fp_vec = [0 0 0 -500 0 0]';
-        g_here = g(end-3:end,:);
-        g_here(1:3,4) = zeros(3,1);
-        Ad_g_here_inv = dinamico_Adjoint(ginv(g_here));
-        Fp_vec = Ad_g_here_inv*Fp_vec;
-        F_xi = F_xi + J_xi(end-5:end,:)'*Fp_vec;
+        F_xi = F_xi + ComputePointForce(Tr, J, g, 0);
     end
 
     K_xi = Tr.K_xi;

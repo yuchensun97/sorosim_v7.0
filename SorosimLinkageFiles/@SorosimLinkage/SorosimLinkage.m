@@ -76,18 +76,18 @@ classdef SorosimLinkage
             defaultDamping = false;
             defaultActuation = false;
             defaultPointForce = false;
-            defaultLocalForce = false;
+            defaultLocalForce = false(0, 0);
             defaultFp_loc = zeros(0, 0); % integration point location
-            defaultFp_vec = zeros(3, 0); % force vector
+            defaultFp_vec = cell(0, 0); % force should be function handler
 
             addRequired(p, 'Link', checkLink);
             addOptional(p, 'Damped', defaultDamping, @islogical);
             addOptional(p, 'Gravity', defaultGravity, @islogical);
             addOptional(p, 'PointForce', defaultPointForce, @islogical);
-            addOptional(p, 'defaultLocalForce', defaultLocalForce, @islogical);
             addOptional(p, 'Actuation', defaultActuation, @islogical);
             addParameter(p, 'Fp_loc', defaultFp_loc, @isvector);
-            addParameter(p, 'Fp_vec', defaultFp_vec, @ismatrix);
+            addParameter(p, 'LocalForce', defaultLocalForce, @islogical);
+            addParameter(p, 'Fp_vec', defaultFp_vec, @iscell);
 
             parse(p, Link, varargin{:});
 
@@ -149,21 +149,43 @@ classdef SorosimLinkage
 
             % point force
             Tr.PointForce = p.Results.PointForce;
-            Tr.LocalForce = P.Results.LocalForce;
             if Tr.PointForce
                 Fp_loc = p.Results.Fp_loc;
+                LocalForce = P.Results.LocalForce;
+                Fp_vec = p.Results.Fp_vec;
                 nFp = length(Fp_loc);
                 Tr.np = nFp;
-                Fp_vec = p.Results.Fp_vec;
-                sz = size(Fp_vec);
-                if sz(1)~=6
-                    error('Fp_vec must be a 6xn matrix');
+
+                sz_local = size(LocalForce);
+                if sz_local(1)~=nFp
+                    error('Mismatch size of LocalForce and Fp_loc');
                 end
-                if sz(2)~=nFp
+                if sz_local(2)~=1
+                    error('dimension exceed');
+                end
+
+                sz_vec = size(Fp_vec);
+                if sz_vec(1)~=nFp
                     error('Mismatch size of Fp_vec and Fp_loc');
                 end
+                if sz_vec(2)~=1
+                    error('dimension exceed');
+                end
+                for ip = 1:np
+                    Fp_vec_h = Fp_vec(ip);
+                    if ~isa(Fp_vec_h, 'function_handler')
+                        error('Fp_vec should be a function handler');
+                    end
+                    Fp_vec_s = func2strj(Fp_vec_h);
+                    if ~startsWith(Fp_vec_s, '@(t)')
+                        error('The function handler should be the form of @(t)...');
+                    end
+                end
                 Tr.Fp_loc = Fp_loc;
+                Tr.Twists(2).Xadd = Fp_loc;
+                Tr.nisg = Tr.nsig + nFp;
                 Tr.Fp_vec = Fp_vec;
+                Tr.LocalForce = LocalForce;
             end
 
             %% Plot parameters
