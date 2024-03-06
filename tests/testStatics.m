@@ -30,6 +30,10 @@ function L = createLinkage(B_xi, B_rho)
     Fp_vec_2 = @(t)[0 0 0 -2 -3 5]';
     Fp_vec_3 = @(t)[0 0 0 0 5 5]';
     Fp_vec = {Fp_vec_1; Fp_vec_2; Fp_vec_3};
+%       Fp_loc = [1];
+%       LocalForce = [false];
+%       Fp_vec_h = @(t)[0 0 0 -15 0 0]';
+%       Fp_vec = {Fp_vec_h};
     L = SorosimLinkage(S, PointForce=true,...
                           Fp_loc = Fp_loc,...
                           LocalForce = LocalForce,...
