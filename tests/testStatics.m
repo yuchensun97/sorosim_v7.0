@@ -6,7 +6,7 @@ rng(5);
 B_xi = [1 1 1 1 1 1;
         2 2 2 1 0 0]';
 
-B_rho = [0 1];
+B_rho = [1 1];
 
 L = createLinkage(B_xi, B_rho);
 ndof_xi = L.ndof_xi;
@@ -24,5 +24,14 @@ function L = createLinkage(B_xi, B_rho)
     S.L = 0.5;
     S.B_xi = B_xi;
     S.B_rho = B_rho;
-    L = SorosimLinkage(S, Gravity=true);
+    Fp_loc = [0.2, 0.5, 1]';
+    LocalForce = [false, false, false]';
+    Fp_vec_1 = @(t)[0 0 0 0 0 -5]';
+    Fp_vec_2 = @(t)[0 0 0 -2 -3 5]';
+    Fp_vec_3 = @(t)[0 0 0 0 5 5]';
+    Fp_vec = {Fp_vec_1; Fp_vec_2; Fp_vec_3};
+    L = SorosimLinkage(S, PointForce=true,...
+                          Fp_loc = Fp_loc,...
+                          LocalForce = LocalForce,...
+                          Fp_vec = Fp_vec);
 end

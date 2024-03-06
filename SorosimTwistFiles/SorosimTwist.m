@@ -1,4 +1,4 @@
-classdef SorosimTwist
+classdef SorosimTwist < handle
     %SSorosimTwist class that assigns DoFs and Bases to the soft link and
     %   can calculate the twist and inflation ratio given joint angles
     
@@ -33,6 +33,7 @@ classdef SorosimTwist
 
         Link        %Link associated with this twist only for soft link
         nip         %Number of integration points including boundary points
+        nGauss      %Number of Gauss points
         Xs          %integration points
         Ws          %integration weights
         Ms          %(6nipx6) Inertia matrix of cross section.
@@ -73,6 +74,7 @@ classdef SorosimTwist
                 
                 % setup integration points and weights
                 nGauss = 10;            %number of Gauss points
+                T.nGauss = nGauss;
                 [Xs, Ws, nip] = GaussQuadrature(nGauss);
 
                 % load B_xi_dof, B_rho_dof, B_xi_odr, B_rho_odr 
@@ -295,14 +297,14 @@ classdef SorosimTwist
         end
 
         %% updates np, Xs, Ws, and dof
-        function T = UpdateIntegration(T, nGauss)
+        function T = UpdateIntegration(T)
             if isempty(T.dof_xi) || isempty(T.dof_rho)
                 return
             end
-            if nGauss < 5
-                nGauss = 5;
+            if T.nGauss < 5
+                T.nGauss = 5;
             end
-            [T.Xs, T.Ws, T.nip] = GaussQuadrature(nGauss);
+            [T.Xs, T.Ws, T.nip] = GaussQuadrature(T.nGauss);
         end
 
         %% updates dof
@@ -352,11 +354,11 @@ classdef SorosimTwist
                 X = T.Xs(ii);
                 T.B_xi((ii-1)*6+1:ii*6, :) = T.Bh_xi(X, T.B_xi_dof, T.B_xi_odr);
                 X = T.Xs(ii-1)+Z1*(T.Xs(ii)-T.Xs(ii-1));
-                T.B_Z1_xi((ii-2)*6+1:ii*6, :) = T.Bh_xi(X, T.B_xi_dof, T.B_xi_odr);
+                T.B_Z1_xi((ii-2)*6+1:(ii-1)*6, :) = T.Bh_xi(X, T.B_xi_dof, T.B_xi_odr);
                 X = T.Xs(ii-1)+Z2*(T.Xs(ii)-T.Xs(ii-1));
-                T.B_Z2_xi((ii-2)*6+1:ii*6, :) = T.Bh_xi(X, T.B_xi_dof, T.B_xi_odr);
+                T.B_Z2_xi((ii-2)*6+1:(ii-1)*6, :) = T.Bh_xi(X, T.B_xi_dof, T.B_xi_odr);
                 X = T.Xs(ii-1)+Z*(T.Xs(ii)-T.Xs(ii-1));
-                T.B_Z_xi((ii-2)*6+1:ii*6, :) = T.Bh_xi(X, T.B_xi_dof, T.B_xi_odr);
+                T.B_Z_xi((ii-2)*6+1:(ii-1)*6, :) = T.Bh_xi(X, T.B_xi_dof, T.B_xi_odr);
                 T.B_rho(ii, :) = T.Bh_rho(X, T.B_rho_dof, T.B_rho_odr);
                 T.B_rho_prime(ii, :) = T.Bh_rho_prime(X, T.B_rho_dof, T.B_rho_odr);
             end
@@ -379,7 +381,7 @@ classdef SorosimTwist
                 return
             end
             T.xi_star = zeros(6*T.nip, 4); % precomputation at all gauss and zannah guess points
-            T.xi_star(4:6:end, :) = ones(4, 4);
+            T.xi_star(4:6:end, :) = ones(T.nip, 4);
             T.rho_star = ones(T.nip, 1);
         end
 
@@ -448,7 +450,7 @@ classdef SorosimTwist
 
         function T = set.Xadd(T, val)
             T.Xadd = val;
-            T.Add_more_X();
+%             T.Add_more_X();
             T.UpdateAll();
         end
 

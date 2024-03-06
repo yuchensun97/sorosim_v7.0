@@ -145,7 +145,7 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
     Bq_rho = 0;
 
     if Tr.PointForce
-        F_xi = F_xi + ComputePointForce(Tr, J, g, 0);
+        F_xi = F_xi + ComputePointForce(Tr, J_xi, g, 0);
     end
 
     K_xi = Tr.K_xi;

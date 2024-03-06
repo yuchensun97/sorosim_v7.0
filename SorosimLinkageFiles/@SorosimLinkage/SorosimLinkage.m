@@ -151,7 +151,7 @@ classdef SorosimLinkage
             Tr.PointForce = p.Results.PointForce;
             if Tr.PointForce
                 Fp_loc = p.Results.Fp_loc;
-                LocalForce = P.Results.LocalForce;
+                LocalForce = p.Results.LocalForce;
                 Fp_vec = p.Results.Fp_vec;
                 nFp = length(Fp_loc);
                 Tr.np = nFp;
@@ -171,19 +171,19 @@ classdef SorosimLinkage
                 if sz_vec(2)~=1
                     error('dimension exceed');
                 end
-                for ip = 1:np
-                    Fp_vec_h = Fp_vec(ip);
-                    if ~isa(Fp_vec_h, 'function_handler')
-                        error('Fp_vec should be a function handler');
+                for ip = 1:nFp
+                    Fp_vec_h = Fp_vec{ip};
+                    if ~isa(Fp_vec_h, 'function_handle')
+                        error('Fp_vec should be a function handle');
                     end
-                    Fp_vec_s = func2strj(Fp_vec_h);
+                    Fp_vec_s = func2str(Fp_vec_h);
                     if ~startsWith(Fp_vec_s, '@(t)')
                         error('The function handler should be the form of @(t)...');
                     end
                 end
                 Tr.Fp_loc = Fp_loc;
                 Tr.Twists(2).Xadd = Fp_loc;
-                Tr.nisg = Tr.nsig + nFp;
+                Tr.nsig = Tr.Twists(2).nip;
                 Tr.Fp_vec = Fp_vec;
                 Tr.LocalForce = LocalForce;
             end

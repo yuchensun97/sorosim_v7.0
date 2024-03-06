@@ -6,7 +6,8 @@ function Fp = ComputePointForce(Tr, J_xi, g, t)
 
     for ip = 1:np
         Fp_loc = Tr.Fp_loc(ip);
-        Fp_vec = Tr.Fp_vec(ip)(t);
+        Fp_vec_h = Tr.Fp_vec{ip};
+        Fp_vec = Fp_vec_h(t);
         LocalForce = Tr.LocalForce(ip);
         [rows, cols] = size(Fp_vec);
         if rows ~= 6 || cols ~= 1
@@ -21,7 +22,7 @@ function Fp = ComputePointForce(Tr, J_xi, g, t)
                     Ad_g_here_inv = dinamico_Adjoint(ginv(g_here));
                     Fp_vec = Ad_g_here_inv*Fp_vec;
                 end
-                Fp=Fp+J_xi((ii-1)*4+1:ii*4,:);
+                Fp=Fp+J_xi((ii-1)*6+1:ii*6,:)'*Fp_vec;
                 break;
             end
         end
