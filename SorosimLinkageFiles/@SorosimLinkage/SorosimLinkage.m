@@ -32,7 +32,19 @@ classdef SorosimLinkage
         M_rho       %Generalized mass matrix for the lateral equation.
 
         % actuation
-        Actuated    %1 if the soft links are actuated, 0 if not
+        ActuatedL    %1 if the soft links are actuated in longitudinal direction, 0 if not
+        ActuatedR    %1 if the soft links are actuated in radial direction, 0 if not
+
+        % cable actuator for soft links
+        n_sact       %number of soft link actuators
+        dc           %(n_sactxN) cells of local cable position (0, yp, zp) at Gauss quadrature points of all active soft divisions
+        dcp          %(n_sactxN) cells of space derivative of the local cable position (0, yp',zp')
+        Inside       %(1xn_sact) cells with logical 1 if the actuator is fully inside the linkage, 0 if not
+        CableFunction     %Struct with cell elements (Cy_fn and Cz_fn) of parameterized functions corresponding to the y and z coodinates of the cable
+
+        % custom actuation
+        CAP          %true if custom actuation is preseent, false is not
+        CAS          %true to apply a custom actuator strength
 
         % point force
         PointForce  %1 if the soft links are actuated, 0 if not
@@ -65,31 +77,6 @@ classdef SorosimLinkage
             if nargin-1 < 1
                 error('Not enough input arguments')
             end
-            % if ~isa(Link,'SorosimLink')
-            %     error('Input must be a SorosimLink object')
-            % end
-
-            %% input parser
-            p = inputParser;
-            checkLink = @(x)isa(x, 'SorosimLink');
-            defaultGravity = false;
-            defaultDamping = false;
-            defaultActuation = false;
-            defaultPointForce = false;
-            defaultLocalForce = false(0, 0);
-            defaultFp_loc = zeros(0, 0); % integration point location
-            defaultFp_vec = cell(0, 0); % force should be function handler
-
-            addRequired(p, 'Link', checkLink);
-            addOptional(p, 'Damped', defaultDamping, @islogical);
-            addOptional(p, 'Gravity', defaultGravity, @islogical);
-            addOptional(p, 'PointForce', defaultPointForce, @islogical);
-            addOptional(p, 'Actuation', defaultActuation, @islogical);
-            addParameter(p, 'Fp_loc', defaultFp_loc, @isvector);
-            addParameter(p, 'LocalForce', defaultLocalForce, @islogical);
-            addParameter(p, 'Fp_vec', defaultFp_vec, @iscell);
-
-            parse(p, Link, varargin{:});
 
             %% initialization starts here
             Tr.Link = Link;
@@ -111,6 +98,38 @@ classdef SorosimLinkage
             Tr.ndof_xi = VTwists(1).dof_xi + VTwists(2).dof_xi;
             Tr.ndof_rho =VTwists(1).dof_rho + VTwists(2).dof_rho;
             Tr.nsig = VTwists(2).nip;
+
+            %% input parser
+            p = inputParser;
+            checkLink = @(x)isa(x, 'SorosimLink');
+            defaultGravity = false;
+            defaultDamping = false;
+            defaultActuationL = false;
+            defaultActuationR = false;
+            defaultPointForce = false;
+            defaultLocalForce = false(0, 0);
+            defaultFp_loc = zeros(0, 0); % integration point location
+            defaultFp_vec = cell(0, 0); % force should be function handler
+            default_n_sact = 0;
+            default_dc = cell(default_n_sact, Tr.nsig);
+            default_dcp = cell(default_n_sact, Tr.nsig);
+            defaultInside = cell(1, default_n_sact);
+
+            addRequired(p, 'Link', checkLink);
+            addOptional(p, 'Damped', defaultDamping, @islogical);
+            addOptional(p, 'Gravity', defaultGravity, @islogical);
+            addOptional(p, 'PointForce', defaultPointForce, @islogical);
+            addOptional(p, 'ActuationL', defaultActuationL, @islogical);
+            addOptional(p, 'ActuationR', defaultActuationR, @islogical);
+            addParameter(p, 'Fp_loc', defaultFp_loc, @isvector);
+            addParameter(p, 'LocalForce', defaultLocalForce, @islogical);
+            addParameter(p, 'Fp_vec', defaultFp_vec, @iscell);
+            addParameter(p, 'n_sact', default_n_sact, @isnumeric);
+            addParameter(p, 'dc', default_dc, @iscell);
+            addParameter(p, 'dcp', default_dcp, @iscell);
+            addParameter(p, 'Inside', defaultInside, @iscell);
+
+            parse(p, Link, varargin{:});
 
             %% External Force Properties
             Tr.Gravity = p.Results.Gravity;
@@ -144,10 +163,11 @@ classdef SorosimLinkage
             M_rho = findM_rho(Tr);
             Tr.M_rho = M_rho;
 
-            % Actuation
-            Tr.Actuated = p.Results.Actuation;
+            %% Actuation
+            Tr.ActuatedL = p.Results.ActuationL;
+            Tr.ActuatedR = p.Results.ActuationR;
 
-            % point force
+            %% point force
             Tr.PointForce = p.Results.PointForce;
             if Tr.PointForce
                 Fp_loc = p.Results.Fp_loc;
