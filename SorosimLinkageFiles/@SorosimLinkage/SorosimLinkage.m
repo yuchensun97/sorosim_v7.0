@@ -39,7 +39,7 @@ classdef SorosimLinkage
         n_sact       %number of soft link actuators
         dc           %(n_sactxN) cells of local cable position (0, yp, zp) at Gauss quadrature points of all active soft divisions
         dcp          %(n_sactxN) cells of space derivative of the local cable position (0, yp',zp')
-        CableActuation     %CableActuation class of parameterized functions corresponding to the y and z coodinates of the cable
+        CableActuator     %CableActuation class of parameterized functions corresponding to the y and z coodinates of the cable
 
         % custom actuation
         CAP          %true if custom actuation is preseent, false is not
@@ -109,7 +109,7 @@ classdef SorosimLinkage
             defaultLocalForce = false(0, 0);
             defaultFp_loc = zeros(0, 0); % integration point location
             defaultFp_vec = cell(0, 0); % force should be function handler
-            defaultCableActuation = CableActuation();
+            defaultCableActuator = CableActuation();
             checkCableActuation = @(x)isa(x, 'CableActuation');
 
             addRequired(p, 'Link', checkLink);
@@ -121,7 +121,7 @@ classdef SorosimLinkage
             addParameter(p, 'Fp_loc', defaultFp_loc, @isvector);
             addParameter(p, 'LocalForce', defaultLocalForce, @islogical);
             addParameter(p, 'Fp_vec', defaultFp_vec, @iscell);
-            addParameter(p, 'CableActuation', defaultCableActuation, checkCableActuation);
+            addParameter(p, 'CableActuator', defaultCableActuator, checkCableActuation);
 
             parse(p, Link, varargin{:});
 
@@ -202,13 +202,13 @@ classdef SorosimLinkage
             Tr.ActuatedL = p.Results.ActuationL;
             Tr.ActuatedR = p.Results.ActuationR;
             if Tr.ActuatedL
-                CableActuation = p.Results.CableActuation;
-                n_sact = CableActuation.get_n_sact();
+                CableActuator = p.Results.CableActuator;
+                n_sact = CableActuator.get_n_sact();
                 if n_sact == 0
                     error('You must have at least 1 cable actuator');
                 end
-                dc_fn = CableActuation.get_dc_fn();
-                dcp_fn = CableActuation.get_dcp_fn();
+                dc_fn = CableActuator.get_dc_fn();
+                dcp_fn = CableActuator.get_dcp_fn();
                 dc = cell(n_sact, 1);
                 dcp = cell(n_sact, 1);
                 Xs = Tr.Twists(2).Xs;
