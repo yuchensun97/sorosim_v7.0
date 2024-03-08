@@ -113,6 +113,7 @@ classdef SorosimLinkage
             default_n_sact = 0;
             default_dc = cell(default_n_sact, Tr.nsig);
             default_dcp = cell(default_n_sact, Tr.nsig);
+            defaultCableFunction = struct([]);
             defaultInside = cell(1, default_n_sact);
 
             addRequired(p, 'Link', checkLink);
@@ -125,8 +126,7 @@ classdef SorosimLinkage
             addParameter(p, 'LocalForce', defaultLocalForce, @islogical);
             addParameter(p, 'Fp_vec', defaultFp_vec, @iscell);
             addParameter(p, 'n_sact', default_n_sact, @isnumeric);
-            addParameter(p, 'dc', default_dc, @iscell);
-            addParameter(p, 'dcp', default_dcp, @iscell);
+            addParameter(p, 'CableFunction', defaultCableFunction, @isstruct);
             addParameter(p, 'Inside', defaultInside, @iscell);
 
             parse(p, Link, varargin{:});
@@ -166,6 +166,17 @@ classdef SorosimLinkage
             %% Actuation
             Tr.ActuatedL = p.Results.ActuationL;
             Tr.ActuatedR = p.Results.ActuationR;
+            if Tr.ActuatedL
+                n_sact = p.Results.sn_sact;
+                if n_sact < 1
+                    error('Number of cable actuation must be at least 1');
+                end
+                Inside = p.Results.Inside;
+                Tr.n_sact = n_sact;
+            end
+
+            if Tr.ActuatedR
+            end
 
             %% point force
             Tr.PointForce = p.Results.PointForce;
