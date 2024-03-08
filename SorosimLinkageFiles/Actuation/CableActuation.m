@@ -8,23 +8,29 @@ classdef CableActuation
     methods % constructor
         function CA = CableActuation(varargin)
             %% initializing Cable vector
-            n_sact = nargin;
-            dc_fn = cell(n_sact, 0);
-            dcp_fn = cell(n_sact, 0);
+            if nargin == 0
+                CA.n_sact = 0;
+                CA.dc_fn = cell(0,0);
+                CA.dcp_fn = cell(0, 0);
+            else
+                n_sact = nargin;
+                dc_fn = cell(n_sact, 0);
+                dcp_fn = cell(n_sact, 0);
 
-            for i=1:n_sact
-                C = varargin{i};
-                if ~isa(C, 'Cable')
-                    error('Input must be of Cable class');
-                else
-                    dc_fn{i} = C.get_dc_fn();
-                    dcp_fn{i} = C.get_dcp_fn();
+                for i=1:n_sact
+                    C = varargin{i};
+                    if ~isa(C, 'Cable')
+                        error('Input must be of Cable class');
+                    else
+                        dc_fn{i} = C.get_dc_fn();
+                        dcp_fn{i} = C.get_dcp_fn();
+                    end
                 end
-            end
 
-            CA.n_sact = n_sact;
-            CA.dc_fn = dc_fn;
-            CA.dcp_fn = dcp_fn;
+                CA.n_sact = n_sact;
+                CA.dc_fn = dc_fn;
+                CA.dcp_fn = dcp_fn;
+            end
         end
     end
 

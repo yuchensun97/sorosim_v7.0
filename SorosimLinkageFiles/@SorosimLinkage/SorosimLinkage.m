@@ -39,8 +39,7 @@ classdef SorosimLinkage
         n_sact       %number of soft link actuators
         dc           %(n_sactxN) cells of local cable position (0, yp, zp) at Gauss quadrature points of all active soft divisions
         dcp          %(n_sactxN) cells of space derivative of the local cable position (0, yp',zp')
-        Inside       %(1xn_sact) cells with logical 1 if the actuator is fully inside the linkage, 0 if not
-        CableFunction     %Struct with cell elements (Cy_fn and Cz_fn) of parameterized functions corresponding to the y and z coodinates of the cable
+        CableActuation     %CableActuation class of parameterized functions corresponding to the y and z coodinates of the cable
 
         % custom actuation
         CAP          %true if custom actuation is preseent, false is not
@@ -110,11 +109,8 @@ classdef SorosimLinkage
             defaultLocalForce = false(0, 0);
             defaultFp_loc = zeros(0, 0); % integration point location
             defaultFp_vec = cell(0, 0); % force should be function handler
-            default_n_sact = 0;
-            default_dc = cell(default_n_sact, Tr.nsig);
-            default_dcp = cell(default_n_sact, Tr.nsig);
-            defaultCableFunction = struct([]);
-            defaultInside = cell(1, default_n_sact);
+            defaultCableActuation = CableActuation();
+            checkCableActuation = @(x)isa(x, 'CableActuation');
 
             addRequired(p, 'Link', checkLink);
             addOptional(p, 'Damped', defaultDamping, @islogical);
@@ -125,9 +121,7 @@ classdef SorosimLinkage
             addParameter(p, 'Fp_loc', defaultFp_loc, @isvector);
             addParameter(p, 'LocalForce', defaultLocalForce, @islogical);
             addParameter(p, 'Fp_vec', defaultFp_vec, @iscell);
-            addParameter(p, 'n_sact', default_n_sact, @isnumeric);
-            addParameter(p, 'CableFunction', defaultCableFunction, @isstruct);
-            addParameter(p, 'Inside', defaultInside, @iscell);
+            addParameter(p, 'CableActuation', defaultCableActuation, checkCableActuation);
 
             parse(p, Link, varargin{:});
 
@@ -162,21 +156,6 @@ classdef SorosimLinkage
             % mass
             M_rho = findM_rho(Tr);
             Tr.M_rho = M_rho;
-
-            %% Actuation
-            Tr.ActuatedL = p.Results.ActuationL;
-            Tr.ActuatedR = p.Results.ActuationR;
-            if Tr.ActuatedL
-                n_sact = p.Results.sn_sact;
-                if n_sact < 1
-                    error('Number of cable actuation must be at least 1');
-                end
-                Inside = p.Results.Inside;
-                Tr.n_sact = n_sact;
-            end
-
-            if Tr.ActuatedR
-            end
 
             %% point force
             Tr.PointForce = p.Results.PointForce;
@@ -217,6 +196,31 @@ classdef SorosimLinkage
                 Tr.nsig = Tr.Twists(2).nip;
                 Tr.Fp_vec = Fp_vec;
                 Tr.LocalForce = LocalForce;
+            end
+
+            %% Actuation
+            Tr.ActuatedL = p.Results.ActuationL;
+            Tr.ActuatedR = p.Results.ActuationR;
+            if Tr.ActuatedL
+                CableActuation = p.Results.CableActuation;
+                n_sact = CableActuation.get_n_sact();
+                if n_sact == 0
+                    error('You must have at least 1 cable actuator');
+                end
+                dc_fn = CableActuation.get_dc_fn();
+                dcp_fn = CableActuation.get_dcp_fn();
+                dc = cell(n_sact, 1);
+                dcp = cell(n_sact, 1);
+                Xs = Tr.Twists(2).Xs;
+                for i=1:n_sact
+                    dc_sact = arrayfun(dc_fn, Xs, 'UniformOutput', false);
+                    dcp_sact = arrayfun(dcp_fn, Xs, 'UniformOutput', false);
+                    dc{i} = cell2mat(dc_sact);
+                    dcp{i} = cell2mat(dcp_sact);
+                end
+                Tr.dc = dc;
+                Tr.dcp = dcp;
+                Tr.n_sact = n_sact;
             end
 
             %% Plot parameters
