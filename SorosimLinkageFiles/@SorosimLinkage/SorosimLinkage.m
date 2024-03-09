@@ -37,8 +37,8 @@ classdef SorosimLinkage
 
         % cable actuator for soft links
         n_sact       %number of soft link actuators
-        dc           %(n_sactxN) cells of local cable position (0, yp, zp) at Gauss quadrature points of all active soft divisions
-        dcp          %(n_sactxN) cells of space derivative of the local cable position (0, yp',zp')
+        dc           %(n_sactx1) cells of local cable position (0, yp, zp) at Gauss quadrature points of all active soft divisions
+        dcp          %(n_sactx1) cells of space derivative of the local cable position (0, yp',zp')
         CableActuator     %CableActuation class of parameterized functions corresponding to the y and z coodinates of the cable
 
         % custom actuation

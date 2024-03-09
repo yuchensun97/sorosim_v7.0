@@ -148,9 +148,23 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
         F_xi = F_xi + ComputePointForce(Tr, J_xi, g, 0);
     end
 
+    if Tr.ActuatedL
+        n_sact = Tr.n_sact;
+        Bq_xi = zeros(ndof_xi, n_sact);
+        u_xi = zeros(n_sact, 1);
+
+        for i_act = 1:n_sact
+            dci = Tr.dc{i};
+            dcpi = Tr.dcp{i};
+
+            Bq_xi(:, i_act) = ComputeCableActuation(Tr, dci, dcpi, q_xi, q_rho);
+            u_xi(i_act) = uqt_xi(i_act);
+        end
+    end
+
     K_xi = Tr.K_xi;
     K_xi_bar = Tr.K_xi_bar;
-    E_xi = K_xi*q_xi+K_xi_bar*q_rho-Bq_xi*uqt_xi-F_xi;
+    E_xi = K_xi*q_xi+K_xi_bar*q_rho-Bq_xi*u_xi-F_xi;
 
     K_rho = Tr.K_rho_part;
     K_rho_bar = Tr.K_rho_bar;
