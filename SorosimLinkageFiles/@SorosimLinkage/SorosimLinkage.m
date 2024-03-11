@@ -213,10 +213,12 @@ classdef SorosimLinkage
                 dcp = cell(n_sact, 1);
                 Xs = Tr.Twists(2).Xs;
                 for i=1:n_sact
-                    dc_sact = arrayfun(dc_fn, Xs, 'UniformOutput', false);
-                    dcp_sact = arrayfun(dcp_fn, Xs, 'UniformOutput', false);
-                    dc{i} = cell2mat(dc_sact);
-                    dcp{i} = cell2mat(dcp_sact);
+                    dc_fn_here = dc_fn{i};
+                    dcp_fn_here = dcp_fn{i};
+                    dc_sact = arrayfun(dc_fn_here, Xs, 'UniformOutput', false);
+                    dcp_sact = arrayfun(dcp_fn_here, Xs, 'UniformOutput', false);
+                    dc{i} = cell2mat(dc_sact');
+                    dcp{i} = cell2mat(dcp_sact');
                 end
                 Tr.dc = dc;
                 Tr.dcp = dcp;

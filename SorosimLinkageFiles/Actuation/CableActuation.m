@@ -1,8 +1,8 @@
 classdef CableActuation
     properties(Access = private)
         n_sact  % number of cable actuations
-        dc_fn   % (n_sact x 1) cell of local cable position function handler
-        dcp_fn  % (n_sact x 1) cell of space derivative of the local cable position
+        dc_fn   % (n_sact x 1) array of local cable position function handler
+        dcp_fn  % (n_sact x 1) array of space derivative of the local cable position
     end
 
     methods % constructor
@@ -22,8 +22,8 @@ classdef CableActuation
                     if ~isa(C, 'Cable')
                         error('Input must be of Cable class');
                     else
-                        dc_fn{i} = C.get_dc_fn();
-                        dcp_fn{i} = C.get_dcp_fn();
+                        dc_fn{i,1} = C.get_dc_fn();
+                        dcp_fn{i,1} = C.get_dcp_fn();
                     end
                 end
 

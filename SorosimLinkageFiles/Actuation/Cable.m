@@ -20,8 +20,8 @@ classdef Cable
             if ~startsWith(cz_fn_s, '@(X)')
                 error('cz_fn should be the form of @(X)...');
             end
-            cyp_fn = @(X)derivative(cy_fn, X);
-            czp_fn = @(X)derivative(cz_fn, X);
+            cyp_fn = @(X)Cable.CableDerivative(cy_fn, X);
+            czp_fn = @(X)Cable.CableDerivative(cz_fn, X);
             dc_fn = @(X)[0;cy_fn(X);cz_fn(X)];
             dcp_fn = @(X)[0;cyp_fn(X);czp_fn(X)];
             C.dc_fn = dc_fn;
@@ -30,7 +30,7 @@ classdef Cable
     end
 
     methods(Access = private, Static=true) % statics method
-        function dydx = derivative(f, X)
+        function dydx = CableDerivative(f, X)
             % f, function handler
             % X, point at which to compute the derivative
             h = 1e-5;

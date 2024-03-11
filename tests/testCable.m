@@ -43,6 +43,6 @@ function L = createLinkage(B_xi, B_rho)
 
     Cables = CableActuation(act1, act2, act3, act4);
 
-    L = SorosimLinkage(S, ActuatedL=true,...
-                       CableActuation=Cables);
+    L = SorosimLinkage(S, ActuationL=true,...
+                       CableActuator=Cables);
 end
