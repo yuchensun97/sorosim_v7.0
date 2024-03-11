@@ -154,8 +154,8 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
         u_xi = zeros(n_sact, 1);
 
         for i_act = 1:n_sact
-            dci = Tr.dc{i};
-            dcpi = Tr.dcp{i};
+            dci = Tr.dc{i_act};
+            dcpi = Tr.dcp{i_act};
 
             Bq_xi(:, i_act) = ComputeCableActuation(Tr, dci, dcpi, q_xi, q_rho);
             u_xi(i_act) = uqt_xi(i_act);
