@@ -201,6 +201,7 @@ classdef SorosimLinkage
             %% Actuation
             Tr.ActuatedL = p.Results.ActuationL;
             Tr.ActuatedR = p.Results.ActuationR;
+            Tr.n_sact = 0;
             if Tr.ActuatedL
                 CableActuator = p.Results.CableActuator;
                 n_sact = CableActuator.get_n_sact();

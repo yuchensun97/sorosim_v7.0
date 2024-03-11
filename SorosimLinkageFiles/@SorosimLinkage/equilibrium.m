@@ -160,6 +160,8 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
             Bq_xi(:, i_act) = ComputeCableActuation(Tr, dci, dcpi, q_xi, q_rho);
             u_xi(i_act) = uqt_xi(i_act);
         end
+    else
+        u_xi = 0;
     end
 
     K_xi = Tr.K_xi;
