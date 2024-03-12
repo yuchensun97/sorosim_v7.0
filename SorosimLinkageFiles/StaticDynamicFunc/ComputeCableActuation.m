@@ -30,12 +30,12 @@ function Bq_xi = ComputeCableActuation(Tr, dc, dcp, q_xi, q_rho)
                 rho_prime_here = B_rho_prime_here*q_rho + rho_prime_here;
             end
 
-            xihat_here123 = [rho_prime_here -xi_here(3) xi_here(2) xi_here(4);
-                             xi_here(3) rho_prime_here -xi_here(1) xi_here(5);
-                             -xi_here(2) xi_here(1) rho_prime_here xi_here(6)];
+            xihat_here123 = [rho_prime_here -xi_here(3)*rho_here xi_here(2)*rho_here xi_here(4);
+                             xi_here(3)*rho_here rho_prime_here -xi_here(1)*rho_here xi_here(5);
+                             -xi_here(2)*rho_here xi_here(1)*rho_here rho_prime_here xi_here(6)];
             tang = xihat_here123*[dc_here;1] + rho_here*dcp_here;
             tang = tang/norm(tang);
-            Btau = [[0 -dc_here(3) dc_here(2);
+            Btau = [rho_here*[0 -dc_here(3) dc_here(2);
                      dc_here(3) 0 -dc_here(1);
                      -dc_here(2) dc_here(1) 0]*tang;
                     tang];
