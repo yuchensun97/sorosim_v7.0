@@ -153,7 +153,7 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
         Bq_rho = zeros(ndof_rho, n_sact);
         u_rho = zeros(n_sact, 1);
         rc = Tr.rc;
-        Bq_rho = ComputeRadialActuation(Tr, rc, q_rho);
+        Bq_rho = ComputeRadialActuation(Tr, rc, r_local, q_rho);
         u_rho = uqt_rho;
     else
         u_rho = 0;
