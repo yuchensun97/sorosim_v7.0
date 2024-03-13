@@ -16,7 +16,7 @@ classdef CableActuation
                 n_sact = nargin;
                 dc_fn = cell(n_sact, 0);
                 dcp_fn = cell(n_sact, 0);
-
+                
                 for i=1:n_sact
                     C = varargin{i};
                     if ~isa(C, 'Cable')

@@ -148,6 +148,17 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
         F_xi = F_xi + ComputePointForce(Tr, J_xi, g, 0);
     end
 
+    if Tr.ActuatedR
+        n_ract = Tr.n_ract;
+        Bq_rho = zeros(ndof_rho, n_sact);
+        u_rho = zeros(n_sact, 1);
+        rc = Tr.rc;
+        Bq_rho = ComputeRadialActuation(Tr, rc, q_rho);
+        u_rho = uqt_rho;
+    else
+        u_rho = 0;
+    end
+
     if Tr.ActuatedL
         n_sact = Tr.n_sact;
         Bq_xi = zeros(ndof_xi, n_sact);
@@ -170,7 +181,7 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
 
     K_rho = Tr.K_rho_part;
     K_rho_bar = Tr.K_rho_bar;
-    E_rho = K_rho*q_rho+K_rho_bar*q_xi-Bq_rho*uqt_rho;
+    E_rho = K_rho*q_rho+K_rho_bar*q_xi-Bq_rho*u_rho;
     err = [E_xi;E_rho]*1e7;
 end
     

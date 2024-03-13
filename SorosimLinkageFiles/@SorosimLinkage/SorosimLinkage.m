@@ -41,6 +41,12 @@ classdef SorosimLinkage
         dcp          %(n_sactx1) cells of space derivative of the local cable position (0, yp',zp')
         CableActuator     %CableActuation class of parameterized functions corresponding to the y and z coodinates of the cable
 
+        % radial actuator for soft links
+        n_ract      %number of radial actuators
+        rc          %(n_ractx1) array of radial actuator position
+        r_local     %(n_ractx1) array of local radial actuator
+        RadialActuator %RadialActuation classs 
+
         % custom actuation
         CAP          %true if custom actuation is preseent, false is not
         CAS          %true to apply a custom actuator strength
@@ -111,6 +117,8 @@ classdef SorosimLinkage
             defaultFp_vec = cell(0, 0); % force should be function handler
             defaultCableActuator = CableActuation();
             checkCableActuation = @(x)isa(x, 'CableActuation');
+            defaultRadialActuator = RadialActuation();
+            checkRadialActuator = @(x)isa(x, 'RadialActuation');
 
             addRequired(p, 'Link', checkLink);
             addOptional(p, 'Damped', defaultDamping, @islogical);
@@ -122,6 +130,7 @@ classdef SorosimLinkage
             addParameter(p, 'LocalForce', defaultLocalForce, @islogical);
             addParameter(p, 'Fp_vec', defaultFp_vec, @iscell);
             addParameter(p, 'CableActuator', defaultCableActuator, checkCableActuation);
+            addParameter(p, 'RadialActuator', defaultRadialActuator, checkRadialActuator);
 
             parse(p, Link, varargin{:});
 
@@ -191,6 +200,7 @@ classdef SorosimLinkage
                         error('The function handler should be the form of @(t)...');
                     end
                 end
+
                 Tr.Fp_loc = Fp_loc;
                 Tr.Twists(2).Xadd = Fp_loc;
                 Tr.nsig = Tr.Twists(2).nip;
@@ -202,6 +212,22 @@ classdef SorosimLinkage
             Tr.ActuatedL = p.Results.ActuationL;
             Tr.ActuatedR = p.Results.ActuationR;
             Tr.n_sact = 0;
+            Tr.n_ract = 0;
+            if Tr.ActuatedR
+                RadialActuator = p.Results.RadialActuator;
+                n_ract = RadialActuator.get_n_ract();
+                if n_ract ==0
+                    error('You must have at least 1 radial actuator');
+                end
+                rc = RadialActuator.get_rc();
+                r_local = RadialActuator.get_local();
+                
+                Tr.rc = rc;
+                Tr.Twists(2).Xadd = rc;
+                Tr.nsig = Tr.Twists(2).nip;
+                Tr.r_local = r_local;
+            end
+
             if Tr.ActuatedL
                 CableActuator = p.Results.CableActuator;
                 n_sact = CableActuator.get_n_sact();
