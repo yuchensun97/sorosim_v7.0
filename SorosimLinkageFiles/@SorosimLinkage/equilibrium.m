@@ -149,11 +149,12 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
     end
 
     if Tr.ActuatedR
-        n_ract = Tr.n_ract;
-        Bq_rho = zeros(ndof_rho, n_sact);
-        u_rho = zeros(n_sact, 1);
         rc = Tr.rc;
-        Bq_rho = ComputeRadialActuation(Tr, rc, r_local, q_rho);
+        n_ract = Tr.n_ract;
+        if size(uqt_rho, 1) ~= n_ract || size(uqt_rho, 2) ~=1
+            error("radial actuators dimension mismatch");
+        end
+        Bq_rho = ComputeRadialActuation(Tr, rc);
         u_rho = uqt_rho;
     else
         u_rho = 0;

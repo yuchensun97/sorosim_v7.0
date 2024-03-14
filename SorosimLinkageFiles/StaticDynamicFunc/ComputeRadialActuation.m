@@ -1,19 +1,26 @@
-function Bq_rho = ComputeRadialActuation(Tr, rc, r_local, q_rho)
+function Bq_rho = ComputeRadialActuation(Tr, rc)
     Bq_rho = zeros(Tr.ndof_rho, Tr.n_ract);
     nsig = Tr.nsig;
-    n_ract = Tr.n_ract;
-
-    r_fn = Tr.Link.r_fn;
+    B_rho = Tr.Twists(2).B_rho;
     Xs = Tr.Twist(2).Xs;
+    r_fn = Tr.Link.r_fn;
+    ld = Tr.Link.L;
 
-    %TODO: compute \Phi_a
-    for i_ract = 1:n_ract
-        rc_here = rc(i_ract); %X coordinates of the radial actuator
-        r_here = r_fn(rc_here); %radius of the current cross-section
-        local_here = r_local(i_ract);
-        
+    j = 1; % index of rc intervals
+    for ii = 1:nsig
+        if Xs(ii)>=rc(j,1) && Xs(ii)<=rc(j,2)
+            if Ws(ii) > 0
+                % do the integration
+                z = r_fn(Xs(ii));
+                B_rho_here = B_rho(ii, :);
+                Bq_rho(:,j) = Bq_rho(:,j)+2*pi*(ld*Ws(ii)*B_rho_here'*z^2);
+            end
+        end
+        if Xs(ii) > rc(j, 2)
+            if j == Tr.n_ract
+                break;
+            end
+            j=j+1;
+        end
     end
-
-    %TODO: multiply by rho basis
-    %TODO: then integrate over the rod length
 end

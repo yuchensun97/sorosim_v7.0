@@ -1,8 +1,7 @@
 classdef RadialActuation
     properties(Access=private)
         n_ract    %number of radial actuations
-        rc        %(n_ract x 1) array of radial position
-        local     %(n_ract x 1) array of if the actuator is local or not
+        rc        %(n_ract x 2) array of radial actuator position
     end
 
     methods % constructor
@@ -10,26 +9,40 @@ classdef RadialActuation
             %% initializing radial actuators
             if nargin == 0
                 RA.n_ract = 0;
-                RA.rc = zeros(0, 0);
-                RA.local = zeros(0, 0);
+                RA.rc = zeros(0, 2);
             else
                 n_ract = nargin;
-                rc = zeros(n_ract, 0);
-                local = zeros(n_ract, 0);
+                rc = zeros(n_ract, 2);
                 
                 for i=1:n_ract
                     R = varargin{i};
                     if ~isa(R, 'Radial')
                         error('Input must be of Radial class');
                     else
-                        rc(i, 1) = R.get_rc();
-                        local(i, 1) = R.get_local();
+                        rc(i, :) = R.get_r_pos;
                     end
                 end
-
+                if RadialActuation.checkOverlay(rc)
+                    error('Overlay of radial actuations is not allowed');
+                end
                 RA.n_ract = n_ract;
                 RA.rc = rc;
-                RA.local = local;
+            end
+        end
+    end
+
+    methods(Access=private, Static=true)
+        function overlay = checkOverlay(intervals)
+            sorted_intervals = sortrows(intervals, 1);
+            overlay = false;
+            n = size(sorted_intervals, 1)-1;
+            for i=1:n
+                curr_end = sorted_intervals(i, 2);
+                next_start = sorted_intervals(i+1, 1);
+                if curr_end > next_start
+                    overlay = true;
+                    break;
+                end
             end
         end
     end
@@ -41,10 +54,6 @@ classdef RadialActuation
         
         function rc = get_rc(RA)
             rc = RA.rc;
-        end
-        
-        function local = get_local(RA)
-            local = RA.local;
         end
     end
 end

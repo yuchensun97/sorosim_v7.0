@@ -1,25 +1,29 @@
 classdef Radial
     properties(Access=private)
-        rc    % X coordinates of the radial actuation
-        local % true if the pressure is applied to local frame
+        r_pos    % position of the radial actuator, interval \belongs [0, 1]
     end
 
     methods
-        function R = Radial(cx, local)
-            if cx<0 || cx > 1
-                error('cx must be in [0, 1]');
+        function R = Radial(r_start, r_end)
+            if r_start < 0 || r_start > 1
+                error("r_start must be in [0, 1]");
             end
-            R.rc = cx;
-            R.local = local;
+
+            if r_end < 0 || r_start > 1
+                error("r_end must be in [0, 1]");
+            end
+            
+            if r_end <= r_start
+                error("r_end must be greater than r_start");
+            end
+
+            R.r_pos = [r_star r_end];
         end
-        
-        %% Getter methods
-        function cx = get_rc(R)
-            cx = R.rc;
-        end
-        
-        function local = get_local(R)
-            local = R.local;
+    end
+
+    methods
+        function r_pos = get_r_pos(R)
+            r_pos = R.r_pos;
         end
     end
 end

@@ -44,7 +44,6 @@ classdef SorosimLinkage
         % radial actuator for soft links
         n_ract      %number of radial actuators
         rc          %(n_ractx1) array of radial actuator position
-        r_local     %(n_ractx1) array of local radial actuator
         RadialActuator %RadialActuation classs 
 
         % custom actuation
@@ -220,12 +219,7 @@ classdef SorosimLinkage
                     error('You must have at least 1 radial actuator');
                 end
                 rc = RadialActuator.get_rc();
-                r_local = RadialActuator.get_local();
-                
                 Tr.rc = rc;
-                Tr.Twists(2).Xadd = rc;
-                Tr.nsig = Tr.Twists(2).nip;
-                Tr.r_local = r_local;
             end
 
             if Tr.ActuatedL
