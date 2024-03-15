@@ -17,7 +17,7 @@ classdef Radial
                 error("r_end must be greater than r_start");
             end
 
-            R.r_pos = [r_star r_end];
+            R.r_pos = [r_start r_end];
         end
     end
 

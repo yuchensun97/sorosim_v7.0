@@ -48,7 +48,7 @@ classdef RadialActuation
     end
 
     methods % getter
-        function n = get_n_sact(RA)
+        function n = get_n_ract(RA)
             n = RA.n_ract;
         end
         

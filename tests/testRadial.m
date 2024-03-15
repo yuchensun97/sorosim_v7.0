@@ -13,7 +13,7 @@ B_rho = [1 1];
 L = createLinkage(B_xi, B_rho);
 ndof_xi = L.ndof_xi;
 ndof_rho = L.ndof_rho;
-u_rho = -[0.12 0.35]'*1e5;
+u_rho = -[1.35 1.35]'*1e5;
 
 q = L.statics(zeros(ndof_rho+ndof_xi,1), 0, u_rho);
 q_xi = q(1:ndof_xi,:);
@@ -28,8 +28,8 @@ function L = createLinkage(B_xi, B_rho)
     S.B_xi = B_xi;
     S.B_rho = B_rho;
 
-    act1 = Radial(0.2, 0.5);
-    act2 = Radial(0.6, 0.8);
+    act1 = Radial(0.2, 0.4);
+    act2 = Radial(0.5, 0.7);
 
     Radials = RadialActuation(act1, act2);
 

@@ -2,7 +2,8 @@ function Bq_rho = ComputeRadialActuation(Tr, rc)
     Bq_rho = zeros(Tr.ndof_rho, Tr.n_ract);
     nsig = Tr.nsig;
     B_rho = Tr.Twists(2).B_rho;
-    Xs = Tr.Twist(2).Xs;
+    Xs = Tr.Twists(2).Xs;
+    Ws = Tr.Twists(2).Ws;
     r_fn = Tr.Link.r_fn;
     ld = Tr.Link.L;
 

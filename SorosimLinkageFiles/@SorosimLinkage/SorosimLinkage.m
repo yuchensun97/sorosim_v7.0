@@ -220,6 +220,7 @@ classdef SorosimLinkage
                 end
                 rc = RadialActuator.get_rc();
                 Tr.rc = rc;
+                Tr.n_ract = n_ract;
             end
 
             if Tr.ActuatedL
