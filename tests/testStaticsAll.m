@@ -5,7 +5,6 @@ clear;
 B_xi = [1 1 1 1 1 1;
         2 2 2 1 0 0]';
 
-B_rho_base = [0 1];
 B_rho = [1 2];
 
 %% baseline vs w/ inflation
