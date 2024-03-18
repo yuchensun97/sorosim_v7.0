@@ -73,7 +73,7 @@ classdef SorosimTwist < handle
                 Z = 1/2;                %Zanna quadrature coefficients 2nd order   
                 
                 % setup integration points and weights
-                nGauss = 10;            %number of Gauss points
+                nGauss = 20;            %number of Gauss points
                 T.nGauss = nGauss;
                 [Xs, Ws, nip] = GaussQuadrature(nGauss);
 
