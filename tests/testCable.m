@@ -13,13 +13,20 @@ B_rho = [1 1];
 L = createLinkage(B_xi, B_rho);
 ndof_xi = L.ndof_xi;
 ndof_rho = L.ndof_rho;
-u_xi = -[30 0 0 0]';
+u_xi = -[15 15 15 15]';
 
 q = L.statics(zeros(ndof_rho+ndof_xi,1), u_xi, 0);
 q_xi = q(1:ndof_xi,:);
 q_rho = q(ndof_xi+1:end,:);
 [g, rho] = L.FwdKinematics(q_xi, q_rho);
 f = L.plotq(q_xi, q_rho);
+
+figure;
+Xs = L.Twists(2).Xs;
+plot(Xs, rho);
+xlabel('Xs');
+ylabel('rho');
+grid on
 
 function L = createLinkage(B_xi, B_rho)
     S = SorosimLink();
@@ -28,8 +35,10 @@ function L = createLinkage(B_xi, B_rho)
     S.B_xi = B_xi;
     S.B_rho = B_rho;
 
-    act1_y = @(X)0.018*sin(X);
-    act1_z = @(X)0.018*cos(X);
+    %act1_y = @(X)0.018*sin(X);
+    %act1_z = @(X)0.018*cos(X);
+    act1_y = @(X)0.018;
+    act1_z = @(X)0;
     act1 = Cable(act1_y, act1_z);
 
     act2_y = @(X)0;
@@ -46,7 +55,7 @@ function L = createLinkage(B_xi, B_rho)
 
     Cables = CableActuation(act1, act2, act3, act4);
 
-    L = SorosimLinkage(S, Gravity=true,...
+    L = SorosimLinkage(S, Gravity=false,...
                           ActuationL=true,...
                           CableActuator=Cables);
 end

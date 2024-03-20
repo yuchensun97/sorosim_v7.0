@@ -11,8 +11,8 @@ B_rho = [1 2];
 L = createLinkage(B_xi, B_rho);
 ndof_xi = L.ndof_xi;
 ndof_rho = L.ndof_rho;
-u_rho = -[1.5 1.2]'*1e5;
-u_xi = -[15 15 0 0]';
+u_rho = -[0.5 1.35]'*1e5;
+u_xi = -[30 0 0 0]';
 
 q = L.statics(zeros(ndof_rho+ndof_xi,1), u_xi, u_rho);
 q_xi = q(1:ndof_xi,:);
