@@ -198,20 +198,22 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
             omega_2 = eta_here(3);
             omega_3 = eta_here(1);
             MI_here = I11*(omega_2^2+omega_3^2)+I22*(omega_1^2+omega_3^2);
-            Ms_here(1:3,1:3) = rho_here^4 * Ms_here(1:3, 1:3);
-            Ms_here(4:6,4:6) = rho_here^2 * Ms_here(4:6, 4:6);
-            Ms_dot_here = Ms_here;
-            Ms_dot_here(1:3, 1:3) = 4*rho_here^3 * Ms_dot_here(1:3, 1:3);
-            Ms_dot_here(4:6, 4:6) = 2*rho_here * Ms_dot_here(4:6, 4:6);
-            Ms_dot_here = rhod_here * Ms_dot_here;
+            % Ms_here(1:3,1:3) = rho_here^4 * Ms_here(1:3, 1:3);
+            % Ms_here(4:6,4:6) = rho_here^2 * Ms_here(4:6, 4:6);
+            % Ms_dot_here = Ms_here;
+            % Ms_dot_here(1:3, 1:3) = 4*rho_here^3 * Ms_dot_here(1:3, 1:3);
+            % Ms_dot_here(4:6, 4:6) = 2*rho_here * Ms_dot_here(4:6, 4:6);
+            % Ms_dot_here = rhod_here * Ms_dot_here;
 
             if Tr.Gravity
                 F_xi = F_xi + ld*W_here*J_here_xi'*Ms_here*dinamico_Adjoint(ginv(g_here))*G;
             end
             Qtemp = ld*W_here*J_here_xi'*Ms_here;
             M_xi = M_xi + Qtemp*J_here_xi;
+            % C_xi = C_xi + Qtemp*Jd_here_xi +...
+            %        ld*W_here*J_here_xi'*Ms_dot_here*J_here_xi+...
+            %        ld*W_here*J_here_xi'*dinamico_coadj(eta_here)*Ms_here*J_here_xi;
             C_xi = C_xi + Qtemp*Jd_here_xi +...
-                   ld*W_here*J_here_xi'*Ms_dot_here*J_here_xi+...
                    ld*W_here*J_here_xi'*dinamico_coadj(eta_here)*Ms_here*J_here_xi;
             K_rho = K_rho - ld*W_here*J_rho_here'*MI_here*J_rho_here;% last term of K_rho
             F_rho = F_rho + ld*W_here*J_rho_here'*MI_here*rho_star_here;
@@ -231,10 +233,10 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
         D_rho = Tr.D_rho;
         D_rho_bar = Tr.D_rho_bar;
     else
-        D_xi = 0;
-        D_xi_bar = 0;
-        D_rho = 0;
-        D_rho_bar = 0;
+        D_xi = zeros(ndof_xi, ndof_xi);
+        D_xi_bar = zeros(ndof_xi, ndof_rho);
+        D_rho = zeros(ndof_rho, ndof_rho);
+        D_rho_bar = zeros(ndof_rho, ndof_xi);
     end
 
     K_xi = Tr.K_xi;

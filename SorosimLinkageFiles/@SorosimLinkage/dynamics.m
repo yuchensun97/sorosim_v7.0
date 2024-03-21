@@ -2,13 +2,13 @@
 function [t, qqd] = dynamics(Tr, qqd0, odetype, dt, tmax)
     ndof_xi = Tr.ndof_xi;
     ndof_rho = Tr.ndof_rho;
+    odetype = 'ode45';
+    dt = 0.01;
+    tmax = 2;
     if nargin==1||isempty(qqd0)
         q0 = zeros(ndof_xi+ndof_rho,1);
         qd0 = zeros(ndof_xi+ndof_rho,1);
         qqd0 = [q0;qd0];
-        dt = 0.01;
-        tmax = 2;
-        odetype = 'ode45';
     end
 
     uqt_xi = 0;
