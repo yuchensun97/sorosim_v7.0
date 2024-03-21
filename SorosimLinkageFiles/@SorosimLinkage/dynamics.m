@@ -2,7 +2,7 @@
 function [t, qqd] = dynamics(Tr, qqd0, odetype, dt, tmax)
     ndof_xi = Tr.ndof_xi;
     ndof_rho = Tr.ndof_rho;
-    odetype = 'ode45';
+    odetype = 'ode15s';
     dt = 0.01;
     tmax = 2;
     if nargin==1||isempty(qqd0)
