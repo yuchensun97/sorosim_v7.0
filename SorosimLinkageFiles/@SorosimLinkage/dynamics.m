@@ -14,11 +14,6 @@ function [t, qqd] = dynamics(Tr, qqd0, odetype, dt, tmax)
     uqt_xi = 0;
     uqt_rho = 0;
 
-    if Tr.Actuated
-        uqt_xi = rand(1);
-        uqt_rho = rand(1);
-    end
-
     switch odetype
         case 'ode45'
             options = odeset('RelTol',1e-3);
