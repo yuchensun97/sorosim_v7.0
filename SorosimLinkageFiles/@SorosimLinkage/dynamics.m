@@ -4,7 +4,7 @@ function [t, qqd] = dynamics(Tr, qqd0, odetype, dt, tmax)
     ndof_rho = Tr.ndof_rho;
     odetype = 'ode15s';
     dt = 0.01;
-    tmax = 2;
+    tmax = 10;
     if nargin==1||isempty(qqd0)
         q0 = zeros(ndof_xi+ndof_rho,1);
         qd0 = zeros(ndof_xi+ndof_rho,1);
