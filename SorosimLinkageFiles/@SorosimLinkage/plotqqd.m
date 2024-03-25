@@ -1,9 +1,8 @@
-function plotqqd(Tr, t, qqd, filename, play)
+function plotqqd(Tr, t, qqd, filename)
     close all
 
     if nargin<=3
         filename = 'dynamics';
-        play = true;
     end
 
     PlottingParameters = Tr.PlotParameters;
@@ -13,7 +12,7 @@ function plotqqd(Tr, t, qqd, filename, play)
     if ~exist('./videos', 'dir')
         mkdir('./videos');
     end
-    v = VideoWriter("./videos/"+filename);
+    v = VideoWriter("./videos/"+filename, 'MPEG-4');
     FrameRate = PlottingParameters.FrameRateValue;
     v.FrameRate = FrameRate;
     open(v);
@@ -161,8 +160,4 @@ function plotqqd(Tr, t, qqd, filename, play)
     end
 
     close(v);
-
-    if play
-        implay("./videos/"+filename+".avi")
-    end
 end
