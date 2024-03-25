@@ -213,6 +213,8 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
             C_xi = C_xi + Qtemp*Jd_here_xi +...
                    ld*W_here*J_here_xi'*Ms_dot_here*J_here_xi+...
                    ld*W_here*J_here_xi'*dinamico_coadj(eta_here)*Ms_here*J_here_xi;
+            % C_xi = C_xi + Qtemp*Jd_here_xi +...
+            %        ld*W_here*J_here_xi'*dinamico_coadj(eta_here)*Ms_here*J_here_xi;
             K_rho = K_rho - ld*W_here*J_rho_here'*MI_here*J_rho_here;% last term of K_rho
             F_rho = F_rho + ld*W_here*J_rho_here'*MI_here*rho_star_here;
         end
@@ -231,10 +233,10 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
         D_rho = Tr.D_rho;
         D_rho_bar = Tr.D_rho_bar;
     else
-        D_xi = 0;
-        D_xi_bar = 0;
-        D_rho = 0;
-        D_rho_bar = 0;
+        D_xi = zeros(ndof_xi, ndof_xi);
+        D_xi_bar = zeros(ndof_xi, ndof_rho);
+        D_rho = zeros(ndof_rho, ndof_rho);
+        D_rho_bar = zeros(ndof_rho, ndof_xi);
     end
 
     K_xi = Tr.K_xi;

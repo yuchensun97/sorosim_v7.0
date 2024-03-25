@@ -6,9 +6,9 @@ function [t, qqd] = dynamics(Tr, qqd0, odetype, dt, tmax)
         q0 = zeros(ndof_xi+ndof_rho,1);
         qd0 = zeros(ndof_xi+ndof_rho,1);
         qqd0 = [q0;qd0];
+        odetype = 'ode15s';
         dt = 0.01;
-        tmax = 2;
-        odetype = 'ode45';
+        tmax = 10;
     end
 
     uqt_xi = 0;

@@ -24,8 +24,7 @@ function D_rho = findD_rho(Tr)
             Gs_here = Gs((ii-1)*6+1:ii*6,:);
             sigma_here = Gs_here(1,1);
             gamma_here = gamma(ii);
-            % Dtemp = Dtemp + ld*Ws(ii)*phi((ii-1)*6+1:ii*6,:)'*Gs_here*phi((ii-1)*6+1:ii*6,:);
-            Dtemp = Dtemp+ld*Ws(ii)*phi_p(ii,:)'*sigma_here*phi_p(ii,:)-...
+            Dtemp = Dtemp+ld*Ws(ii)*phi_p(ii,:)'*sigma_here*phi_p(ii,:)+...
                     ld*Ws(ii)*phi(ii,:)'*gamma_here*phi(ii,:);
         end
     end
