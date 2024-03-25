@@ -85,6 +85,13 @@ function plotqqd(Tr, t, qqd, filename, play)
         y = rho_here*r*cos(theta);
         z = rho_here*r*sin(theta);
         pos = [x; y; z;ones(1, n_r)];
+
+        g_here = eye(4);
+
+        pos_here = g_here*pos;
+        x_here = pos_here(1, :);
+        y_here = pos_here(2, :);
+        z_here = pos_here(3, :);
     
         Xpatch(:, i_patch) = x_here';
         Ypatch(:, i_patch) = y_here';
