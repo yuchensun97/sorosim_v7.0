@@ -18,6 +18,8 @@ ndof_xi = L.ndof_xi;
 ndof_rho = L.ndof_rho;
 q_xi = qqd(:,1:ndof_xi);
 q_rho = qqd(:,ndof_xi+1:ndof_xi+ndof_rho);
+
+%% plot figure
 figure;
 plot(t, q_rho(:,1));
 xlabel('time');
@@ -25,6 +27,10 @@ ylabel('q rho main');
 grid on;
 exportgraphics(gcf, './figures/damp_full.pdf','ContentType','vector');
 
+%% play video
+L.plotqqd(t, qqd, 'free_fall', true);
+
+%% useful function
 function L = createLinkage(B_xi, B_rho)
     S = SorosimLink();
     S.L = 0.5;

@@ -77,7 +77,7 @@ function plotqqd(Tr, t, qqd, filename, play)
         r = r_fn(0);
         theta = linspace(0, 2*pi, n_r);
         if dof_rho ~= 0
-            rho_here = Bh_rho(Xs(ii+1), B_rho_dof, B_rho_odr)*q_rho + rho_starfn(Xs(ii+1));
+            rho_here = Bh_rho(Xs(1), B_rho_dof, B_rho_odr)*q_rho + rho_starfn(Xs(1));
         else
             rho_here = 1;
         end
