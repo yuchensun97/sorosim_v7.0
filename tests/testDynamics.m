@@ -27,7 +27,7 @@ grid on;
 exportgraphics(gcf, './figures/damp_full.pdf','ContentType','vector');
 
 %% play video
-L.plotqqd(t, qqd, 'free_fall');
+% L.plotqqd(t, qqd, 'free_fall');
 
 %% useful function
 function L = createLinkage(B_xi, B_rho)
