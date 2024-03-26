@@ -23,7 +23,7 @@ qqd0 = zeros(2*(ndof_rho+ndof_xi), 1);
 [t, qqd] = L.dynamics(qqd0, uqt_xi, uqt_rho, 'ode15s', 0.01, 2);
 
 %% play video
-L.plotqqd(t, qqd, 'cable');
+% L.plotqqd(t, qqd, 'cable');
 
 
 function L = createLinkage(B_xi, B_rho)
