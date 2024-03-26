@@ -18,7 +18,7 @@ function [t, qqd] = dynamics(Tr, qqd0, uqt_xi, uqt_rho, odetype, dt, tmax)
     end
 
     if n_sact == 0
-        uqt_xi = @(t)0;
+        uqt_xi = 0;
     else
         if ~isa(uqt_xi, 'function_handle')
             error('uqt_xi should be a function handle');
@@ -31,7 +31,7 @@ function [t, qqd] = dynamics(Tr, qqd0, uqt_xi, uqt_rho, odetype, dt, tmax)
     end
 
     if n_ract == 0
-        uqt_rho = @(t)0;
+        uqt_rho = 0;
     else
         if ~isa(uqt_rho, 'function_handle')
             error('uqt_rho should be a function handle');
