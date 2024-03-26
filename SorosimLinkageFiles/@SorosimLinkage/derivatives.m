@@ -239,6 +239,12 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
         n_sact = Tr.n_sact;
         Bq_xi = zeros(ndof_xi, n_sact);
         u_xi = uqt_xi(t);
+
+        for i_act = 1:n_sact
+            dci = Tr.dc{i_act};
+            dcpi = Tr.dcp{i_act};
+            Bq_xi(:, i_act) = ComputeCableActuation(Tr, dci, dcpi, q_xi, q_rho);
+        end
     else
         u_xi = 0;
     end

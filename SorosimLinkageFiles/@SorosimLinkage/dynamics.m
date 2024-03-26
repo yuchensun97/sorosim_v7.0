@@ -1,17 +1,18 @@
 %Function for the dynamic simulation of the linkage
+%TODO: provide default parameters using input parser.
 function [t, qqd] = dynamics(Tr, qqd0, uqt_xi, uqt_rho, odetype, dt, tmax)
     ndof_xi = Tr.ndof_xi;
     ndof_rho = Tr.ndof_rho;
     n_sact = Tr.n_sact;
     n_ract = Tr.n_ract;
 
-    if nargin==1||isempty(qqd0)
+    if nargin==1 || isempty(qqd0)
         q0 = zeros(ndof_xi+ndof_rho,1);
         qd0 = zeros(ndof_xi+ndof_rho,1);
         qqd0 = [q0;qd0];
+        odetype = 'ode15s';
         n_sact = 0;
         n_ract = 0;
-        odetype = 'ode15s';
         dt = 0.01;
         tmax = 10;
     end
@@ -19,7 +20,7 @@ function [t, qqd] = dynamics(Tr, qqd0, uqt_xi, uqt_rho, odetype, dt, tmax)
     if n_sact == 0
         uqt_xi = @(t)0;
     else
-        if isa(uqt_xi, 'function_handle')
+        if ~isa(uqt_xi, 'function_handle')
             error('uqt_xi should be a function handle');
         end
         u_xi = uqt_xi(0);
@@ -32,7 +33,7 @@ function [t, qqd] = dynamics(Tr, qqd0, uqt_xi, uqt_rho, odetype, dt, tmax)
     if n_ract == 0
         uqt_rho = @(t)0;
     else
-        if isa(uqt_rho, 'function_handle')
+        if ~isa(uqt_rho, 'function_handle')
             error('uqt_rho should be a function handle');
         end
         u_rho = uqt_rho(0);
