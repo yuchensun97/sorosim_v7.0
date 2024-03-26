@@ -2,8 +2,8 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
 % compute the time derivatives of q_xi and q_rho
 % t is the time
 % qqd = [q_xi, q_rho, qd_xi, qd_rho]
-% uqt_xi = TODO: fill me in future
-% uqt_rho = TODO: fill me in future
+% uqt_xi = @(t)[uq_xi_1, uq_xi_2, ...]
+% uqt_rho = @(t)[uq_rho_1, uq_rho_2, ...]
 % returns:
 % ydot = [qd_xi, qd_rho, qdd_xi, qdd_rho]
 
@@ -227,6 +227,22 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
         F_xi = F_xi + ComputePointForce(Tr, J_xi, g, t);
     end
 
+    if Tr.ActuatedR
+        rc = Tr.rc;
+        Bq_rho = ComputeRadialActuation(Tr, rc);
+        u_rho = uqt_rho(t);
+    else
+        u_rho = 0;
+    end
+
+    if Tr.ActuatedL
+        n_sact = Tr.n_sact;
+        Bq_xi = zeros(ndof_xi, n_sact);
+        u_xi = uqt_xi(t);
+    else
+        u_xi = 0;
+    end
+
     if Tr.Damped
         D_xi = Tr.D_xi;
         D_xi_bar = Tr.D_xi_bar;
@@ -241,7 +257,7 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
 
     K_xi = Tr.K_xi;
     K_xi_bar = Tr.K_xi_bar;
-    qdd_xi = M_xi\(Bq_xi*uqt_xi+F_xi-K_xi*q_xi-(C_xi+D_xi)*qd_xi-...
+    qdd_xi = M_xi\(Bq_xi*u_xi+F_xi-K_xi*q_xi-(C_xi+D_xi)*qd_xi-...
             K_xi_bar*q_rho - D_xi_bar*qd_rho);
     % ydot = [qd_xi;qdd_xi];
 
@@ -253,7 +269,7 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
     K_rho_bar = Tr.K_rho_bar;
     M_rho = Tr.M_rho;
 
-    qdd_rho = M_rho\(Bq_rho*uqt_rho+F_rho-K_rho*q_rho-D_rho*qd_rho-...
+    qdd_rho = M_rho\(Bq_rho*u_rho+F_rho-K_rho*q_rho-D_rho*qd_rho-...
                     K_rho_bar*q_xi-D_rho_bar*qd_xi);
     ydot = [qd_xi;qd_rho;qdd_xi;qdd_rho];
 end

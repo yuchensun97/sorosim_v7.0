@@ -1,4 +1,4 @@
-function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
+function err = equilibrium(Tr, qu, u_xi, u_rho) %unscaled
     % compute the time derivatives of q_xi and q_rho
     % t is the time
     % qu = [q_xi, q_rho]
@@ -151,7 +151,6 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
     if Tr.ActuatedR
         rc = Tr.rc;
         Bq_rho = ComputeRadialActuation(Tr, rc);
-        u_rho = uqt_rho;
     else
         u_rho = 0;
     end
@@ -159,14 +158,11 @@ function err = equilibrium(Tr, qu, uqt_xi, uqt_rho) %unscaled
     if Tr.ActuatedL
         n_sact = Tr.n_sact;
         Bq_xi = zeros(ndof_xi, n_sact);
-        u_xi = zeros(n_sact, 1);
 
         for i_act = 1:n_sact
             dci = Tr.dc{i_act};
             dcpi = Tr.dcp{i_act};
-
             Bq_xi(:, i_act) = ComputeCableActuation(Tr, dci, dcpi, q_xi, q_rho);
-            u_xi(i_act) = uqt_xi(i_act);
         end
     else
         u_xi = 0;

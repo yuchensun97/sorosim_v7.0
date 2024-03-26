@@ -10,10 +10,6 @@ function q = statics(Tr, qu0, u_xi, u_rho)
         if sz(1)~= n_sact || sz(2)~= 1
             error('u_xi must match the size of cable actuators');
         end
-        
-        if any(u_xi >0)
-            error('Cable can only apply negative force');
-        end
     end
 
     if n_ract == 0
@@ -22,10 +18,6 @@ function q = statics(Tr, qu0, u_xi, u_rho)
         sz = size(u_rho);
         if sz(1) ~= n_ract || sz(2)~=1
             error('u_rho must match the size of radial actuators');
-        end
-
-        if any(u_rho > 0)
-            error('Radial actuator can only apply negative pressure');
         end
     end
     
