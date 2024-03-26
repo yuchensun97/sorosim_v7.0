@@ -224,7 +224,7 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
     Bq_rho = 0;
 
     if Tr.PointForce
-        F_xi = F_xi + J_xi(end-5:end,:)'*[0 0 0 -1 0 0]';
+        F_xi = F_xi + ComputePointForce(Tr, J_xi, g, t);
     end
 
     if Tr.Damped
