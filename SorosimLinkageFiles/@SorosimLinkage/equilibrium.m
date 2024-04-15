@@ -135,6 +135,10 @@ function err = equilibrium(Tr, qu, u_xi, u_rho) %unscaled
             W_here = Ws(ii);
             Ms_here = Ms(6*(ii-1)+1:6*ii,:);
 
+            % todo: check this
+            Ms_here(1:3,1:3) = rho_here^4 * Ms_here(1:3, 1:3);
+            Ms_here(4:6,4:6) = rho_here^2 * Ms_here(4:6, 4:6);
+
             if Tr.Gravity
                 F_xi = F_xi + ld*W_here*J_here_xi'*Ms_here*dinamico_Adjoint(ginv(g_here))*G;
             end

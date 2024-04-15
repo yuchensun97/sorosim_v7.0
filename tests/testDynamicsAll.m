@@ -22,9 +22,11 @@ qs_xi = q(1:ndof_xi,:);
 qs_rho = q(ndof_xi+1:end,:);
 qqd0 = zeros(2*(ndof_rho+ndof_xi), 1);
 [t, qqd] = L.dynamics(qqd0, uqt_xi, uqt_rho, 'ode15s', 0.01, 15);
+q_xi = qqd(end, 1:ndof_xi)';
+q_rho = qqd(end, ndof_xi+1:ndof_xi+ndof_rho);
 
 %% play video
-L.plotqqd(t, qqd, 'actuators');
+%L.plotqqd(t, qqd, 'actuators');
 
 function L = createLinkage(B_xi, B_rho)
     S = SorosimLink();
@@ -33,8 +35,8 @@ function L = createLinkage(B_xi, B_rho)
     S.B_xi = B_xi;
     S.B_rho = B_rho;
 
-    act1_y = @(X)0.018*sin(X);
-    act1_z = @(X)0.018*cos(X);
+   act1_y = @(X)0.018*sin(X);
+    act1_z = @( X)0.018*cos(X);
     act1 = Cable(act1_y, act1_z);
 
     act2_y = @(X)0;
