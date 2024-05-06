@@ -1,4 +1,4 @@
 figures/*
 *.asv
 videos/*
-./tests/*
+tests/*
