@@ -12,7 +12,6 @@ L = createLinkage(B_xi, B_rho);
 ndof_xi = L.ndof_xi;
 ndof_rho = L.ndof_rho;
 q = L.statics(zeros(ndof_rho+ndof_xi,1), 0, 0);
-qqd0 = [q; zeros(ndof_rho+ndof_xi,1)];
 [t, qqd] = L.dynamics();
 ndof_xi = L.ndof_xi;
 ndof_rho = L.ndof_rho;

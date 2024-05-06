@@ -3,7 +3,7 @@ clear;
 
 X = linspace(0, 1, 50); % X varies from 0 to 1
 Bdof = 1;
-Bodr = 2;
+Bodr = 3;
 % Remove the line that assigns an empty array to 'results'
 
 results = Phi_Rho_Hermitian(X(1), Bdof, Bodr);
@@ -26,9 +26,8 @@ end
 legend(legendInfo);
 
 % add title and labels
-title('Phi Rho mixed');
-xlabel('X');
-ylabel('Phi Rho');
+xlabel('s');
+ylabel('p(s)');
 
 % save figure as .pdf in ${workspaceDir}/figures
 % if the folder does not exist, create it

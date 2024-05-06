@@ -27,7 +27,7 @@ function plotqqd(Tr, t, qqd, filename)
     if PlottingParameters.Light
         camlight(PlottingParameters.Az_light,PlottingParameters.El_light)
     end
-    %     view(45,45);
+    view(45,30);
     axis equal
     grid on
     hold on
