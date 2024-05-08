@@ -22,7 +22,7 @@ function q = statics(Tr, qu0, u_xi, u_rho)
     end
     
     Func    = @(qu)equilibrium(Tr,qu,u_xi,u_rho);
-    options = optimoptions('fsolve','Algorithm','trust-region-dogleg','Display','iter','MaxFunctionEvaluations',2e10);%,'Jacobian','on'); 'trust-region-dogleg' (default), 'trust-region', and 'levenberg-marquardt'.
+    options = optimoptions('fsolve','Algorithm','trust-region-dogleg','Display','iter','MaxFunctionEvaluations',2e10);
     tic
     q      = fsolve(Func,qu0,options);
     toc
