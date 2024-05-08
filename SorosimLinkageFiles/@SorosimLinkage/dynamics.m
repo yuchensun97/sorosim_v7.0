@@ -1,5 +1,4 @@
 %Function for the dynamic simulation of the linkage
-%TODO: provide default parameters using input parser.
 function [t, qqd] = dynamics(Tr, qqd0, uqt_xi, uqt_rho, odetype, dt, tmax)
     ndof_xi = Tr.ndof_xi;
     ndof_rho = Tr.ndof_rho;
@@ -47,7 +46,7 @@ function [t, qqd] = dynamics(Tr, qqd0, uqt_xi, uqt_rho, odetype, dt, tmax)
         case 'ode45'
             options = odeset('RelTol',1e-3);
             tic
-            [t, qqd] = ode45(@(t,qqd)Tr.derivatives(t, qqd,uqt_xi, uqt_rho),0:dt:tmax,qqd0,options);
+            [t, qqd] = ode45(@(t,qqd)Tr.derivatives(t, qqd, uqt_xi, uqt_rho),0:dt:tmax,qqd0,options);
             toc
         case 'ode23'
             options = odeset('RelTol',1e-3);
