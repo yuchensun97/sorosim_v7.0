@@ -246,7 +246,7 @@ clc
 clear variables
 
 addpath(genpath('Basicfunctions'))
-addpath('Custom')
+addpath(genpath('Custom'))
 addpath('SorosimLinkFiles')
 addpath('SorosimTwistFiles')
 addpath(genpath('SorosimLinkageFiles')) %include subfolders
