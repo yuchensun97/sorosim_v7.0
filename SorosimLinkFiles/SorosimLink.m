@@ -120,7 +120,6 @@ classdef SorosimLink
                 A0 = pi*r_base^2;
 
             elseif nargin == 0
-                %default values, same as SimpleLinkage.L1 in Anup's code
                 Li.L = 0.5;
                 Li.r_base = 0.02;
                 Li.r_tip = 0.02;
@@ -138,7 +137,7 @@ classdef SorosimLink
                 Li.B_xi = [1 1 1 1 1 1;
                            0 0 0 0 0 0]';
                 Li.B_rho = [0, 0];
-                Li.basisType = 'hermite';
+                Li.basisType = 'mixed';
             else
                 error('Wrong number of input arguments')
             end

@@ -2,8 +2,8 @@ function err = equilibrium(Tr, qu, u_xi, u_rho) %unscaled
     % compute the time derivatives of q_xi and q_rho
     % t is the time
     % qu = [q_xi, q_rho]
-    % u_xi: (nip,1) vector, the cable loads at integration points
-    % u_rho: (nip, 1) vector, tha radial loads at integration points
+    % u_xi: (nip,n_sact) vector, the cable loads at integration points
+    % u_rho: (nip, n_ract) vector, tha radial loads at integration points
     % returns:
     % err: error between current guess and ground true value
 
@@ -172,7 +172,7 @@ function err = equilibrium(Tr, qu, u_xi, u_rho) %unscaled
 
     K_xi = Tr.K_xi;
     K_xi_bar = Tr.K_xi_bar;
-    E_xi = K_xi*q_xi+K_xi_bar*q_rho-Bq_xi*u_xi-F_xi;
+    E_xi = K_xi*q_xi+K_xi_bar*q_rho-Bq_xi-F_xi;
 
     K_rho = Tr.K_rho_part;
     K_rho_bar = Tr.K_rho_bar;
