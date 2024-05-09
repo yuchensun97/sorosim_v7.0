@@ -1,11 +1,11 @@
-function ux = cableFunc(t, Xs)
+function ux = cableFunc(t, Xs, Fmax)
 % input:
 %   t  -- scalar, time
 %   Xs -- (nip, 1) vector, integration points
+%   Fmax -- scalr, maximum force applied to the cable
 % returns:
 %   ux -- (nip, 1) vector, cable tension at integration points at t
 
-    Fmax = 15; % maximum force 15 N
     T = 0.1; % ramping time
     Tp = 2; % propangation time
 
