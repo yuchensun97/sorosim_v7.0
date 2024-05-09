@@ -13,7 +13,7 @@ function Bq_xi = ComputeCableActuation(Tr, dc, dcp, q_xi, q_rho)
     for ii = 1:nip
         if Ws(ii)>0
             dc_here = dc(:, ii);
-            dcp_here = dcp(:, ii);
+            dcp_here = dcp(:, ii)/ld; % convert back to the [0,L] domain
             xi_here = xi_star(6*(ii-1)+1:6*ii, 1);
             B_xi_here = Twists.B_xi(6*(ii-1)+1:6*ii, :);
             if ndof_xi>0
