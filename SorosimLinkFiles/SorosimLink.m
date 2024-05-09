@@ -111,7 +111,7 @@ classdef SorosimLink
                 Li.G = Li.E/(2*(1+Li.Poi));
                 Li.Rho0 = data.density;
                 Li.Eta = data.viscousity;
-                Li.color = data.color;
+                Li.color = rand(1,3);
                 Li.n_l = data.cs;
                 Li.n_r = data.points;
                 A0 = pi*r_base^2;
@@ -128,7 +128,7 @@ classdef SorosimLink
                 Li.Eta = 1e4;
                 Li.color = rand(1,3);
                 Li.n_l = 25;
-                Li.n_r = 50;
+                Li.n_r = 18;
                 r_base = Li.r_fn(0);
                 A0 = pi*r_base^2;
                 Li.B_xi = [1 1 1 1 1 1;
