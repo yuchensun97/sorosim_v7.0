@@ -3,7 +3,7 @@ classdef OctopusArm < SorosimLinkage
     % Deal with the case when the actuation loads are functions of both time and space
     methods
         function Tr = OctopusArm(Link, varargin)
-            Tr@SorosimLinkage(Link, varargin);
+            Tr@SorosimLinkage(Link, varargin{:});
         end
     end
     methods

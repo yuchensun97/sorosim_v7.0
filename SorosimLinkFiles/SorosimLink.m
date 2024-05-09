@@ -95,9 +95,6 @@ classdef SorosimLink
                 if data.inflation_order <= 0
                     error('inflation_order must be positive')
                 end
-                if ~isstring(data.basisType)
-                    error('basisType must be a string')
-                end
 
                 %assign values
                 Li.basisType = data.basisType;
