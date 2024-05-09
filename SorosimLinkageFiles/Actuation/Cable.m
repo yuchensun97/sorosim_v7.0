@@ -31,6 +31,7 @@ classdef Cable
 
     methods(Access = private, Static=true) % statics method
         function dydx = CableDerivative(f, X)
+            % return the derivatives on the SCALE domain
             % f, function handler
             % X, point at which to compute the derivative
             h = 1e-5;
