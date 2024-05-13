@@ -1,4 +1,4 @@
-function ux = cableFunc(t, Xs, Fmax, fend)
+function ux = LMrelease(t, Xs, Fmax, fend)
 % input:
 %   t  -- scalar, time
 %   Xs -- (nip, 1) vector, integration points

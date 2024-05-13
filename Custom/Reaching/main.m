@@ -12,7 +12,7 @@ ndof_xi = Octopus.ndof_xi;
 ndof_rho = Octopus.ndof_rho;
 
 %% assign actuation load
-Fmax = 30;
+Fmax = 3;
 fend = 0.7; % cable force end at fend
 Xs = Octopus.Twists(2).Xs;
 nip = Octopus.Twists(2).nip;
@@ -21,14 +21,26 @@ u_xi = zeros(nip, n_sact);
 u_xi(:, 1) = -Fmax * (ones(nip, 1) - Xs/fend);
 u_xi(Xs>=fend, 1)= 0;
 
+uqt_xi = cell{n_sact, 1};
+uqt_xi{1} = @(t)LMrelease(t, Xs, Fmax, fend);
+for i = 2:n_sact
+    uqt_xi{i} = @(t)zeros(nip, 1);
+end
+
 %% statics
 q0 = zeros(ndof_xi+ndof_rho, 1);
 q_static = Octopus.statics(q0, u_xi, 0);
 q_xi = q_static(1:ndof_xi,:);
 q_rho = q_static(ndof_xi+1:end,:);
-f = Octopus.plotq(q_xi, q_rho);
+f = Octopus.plotq(qs_xi, qs_rho);
 
-%% TODO: dynamics
+%% dynamics
+dt = 0.01;
+tmax = 2.5;
+[t, qqd] = Octopus.dynamics(q_static, uqt_xi, 0, 'ode15s', dt, tmax);
+
+% play video
+Octopus.plotqqd(t, qqd, 'Octopus_reaching');
 
 %% usefull functions
 function LOM = createLOM(OctopusLink)
