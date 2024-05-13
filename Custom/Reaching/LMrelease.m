@@ -7,7 +7,7 @@ function ux = LMrelease(t, Xs, Fmax, fend)
 % returns:
 %   ux -- (nip, 1) vector, cable tension at integration points at t
 
-    T = 0.1; % ramping time
+    T = 0.2; % ramping time
     Tp = 2; % propangation time
 
     pe = (t-T)/(Tp-T); % propangation end
