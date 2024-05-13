@@ -220,9 +220,6 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
             end
         end
     
-        Bq_xi = 0;
-        Bq_rho = 0;
-    
         if Tr.PointForce
             F_xi = F_xi + ComputePointForce(Tr, J_xi, g, t);
         end
