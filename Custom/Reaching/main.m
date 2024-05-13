@@ -13,12 +13,13 @@ ndof_rho = Octopus.ndof_rho;
 
 %% assign actuation load
 Fmax = 30;
+fend = 0.7; % cable force end at fend
 Xs = Octopus.Twists(2).Xs;
 nip = Octopus.Twists(2).nip;
 n_sact = LOM.get_n_sact();
 u_xi = zeros(nip, n_sact);
-u_xi(:, 1) = -Fmax * (ones(nip, 1) - Xs/0.7);
-u_xi(Xs>0.7, 1)= 0;
+u_xi(:, 1) = -Fmax * (ones(nip, 1) - Xs/fend);
+u_xi(Xs>=fend, 1)= 0;
 
 %% statics
 q0 = zeros(ndof_xi+ndof_rho, 1);
@@ -38,7 +39,6 @@ function LOM = createLOM(OctopusLink)
     %   LM: CableActuation objects
     rt = OctopusLink.r_tip;
     rb = OctopusLink.r_base;
-    L = OctopusLink.L;
 
     % define longitudinal muscles on SCALED domain
     LM1_y = @(X)0;
