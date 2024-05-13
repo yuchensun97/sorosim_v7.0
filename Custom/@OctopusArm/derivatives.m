@@ -2,8 +2,8 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
     % compute the time derivatives of q_xi and q_rho
     % t is the time
     % qqd = [q_xi, q_rho, qd_xi, qd_rho]
-    % uqt_xi, {n_act_xi, 1} cell, each cell is the calble load at integration points at t
-    % uqt_rho, {n_act_xi, 1} cell, each cell is the radial load at integration points at t
+    % uqt_xi, {n_sact, 1} cell, each cell is the calble load at integration points at t
+    % uqt_rho, function handler, radial load at integration points at t
     % returns:
     % ydot = [qd_xi, qd_rho, qdd_xi, qdd_rho]
     
@@ -230,10 +230,10 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
         % TODO: update in future
         if Tr.ActuatedR
             rc = Tr.rc;
-            Bq_rho = ComputeRadialActuation(Tr, rc);
             u_rho = uqt_rho(t);
+            Bq_rho = ComputeRadialActuation(Tr, rc, u_rho);
         else
-            u_rho = 0;
+            Bq_rho = zeros(ndof_rho, 1);
         end
     
         if Tr.ActuatedL
