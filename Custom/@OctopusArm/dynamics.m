@@ -35,17 +35,12 @@ function [t, qqd] = dynamics(Tr, qqd0, uqt_xi, uqt_rho, odetype, dt, tmax)
     if n_ract == 0
         uqt_rho = 0;
     else
-        if ~iscell(uqt_rho)
-            error('uqt_rho should be a cell array');
+        if ~isa(uqt_rho, 'function_handle')
+            error('uqt_rho should be a function handle');
         end
-        for i=1:n_ract
-            if ~isa(uqt_rho{i}, 'function_handle')
-                error('uqt_rho should be a function handle');
-            end
-            u_rho = uqt_rho{i}(0);
-           if ~isvector(u_rho)
-                error('return of uqt_rho{i}(t) must be a vector');
-           end
+        u_rho = uqt_rho(0);
+        if ~isvector(u_rho)
+            error('return of uqt_rho{i}(t) must be a vector');
         end
     end
 
