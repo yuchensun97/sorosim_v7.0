@@ -5,6 +5,7 @@ function Bq_xi = ComputeCableActuation(Tr, dc, dcp, q_xi, q_rho, u_xi)
     % q_xi: ndof_xi x 1, the generalized coordinates of the xi
     % q_rho: ndof_rho x 1, the generalized coordinates of the rho
     % u_xi: nip x 1, the actuation loads at intergration points
+    % returns:
     % Bq_xi: ndof_xi x 1, the actuation loads in q-space
     Bq_xi = zeros(Tr.ndof_xi, 1);
     Twists = Tr.Twists(2);

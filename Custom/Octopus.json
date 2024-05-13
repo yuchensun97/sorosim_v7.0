@@ -12,6 +12,10 @@
     "motion": [1, 1, 1, 1, 1, 1],
     "motion_order": [2, 2, 2, 1, 0, 0],
     "inflation": 1,
+<<<<<<< HEAD:Custom/Reaching/Octopus.json
     "inflation_order": 3,
+=======
+    "inflation_order": 2,
+>>>>>>> 599f7b2 (add TM contraction load):Custom/Octopus.json
     "basisType": "mixed"
 }
