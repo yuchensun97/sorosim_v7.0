@@ -40,7 +40,7 @@ function [t, qqd] = dynamics(Tr, qqd0, uqt_xi, uqt_rho, odetype, dt, tmax)
         end
         u_rho = uqt_rho(0);
         if ~isvector(u_rho)
-            error('return of uqt_rho{i}(t) must be a vector');
+            error('return of uqt_rho(t) must be a vector');
         end
     end
 
