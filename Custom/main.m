@@ -4,14 +4,16 @@ clear;
 %% create Link
 OctopusLink = SorosimLink('Octopus.json');
 LOM = createLOM(OctopusLink);
+TM = createTM();
 Octopus = OctopusArm(OctopusLink, Damped=true, ...
                                   Gravity=false, PointForce=false, ...
                                   ActuationL=true, ActuationR=false, ...
-                                  CableActuator=LOM);
+                                  CableActuator=LOM, RadialActuator=TM);
 ndof_xi = Octopus.ndof_xi;
 ndof_rho = Octopus.ndof_rho;
 
 %% assign actuation load
+% LM
 Fmax = 3.5;
 fend = 0.7; % cable force end at fend
 Xs = Octopus.Twists(2).Xs;
@@ -27,18 +29,28 @@ for i = 2:n_sact
     uqt_xi{i} = @(t)zeros(nip, 1);
 end
 
+% TM
+Pmax = 16e3; % maximum boundary stress, Pa
+u_rho = zeros(nip, 1);
+u_rho(:, 1) = -Pmax;
+u_rho(Xs>fend, 1)=0;
+
 %% statics
+% bending
 q0 = zeros(ndof_xi+ndof_rho, 1);
-q_static = Octopus.statics(q0, u_xi, 0);
-q_xi = q_static(1:ndof_xi,:);
-q_rho = q_static(ndof_xi+1:end,:);
-% f = Octopus.plotq(q_xi, q_rho);
+qb = Octopus.statics(q0, u_xi, 0);
+qb_xi = qb(1:ndof_xi,:);
+qb_rho = qb(ndof_xi+1:end,:);
+% f = Octopus.plotq(qb_xi, qb_rho);
+
+% elongation
+
 
 %% dynamics
-dt = 0.01;
-tmax = 16;
-qqd0 = [q_static; zeros(ndof_xi+ndof_rho,1)];
-[t, qqd] = Octopus.dynamics(qqd0, uqt_xi, 0, 'ode15s', dt, tmax);
+% dt = 0.01;
+% tmax = 16;
+% qqd0 = [q_static; zeros(ndof_xi+ndof_rho,1)];
+% [t, qqd] = Octopus.dynamics(qqd0, uqt_xi, 0, 'ode15s', dt, tmax);
 
 % play video
 Octopus.plotqqd(t, qqd, 'Octopus_reaching');
@@ -78,3 +90,7 @@ function LOM = createLOM(OctopusLink)
 
 end
 
+function TM = createTM()
+    act = Radial(0, 0.7);
+    TM = RadialActuation(act);
+end

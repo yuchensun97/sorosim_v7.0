@@ -3,7 +3,7 @@ function err = equilibrium(Tr, qu, u_xi, u_rho) %unscaled
     % t is the time
     % qu = [q_xi, q_rho]
     % u_xi: (nip,n_sact) vector, the cable loads at integration points
-    % u_rho: (nip, n_ract) vector, tha radial loads at integration points
+    % u_rho: (nip, 1) vector, the radial loads at integration points
     % returns:
     % err: error between current guess and ground true value
 
@@ -155,9 +155,7 @@ function err = equilibrium(Tr, qu, u_xi, u_rho) %unscaled
     % TODO: update in future
     if Tr.ActuatedR
         rc = Tr.rc;
-        Bq_rho = ComputeRadialActuation(Tr, rc);
-    else
-        u_rho = 0;
+        Bq_rho = ComputeRadialActuation(Tr, rc, u_rho);
     end
 
     if Tr.ActuatedL
@@ -176,7 +174,7 @@ function err = equilibrium(Tr, qu, u_xi, u_rho) %unscaled
 
     K_rho = Tr.K_rho_part;
     K_rho_bar = Tr.K_rho_bar;
-    E_rho = K_rho*q_rho+K_rho_bar*q_xi-Bq_rho*u_rho;
+    E_rho = K_rho*q_rho+K_rho_bar*q_xi-Bq_rho;
     err = [E_xi;E_rho]*1e7;
 end
     
