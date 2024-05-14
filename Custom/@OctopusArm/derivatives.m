@@ -272,7 +272,7 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
         K_rho_bar = Tr.K_rho_bar;
         M_rho = Tr.M_rho;
     
-        qdd_rho = M_rho\(Bq_rho*u_rho+F_rho-K_rho*q_rho-D_rho*qd_rho-...
+        qdd_rho = M_rho\(Bq_rho+F_rho-K_rho*q_rho-D_rho*qd_rho-...
                         K_rho_bar*q_xi-D_rho_bar*qd_xi);
         ydot = [qd_xi;qd_rho;qdd_xi;qdd_rho];
     end
