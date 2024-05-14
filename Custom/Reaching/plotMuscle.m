@@ -1,9 +1,10 @@
 clc;
+clear;
 close;
 %% starts
 % initialization
 t = 0:0.01:8;
-Xs = 0:0.25:1;
+Xs = 0:0.1:1;
 Fmax = 3.5;
 Pmax = 16e3;
 fend = 0.7;
@@ -13,7 +14,7 @@ TM = [];
 % get values
 for ts=t
     uLM = LMrelease(ts, Xs, Fmax, fend);
-    uTM = TMcontract(ts, Xs, Fmax, fend);
+    uTM = TMcontract(ts, Xs, Pmax, fend);
 
     LM = [LM uLM];
     TM = [TM uTM];
@@ -31,7 +32,7 @@ grid on;
 legend(LMinfo);
 xlabel('time');
 ylabel('F');
-title('LM release propangation');
+title('LM release propagation');
 
 if ~exist('./figures', 'dir')
     mkdir('./figures');
@@ -49,5 +50,5 @@ grid on;
 legend(TMinfo);
 xlabel('time');
 ylabel('P');
-title('TM contract propangation');
+title('TM contract propagation');
 exportgraphics(gcf, './figures/TMcontract.pdf','ContentType','vector');

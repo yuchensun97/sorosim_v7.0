@@ -1,23 +1,32 @@
 function ux = LMrelease(t, Xs, Fmax, fend)
-% input:
-%   t  -- scalar, time
-%   Xs -- (nip, 1) vector, integration points
-%   Fmax -- scalar, maximum force applied to the cable
-%   fend -- scalar, force end at fend
-% returns:
-%   ux -- (nip, 1) vector, cable tension at integration points at t
+    % Inputs:
+    %   t    -- scalar, time
+    %   Xs   -- (nip, 1) vector, integration points
+    %   Fmax -- scalar, maximum force applied to the cable
+    %   fend -- scalar, force end at fend (equivalent to 'a' in the initial description)
 
-    T = 1.5; % ramping time
-    Tp = 5; % propangation time
+    % Constants
+    T = 1.5;  % Ramping time (time it takes for the force to drop to 0)
+    Tp = 5;   % Propagation time (time it takes for the effect to propagate along the cable)
 
-    pe = (t-T)/(Tp-T); % propangation end
-    ps = t/Tp; % propangation start
+    % Calculate start and end time of force decay at each point
+    startTime = (Xs / fend) * Tp;
+    endTime = startTime + (1 - Xs / fend) * T;
 
-    nip = length(Xs); % number of integration points
-    ux = zeros(nip, 1); % cable tension at integration points at t
+    % Initialize cable tension at integration points to zero
+    ux = zeros(length(Xs), 1);
 
-    ux(Xs < pe) = 0;
-    ux(Xs >= pe & Xs < ps) = -(1-ps/fend)*Fmax*(Xs(Xs >= pe & Xs < ps)-pe)/(ps-pe);
-    ux(Xs >= ps & Xs < fend) = -(1-Xs(Xs >= ps & Xs < fend)/fend)*Fmax;
-    ux(Xs >= fend) = 0;
+    % Apply force calculations only where applicable
+    for i = 1:length(Xs)
+        if Xs(i) > fend
+            ux(i) = 0;  % Ensure that for x > fend, u(x, t) is always zero
+        elseif t < startTime(i)
+            ux(i) = (1 - Xs(i) / fend) * Fmax;  % Before decay starts
+        elseif t >= startTime(i) && t <= endTime(i)
+            ux(i) = (1 - (t - startTime(i)) / (endTime(i) - startTime(i))) * (1 - Xs(i) / fend) * Fmax;
+        else
+            ux(i) = 0;  % After decay has finished
+        end
+    end
+    ux = -ux;
 end
