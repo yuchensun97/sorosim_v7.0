@@ -12,6 +12,7 @@
     "motion": [1, 1, 1, 1, 1, 1],
     "motion_order": [2, 2, 2, 1, 0, 0],
 <<<<<<< HEAD
+<<<<<<< HEAD
     "inflation": 1,
 <<<<<<< HEAD:Custom/Reaching/Octopus.json
     "inflation_order": 3,
@@ -20,6 +21,9 @@
 >>>>>>> 599f7b2 (add TM contraction load):Custom/Octopus.json
 =======
     "inflation": 0,
+=======
+    "inflation": 1,
+>>>>>>> 3123c5e (trivial)
     "inflation_order": 1,
 >>>>>>> 0f2c969 (fix LM TM bug)
     "basisType": "mixed"
