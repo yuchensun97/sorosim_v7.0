@@ -5,13 +5,13 @@
     "young": 110e3,
     "poisson": 0.5,
     "density": 1e3,
-    "viscousity": 1000,
+    "viscousity": 300,
     "cs": 25,
     "points": 18,
     "scale": 0.1122,
     "motion": [1, 1, 1, 1, 1, 1],
     "motion_order": [2, 2, 2, 1, 0, 0],
-    "inflation": 1,
-    "inflation_order": 2,
+    "inflation": 0,
+    "inflation_order": 1,
     "basisType": "mixed"
 }

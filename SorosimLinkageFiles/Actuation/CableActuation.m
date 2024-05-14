@@ -36,18 +36,18 @@ classdef CableActuation
 
     methods
         % Getter for n_sact
-        function n = get_n_sact(obj)
-            n = obj.n_sact;
+        function n = get_n_sact(CA)
+            n = CA.n_sact;
         end
         
         % Getter for dc_fn
-        function dc = get_dc_fn(obj)
-            dc = obj.dc_fn;
+        function dc = get_dc_fn(CA)
+            dc = CA.dc_fn;
         end
         
         % Getter for dcp_fn
-        function dcp = get_dcp_fn(obj)
-            dcp = obj.dcp_fn;
+        function dcp = get_dcp_fn(CA)
+            dcp = CA.dcp_fn;
         end
     end
 

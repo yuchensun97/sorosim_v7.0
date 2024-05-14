@@ -17,5 +17,5 @@ function ux = TMcontract(t, Xs, Pmax, fend)
 
     c = hit/T; % compressed factor
     X = t- Xs(Xs < fend)/fend*Tp;
-    ux(Xs < fend) = Pmax*heaviside(X).*(1-exp(-(c*X).^2));
+    ux(Xs < fend) = -Pmax*heaviside(X).*(1-exp(-(c*X).^2));
 end
