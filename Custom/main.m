@@ -7,7 +7,7 @@ LOM = createLOM(OctopusLink);
 TM = createTM();
 Octopus = OctopusArm(OctopusLink, Damped=true, ...
                                   Gravity=false, PointForce=false, ...
-                                  ActuationL=true, ActuationR=false, ...
+                                  ActuationL=true, ActuationR=true, ...
                                   CableActuator=LOM, RadialActuator=TM);
 ndof_xi = Octopus.ndof_xi;
 ndof_rho = Octopus.ndof_rho;
@@ -32,12 +32,10 @@ end
 
 % TM
 Pmax = 16e3; % maximum boundary stress, Pa
-u_rho = -TMcontract(1, Xs, Pmax, fend);
-
-uqt_rho = @(t)zeros(nip, 1);
+uqt_rho = @(t)TMcontract(t, Xs, Pmax, fend);
 
 %% statics
-% % only bending
+% starts from bending position
 q0 = zeros(ndof_xi+ndof_rho, 1);
 qb = Octopus.statics(q0, u_xi, zeros(nip, 1));
 qb_xi = qb(1:ndof_xi,:);
@@ -45,13 +43,13 @@ qb_rho = qb(ndof_xi+1:end, :);
 fb = Octopus.plotq(qb_xi, qb_rho);
 
 %% dynamics
-dt = 0.01;
-tmax = 5;
-
-% reaching
-qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
-[t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, 0, 'ode15s', dt, tmax);
-Octopus.plotqqd(t, qqd, 'Octopus_reaching');
+% dt = 0.01;
+% tmax = 10;
+% 
+% % reaching
+% qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
+% [t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, uqt_rho, 'ode15s', dt, tmax);
+% Octopus.plotqqd(t, qqd, 'Octopus_reaching');
 
 %% usefull functions
 function LOM = createLOM(OctopusLink)
