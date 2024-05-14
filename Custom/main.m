@@ -13,12 +13,13 @@ ndof_xi = Octopus.ndof_xi;
 ndof_rho = Octopus.ndof_rho;
 
 %% assign actuation load
-% LM
 Fmax = 3.5;
 fend = 0.7; % cable force end at fend
 Xs = Octopus.Twists(2).Xs;
 nip = Octopus.Twists(2).nip;
 n_sact = LOM.get_n_sact();
+
+% LM
 u_xi = zeros(nip, n_sact);
 u_xi(:, 1) = -Fmax * (ones(nip, 1) - Xs/fend);
 u_xi(Xs>=fend, 1)= 0;
@@ -31,28 +32,25 @@ end
 
 % TM
 Pmax = 16e3; % maximum boundary stress, Pa
-u_rho = zeros(nip, 1);
-u_rho(:, 1) = -Pmax;
-u_rho(Xs>fend, 1)=0;
+u_rho = -TMcontract(1, Xs, Pmax, fend);
+
+uqt_rho = @(t)zeros(nip, 1);
 
 %% statics
-% bending
+% % only bending
 q0 = zeros(ndof_xi+ndof_rho, 1);
-qb = Octopus.statics(q0, u_xi, 0);
+qb = Octopus.statics(q0, u_xi, zeros(nip, 1));
 qb_xi = qb(1:ndof_xi,:);
-qb_rho = qb(ndof_xi+1:end,:);
-% f = Octopus.plotq(qb_xi, qb_rho);
-
-% elongation
-
+qb_rho = qb(ndof_xi+1:end, :);
+fb = Octopus.plotq(qb_xi, qb_rho);
 
 %% dynamics
-% dt = 0.01;
-% tmax = 16;
-% qqd0 = [q_static; zeros(ndof_xi+ndof_rho,1)];
-% [t, qqd] = Octopus.dynamics(qqd0, uqt_xi, 0, 'ode15s', dt, tmax);
+dt = 0.01;
+tmax = 5;
 
-% play video
+% reaching
+qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
+[t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, 0, 'ode15s', dt, tmax);
 Octopus.plotqqd(t, qqd, 'Octopus_reaching');
 
 %% usefull functions

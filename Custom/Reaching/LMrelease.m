@@ -17,7 +17,7 @@ function ux = LMrelease(t, Xs, Fmax, fend)
     ux = zeros(nip, 1); % cable tension at integration points at t
 
     ux(Xs < pe) = 0;
-    ux(Xs >= pe & Xs < ps) = (1-ps/fend)*Fmax*(Xs(Xs >= pe & Xs < ps)-pe)/(ps-pe);
-    ux(Xs >= ps & Xs < fend) = (1-Xs(Xs >= ps & Xs < fend)/fend)*Fmax;
+    ux(Xs >= pe & Xs < ps) = -(1-ps/fend)*Fmax*(Xs(Xs >= pe & Xs < ps)-pe)/(ps-pe);
+    ux(Xs >= ps & Xs < fend) = -(1-Xs(Xs >= ps & Xs < fend)/fend)*Fmax;
     ux(Xs >= fend) = 0;
 end
