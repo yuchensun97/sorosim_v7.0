@@ -5,12 +5,12 @@ function ux = TMcontract(t, Xs, Pmax, fend)
 %   Fmax -- scalar, maximum force applied to the cable
 %   fend -- scalar, force end at fend
 % returns:
-%   ux -- (nip, 1) vector, cable tension at integration points at t
+%   ux -- (nip, 1) vector, TM tension at integration points at t
 
     hit = sqrt(-log(0.02)); % sigmoid function reach 98%
 
-    T = 0.3; % ramping time
-    Tp = 2; % propangation time
+    T = 0.9; % ramping time
+    Tp = 3; % propangation time
 
     nip = length(Xs); % number of integration points
     ux = zeros(nip, 1); % boundary stress at integration points at t.
