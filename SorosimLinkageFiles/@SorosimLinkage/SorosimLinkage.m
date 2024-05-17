@@ -35,6 +35,12 @@ classdef SorosimLinkage
         ActuatedL    %1 if the soft links are actuated in longitudinal direction, 0 if not
         ActuatedR    %1 if the soft links are actuated in radial direction, 0 if not
 
+        % environment
+        Water       %1 if the soft link is immersed in water
+        rho_w       %density of water
+        DL          %drag/lifting matrix in referenced configuration
+        M_added     %added mass matrix in referenced configuration
+
         % cable actuator for soft links
         n_sact       %number of soft link actuators
         dc           %(n_sactx1) cells of local cable position (0, yp, zp) at Gauss quadrature points of all active soft divisions
@@ -108,6 +114,7 @@ classdef SorosimLinkage
             checkLink = @(x)isa(x, 'SorosimLink');
             defaultGravity = false;
             defaultDamping = false;
+            defaultWater = false;
             defaultActuationL = false;
             defaultActuationR = false;
             defaultPointForce = false;
@@ -123,6 +130,7 @@ classdef SorosimLinkage
             addOptional(p, 'Damped', defaultDamping, @islogical);
             addOptional(p, 'Gravity', defaultGravity, @islogical);
             addOptional(p, 'PointForce', defaultPointForce, @islogical);
+            addOptional(p, 'Water', defaultWater, @islogical);
             addOptional(p, 'ActuationL', defaultActuationL, @islogical);
             addOptional(p, 'ActuationR', defaultActuationR, @islogical);
             addParameter(p, 'Fp_loc', defaultFp_loc, @isvector);
@@ -137,6 +145,13 @@ classdef SorosimLinkage
             Tr.Gravity = p.Results.Gravity;
             if Tr.Gravity
                 Tr.G = [0 0 0 0 0 -9.81]';
+            end
+
+            Tr.Water = p.Results.Water;
+            if Tr.Water
+                Tr.rho_w = 1000;
+                Tr.DL = dragging(Tr);
+                Tr.M_added = addedMass(Tr);
             end
 
             %% Constant coefficients
@@ -283,6 +298,8 @@ classdef SorosimLinkage
         D_rho = findD_rho(Tr);
         D_rho_bar = findD_rho_bar(Tr);
         M_rho = findM_rho(Tr);
+        DL = dragging(Tr);
+        M_added = addedMass(Tr);
     end
 
     methods
