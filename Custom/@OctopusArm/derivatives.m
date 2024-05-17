@@ -22,6 +22,8 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
         q_rho = qqd(ndof_xi+1:ndof_rho+ndof_xi);
         qd_xi = qqd(ndof_xi+ndof_rho+1:2*ndof_xi+ndof_rho);
         qd_rho = qqd(2*ndof_xi+ndof_rho+1:end);
+        DL = Tr.DL;
+        M_added = Tr.M_added;
     
         nsig = Tr.nsig;
         M_xi = zeros(ndof_xi, ndof_xi);
@@ -208,7 +210,19 @@ function ydot = derivatives(Tr, t, qqd, uqt_xi, uqt_rho) %unscaled
                 if Tr.Gravity
                     F_xi = F_xi + ld*W_here*J_here_xi'*Ms_here*dinamico_Adjoint(ginv(g_here))*G;
                 end
-                Qtemp = ld*W_here*J_here_xi'*Ms_here;
+                if Tr.Water
+                    % dragging
+                    DL_here = rho_here * DL((ii-1)*6+1:ii*6, :);
+                    Fd_here = -DL_here * norm(eta_here(4:end)) * eta_here;
+                    F_xi = F_xi + ld*W_here*J_here_xi'*Fd_here;
+    
+                    % added Mass
+                    Ms_here_added = Ms_here + rho_here^2 * M_added((ii-1)*6+1:ii*6, :);
+                else
+                    Ms_here_added = Ms_here;
+                end
+                
+                Qtemp = ld*W_here*J_here_xi'*Ms_here_added;
                 M_xi = M_xi + Qtemp*J_here_xi;
                 C_xi = C_xi + Qtemp*Jd_here_xi +...
                        ld*W_here*J_here_xi'*Ms_dot_here*J_here_xi+...
