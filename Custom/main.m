@@ -44,11 +44,12 @@ qb_rho = qb(ndof_xi+1:end, :);
 
 %% dynamics
 dt = 0.01;
-tmax = 8;
+tmax = 3;
 
 % reaching
 qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
 [t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, uqt_rho, 'ode15s', dt, tmax);
+save("./Custom/results/reaching.mat", "t", "qqd");
 Octopus.plotqqd(t, qqd, 'Octopus_reaching');
 
 %% usefull functions
