@@ -9,8 +9,8 @@ function ux = TMcontract(t, Xs, Pmax, fend)
 
     hit = sqrt(-log(0.02)); % sigmoid function reach 98%
 
-    T = 1.5; % ramping time
-    Tp = 5; % propangation time
+    T = 0.3; % ramping time
+    Tp = 2; % propangation time
 
     nip = length(Xs); % number of integration points
     ux = zeros(nip, 1); % boundary stress at integration points at t.

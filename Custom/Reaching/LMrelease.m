@@ -6,8 +6,8 @@ function ux = LMrelease(t, Xs, Fmax, fend)
     %   fend -- scalar, force end at fend (equivalent to 'a' in the initial description)
 
     % Constants
-    T = 1.5;  % Ramping time (time it takes for the force to drop to 0)
-    Tp = 5;   % Propagation time (time it takes for the effect to propagate along the cable)
+    T = 0.3;  % Ramping time (time it takes for the force to drop to 0)
+    Tp = 2;   % Propagation time (time it takes for the effect to propagate along the cable)
 
     % Calculate start and end time of force decay at each point
     startTime = (Xs / fend) * Tp;

@@ -83,10 +83,6 @@ classdef SorosimLinkage
     methods
         function Tr = SorosimLinkage(Link, varargin)
             %SorosimLinkage Constructor
-            % check input
-            if nargin-1 < 1
-                error('Not enough input arguments')
-            end
 
             %% initialization starts here
             Tr.Link = Link;

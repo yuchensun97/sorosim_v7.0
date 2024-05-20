@@ -10,9 +10,13 @@
     "points": 18,
     "scale": 0.1122,
     "motion": [1, 1, 1, 1, 1, 1],
+<<<<<<< HEAD
     "motion_order": [2, 2, 2, 1, 0, 0],
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    "motion_order": [2, 3, 2, 1, 0, 0],
+>>>>>>> 6a79216 (try bending)
     "inflation": 1,
 <<<<<<< HEAD:Custom/Reaching/Octopus.json
     "inflation_order": 3,
