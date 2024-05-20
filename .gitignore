@@ -2,3 +2,4 @@ figures/*
 *.asv
 videos/*
 tests/*
+.DS_STORE
