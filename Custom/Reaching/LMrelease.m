@@ -1,22 +1,23 @@
-function ux = LMrelease(t, Xs, Fmax, Tp, bp_s, bp_e)
+function ux = LMrelease(t, Xs, Fmax, Fmin, Tp, bp_s, bp_e)
     % Inputs:
     %   t    -- scalar, time
     %   Xs   -- (nip, 1) vector, integration points
     %   Fmax -- scalar, maximum force applied to the cable
+    %   Fmin -- scalar, minimum force applied to the cable
     %   Tp -- scalar, propagation time
     %   bp_s -- scalar, initial bend point
     %   bp_e -- scalar, final bend point
     % Outputs:
     %   ux -- (nip,1) vector, LM tension at integration points at t
 
-    if t<Tp
-        beta = Fmax/Tp*(Tp-t);
-        alpha = bp_s + (bp_e-bp_s)/Tp*t;
+    if t < Tp
+        mu = (bp_e-bp_s)/Tp * t + bp_s; % propangation function
+        alpha = (Fmax-Fmin)/Tp^2 * t^2 - 2 * (Fmax-Fmin)/Tp * t + Fmax;
     else
-        beta = 0;
-        alpha = bp_s;
+        mu = bp_e;
+        alpha = Fmin;
     end
 
-    ux = beta * (1 - 1./(1+exp(-50*(Xs - alpha))));
-    ux = -ux';
+    ux = alpha * exp(-(Xs-mu).^2/(2*0.2^2));
+    ux = -ux;
 end
