@@ -14,10 +14,10 @@ ndof_rho = Octopus.ndof_rho;
 
 %% assign actuation load
 Fmax = 4;
-Fmin = 0.2;
+Fmin = 0.45;
 fstart = 0.2;
 fend = 0.8; % cable force end at fend
-Tp = 2;
+Tp = 1.5;
 Xs = Octopus.Twists(2).Xs;
 nip = Octopus.Twists(2).nip;
 n_sact = LOM.get_n_sact();
@@ -42,28 +42,16 @@ q0 = zeros(ndof_xi+ndof_rho, 1);
 qb = Octopus.statics(q0, u_xi, zeros(nip, 1));
 qb_xi = qb(1:ndof_xi,:);
 qb_rho = qb(ndof_xi+1:end, :);
-fb = Octopus.plotq(qb_xi, qb_rho);
+% fb = Octopus.plotq(qb_xi, qb_rho);
 
 Bh_xi = Octopus.Twists(2).Bh_xi;
 B_xi_dof = Octopus.Twists(2).B_xi_dof;
 B_xi_ord = Octopus.Twists(2).B_xi_odr;
 xi_star = [0 0 0 1 0 0]';
 
-Xs = 0:0.01:1;
-nu2 = [];
-for X=Xs
-    xi = Bh_xi(X, B_xi_dof, B_xi_ord)*qb_xi + xi_star;
-    nu2 = [nu2; xi(2)];
-end
-figure;
-plot(Xs, nu2);
-grid on;
-xlabel('s/L');
-ylabel('\kappa_2');
-
 %% dynamics
 dt = 0.01;
-tmax = 3;
+tmax = 2;
 
 % reaching
 qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
