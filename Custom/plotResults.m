@@ -25,7 +25,7 @@ rho_star = 1;
 
 Xs = 0:0.01:1;
 
-% plot \nu_2 and \rho
+%% plot \nu_2 and \rho
 n = length(t);
 
 f1 = figure;
@@ -71,3 +71,8 @@ legend(legendInfo);
 xlabel('Xs');
 ylabel('\rho');
 exportgraphics(gcf, './figures/rho_over_time.pdf','ContentType','vector');
+
+%% TODO: plot elongation
+
+
+%% TODO: plot 
