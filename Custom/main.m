@@ -1,6 +1,6 @@
 clc;
 clear;
-
+close all;
 %% create Link
 OctopusLink = SorosimLink('Octopus.json');
 LOM = createLOM(OctopusLink);
@@ -13,26 +13,28 @@ ndof_xi = Octopus.ndof_xi;
 ndof_rho = Octopus.ndof_rho;
 
 %% assign actuation load
-Fmax = 3.5;
-fend = 0.7; % cable force end at fend
+Fmax = 4;
+Fmin = 0.45;
+fstart = 0.2;
+fend = 0.8; % cable force end at fend
+Tp = 1.5;
 Xs = Octopus.Twists(2).Xs;
 nip = Octopus.Twists(2).nip;
 n_sact = LOM.get_n_sact();
 
 % LM
-u_xi = zeros(nip, n_sact);
-u_xi(:, 1) = -Fmax * (ones(nip, 1) - Xs/fend);
-u_xi(Xs>=fend, 1)= 0;
-
 uqt_xi = cell(n_sact, 1);
-uqt_xi{1} = @(t)LMrelease(t, Xs, Fmax, fend);
+uqt_xi{1} = @(t)LMrelease(t, Xs, Fmax, Fmin, Tp, fstart, fend);
 for i = 2:n_sact
     uqt_xi{i} = @(t)zeros(nip, 1);
 end
 
+u_xi = zeros(nip, n_sact);
+u_xi(:, 1) = uqt_xi{1}(0);
+
 % TM
 Pmax = 16e3; % maximum boundary stress, Pa
-uqt_rho = @(t)TMcontract(t, Xs, Pmax, fend);
+uqt_rho = @(t)TMcontract(t, Xs, Pmax, fend, Tp);
 
 %% statics
 % starts from bending position
@@ -42,9 +44,14 @@ qb_xi = qb(1:ndof_xi,:);
 qb_rho = qb(ndof_xi+1:end, :);
 % fb = Octopus.plotq(qb_xi, qb_rho);
 
+Bh_xi = Octopus.Twists(2).Bh_xi;
+B_xi_dof = Octopus.Twists(2).B_xi_dof;
+B_xi_ord = Octopus.Twists(2).B_xi_odr;
+xi_star = [0 0 0 1 0 0]';
+
 %% dynamics
 dt = 0.01;
-tmax = 3;
+tmax = 2;
 
 % reaching
 qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
