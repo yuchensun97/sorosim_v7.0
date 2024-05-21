@@ -56,3 +56,5 @@ xlabel('time');
 ylabel('P');
 title('TM contract propagation');
 exportgraphics(gcf, './figures/TMcontract.pdf','ContentType','vector');
+
+%% TODO: plot LM and TM over space, label the time
