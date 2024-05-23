@@ -4,10 +4,10 @@ close;
 %% starts
 % initialization
 t = 0:0.01:3;
-Xs = 0:0.2:1;
+Xs = 0:0.1:1;
 Fmax = 4;
-Fmin = 0.2;
-Pmax = 16e3;
+Fmin = 0.20;
+Pmax = 20e3;
 fend = 1;
 bp_s = 0.2;
 bp_e = 0.8;

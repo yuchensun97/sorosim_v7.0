@@ -31,19 +31,21 @@ Xs = 0:dXs:1;
 arm_length = [];
 bp_vel = [];
 
-for tt = t
-    q_xi = q(1:ndof_xi)';
+
+for i = 1:length(t)
+    tt = t(i);
+    q_xi = q(i, 1:ndof_xi)';
 
     curr_length = 0;
     max_curve = 0;
-    max_curve_idx = 1;
     J_xi_here = zeros(6, ndof_xi);
     J_xi_bp = zeros(6, ndof_xi);
-    for xx=Xs
+    for j = 1:length(Xs)
+        xx = Xs(j);
         Bh_ = Bh_xi(xx+Z, B_xi_dof, B_xi_odr);
         xi_ = Bh_* q_xi + xi_star;
         Gamma_ = dXs * L * xi_;
-        BGamma = dXs * L * Bh_;
+        BGamma_ = dXs * L * Bh_;
         [gh, TGamma_] = variable_expmap_gTg(Gamma_);
         TBGamma_ = TGamma_*BGamma_;
         J_xi_here = dinamico_Adjoint(ginv(gh))*(J_xi_here + TBGamma_);
@@ -51,18 +53,17 @@ for tt = t
         k = xi_(2);
         if abs(k) > max_curve
             max_curve = abs(k);
-            max_curve_idx = xx;
             J_xi_bp = J_xi_here;
         end
 
-        ds = sqrt(xi_(3).^2 + xi_(6).^2) * dXs * L;
+        ds = sqrt(xi_(4).^2 + xi_(6).^2) * dXs * L;
         curr_length = curr_length + ds;
     end
 
     arm_length = [arm_length; curr_length];
 
     % compute bend point velocity
-    qd_xi = qd(1:ndof_xi)';
+    qd_xi = qd(i, 1:ndof_xi)';
     eta_curr = J_xi_bp * qd_xi;
     
     vel_curr = norm(eta_curr(4:end));
@@ -82,8 +83,10 @@ if ~exist('./figures', 'dir')
 end
 exportgraphics(gcf, './figures/arm_length.pdf','ContentType','vector');
 
+%%
 figure(2);
 plot(t, bp_vel);
+
 grid on;
 xlabel('Time (s)');
 ylabel('Bend Point Velocity (m/s)');

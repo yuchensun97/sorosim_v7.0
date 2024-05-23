@@ -43,9 +43,9 @@ for i=1:n
         nu2 = [nu2; xi_(2)];
         rho = [rho; rho_];
     end
-    legendInfo{i} = ['t = ' num2str(tt)];
+    % legendInfo{i} = ['t = ' num2str(tt)];
     figure(f1);
-    plot(Xs, nu2);
+    plot(Xs, -nu2);
     hold on;
     
     figure(f2);
@@ -56,7 +56,7 @@ end
 
 figure(f1);
 grid on;
-legend(legendInfo);
+% legend(legendInfo);
 xlabel('Xs');
 ylabel('\nu_2');
 
@@ -67,7 +67,7 @@ exportgraphics(gcf, './figures/nu_over_time.pdf','ContentType','vector');
 
 figure(f2);
 grid on;
-legend(legendInfo);
+% legend(legendInfo);
 xlabel('Xs');
 ylabel('\rho');
 exportgraphics(gcf, './figures/rho_over_time.pdf','ContentType','vector');
