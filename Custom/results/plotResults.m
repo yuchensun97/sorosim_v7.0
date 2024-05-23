@@ -11,8 +11,8 @@ ndof_xi = Octopus.ndof_xi;
 ndof_rho = Octopus.ndof_rho;
 L = Octopus.Link.L;
 
-q = qqd(1:50:end, 1:ndof_xi+ndof_rho);
-t = t(1:50:end);
+q = qqd(1:10:end, 1:ndof_xi+ndof_rho);
+t = t(1:10:end);
 
 Bh_xi = Octopus.Twists(2).Bh_xi;
 Bh_rho = Octopus.Twists(2).Bh_rho;
