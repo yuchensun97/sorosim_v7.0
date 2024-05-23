@@ -71,8 +71,3 @@ legend(legendInfo);
 xlabel('Xs');
 ylabel('\rho');
 exportgraphics(gcf, './figures/rho_over_time.pdf','ContentType','vector');
-
-%% TODO: plot elongation
-
-
-%% TODO: plot 
