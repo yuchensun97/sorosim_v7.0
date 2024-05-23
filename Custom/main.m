@@ -14,7 +14,7 @@ ndof_rho = Octopus.ndof_rho;
 
 %% assign actuation load
 Fmax = 4;
-Fmin = 0.45;
+Fmin = 0.2;
 fstart = 0.2;
 fend = 0.8; % cable force end at fend
 Tp = 1.5;
@@ -33,7 +33,7 @@ u_xi = zeros(nip, n_sact);
 u_xi(:, 1) = uqt_xi{1}(0);
 
 % TM
-Pmax = 16e3; % maximum boundary stress, Pa
+Pmax = 20e3; % maximum boundary stress, Pa
 uqt_rho = @(t)TMcontract(t, Xs, Pmax, fend, Tp);
 
 %% statics
@@ -51,7 +51,7 @@ xi_star = [0 0 0 1 0 0]';
 
 %% dynamics
 dt = 0.01;
-tmax = 2;
+tmax = 2.5;
 
 % reaching
 qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
