@@ -12,7 +12,7 @@ Octopus = SorosimLinkage(OctopusLink, Damped=true, ...
 ndof_xi = Octopus.ndof_xi;
 ndof_rho = Octopus.ndof_rho;
 
-%% initializations
+%% initializations, see testCable.m
 Xs = Octopus.Twists(2).Xs;
 nip = Octopus.Twists(2).nip;
 n_sact = LOM.get_n_sact();
