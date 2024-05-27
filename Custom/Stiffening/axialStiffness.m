@@ -2,10 +2,10 @@ clc;
 clear;
 close all;
 %% create Link
-OctopusLink = SorosimLink('Octopus_stiff.json');
+OctopusLink = SorosimLink('Stiffness.json');
 LOM = createLOM(OctopusLink);
 TM = createTM();
-Octopus = OctopusArm(OctopusLink, Damped=true, ...
+Octopus = SorosimLinkage(OctopusLink, Damped=true, ...
                                   Gravity=false, Water=true, PointForce=false, ...
                                   ActuationL=true, ActuationR=true, ...
                                   CableActuator=LOM, RadialActuator=TM);
@@ -18,11 +18,11 @@ nip = Octopus.Twists(2).nip;
 n_sact = LOM.get_n_sact();
 L = Octopus.Link.L;
 
-u_xi_init = ones(nip, n_sact);
+u_xi_init = ones(n_sact, 1);
 
 % TM
 Pmax = 20e3; % maximum boundary stress, Pa
-u_rho_init = ones(nip, 1);
+u_rho_init = 1;
 stiff_len = [];
 stiff_force = [];
 
@@ -33,7 +33,7 @@ for tm = 0:0.2:1
 
     shorten = [];
     force = [];
-    for lm=0:0.01:1
+    for lm=0:0.1:1
         u_xi = -lm * u_xi_init;
         q0 = zeros(ndof_xi+ndof_rho, 1);
         q = Octopus.statics(q0, u_xi, u_rho);
@@ -103,6 +103,6 @@ function LOM = createLOM(OctopusLink)
 end
 
 function TM = createTM()
-    act = Radial(0, 0.7);
+    act = Radial(0, 1);
     TM = RadialActuation(act);
 end
