@@ -1,0 +1,17 @@
+{
+    "length": 0.5,
+    "base_radius": 0.015,
+    "tip_radius": 0.004,
+    "young": 110e3,
+    "poisson": 0.5,
+    "density": 1e3,
+    "viscousity": 300,
+    "cs": 40,
+    "points": 18,
+    "scale": 0.1122,
+    "motion": [0, 0, 0, 1, 0, 0],
+    "motion_order": [0, 0, 0, 2, 0, 0],
+    "inflation": 1,
+    "inflation_order": 1,
+    "basisType": "robin"
+}

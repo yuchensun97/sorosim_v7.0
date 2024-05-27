@@ -2,7 +2,7 @@ clc;
 clear;
 close all;
 %% create Link
-OctopusLink = SorosimLink('Octopus.json');
+OctopusLink = SorosimLink('Octopus_stiff.json');
 LOM = createLOM(OctopusLink);
 TM = createTM();
 Octopus = OctopusArm(OctopusLink, Damped=true, ...
@@ -12,51 +12,60 @@ Octopus = OctopusArm(OctopusLink, Damped=true, ...
 ndof_xi = Octopus.ndof_xi;
 ndof_rho = Octopus.ndof_rho;
 
-%% reaching 
-Fmax = 4;
-Fmin = 0.2;
-fstart = 0.2;
-fend = 0.8; % cable force end at fend
-Tp = 1.5;
+%% initializations
 Xs = Octopus.Twists(2).Xs;
 nip = Octopus.Twists(2).nip;
 n_sact = LOM.get_n_sact();
+L = Octopus.Link.L;
 
-% LM
-uqt_xi = cell(n_sact, 1);
-uqt_xi{1} = @(t)LMrelease(t, Xs, Fmax, Fmin, Tp, fstart, fend);
-for i = 2:n_sact
-    uqt_xi{i} = @(t)LMcontract(t, Xs, Fmin, Tp, fstart, fend);
-end
-
-u_xi = zeros(nip, n_sact);
-u_xi(:, 1) = uqt_xi{1}(0);
+u_xi_init = ones(nip, n_sact);
 
 % TM
 Pmax = 20e3; % maximum boundary stress, Pa
-uqt_rho = @(t)TMcontract(t, Xs, Pmax, fend, Tp);
+u_rho_init = ones(nip, 1);
+stiff_len = [];
+stiff_force = [];
 
-%% statics
-% starts from bending position
-q0 = zeros(ndof_xi+ndof_rho, 1);
-qb = Octopus.statics(q0, u_xi, zeros(nip, 1));
-qb_xi = qb(1:ndof_xi,:);
-qb_rho = qb(ndof_xi+1:end, :);
-% fb = Octopus.plotq(qb_xi, qb_rho);
+i = 1;
+for tm = 0:0.2:1
+    P = -Pmax*tm;
+    u_rho = P * u_rho_init;
 
-Bh_xi = Octopus.Twists(2).Bh_xi;
-B_xi_dof = Octopus.Twists(2).B_xi_dof;
-B_xi_ord = Octopus.Twists(2).B_xi_odr;
-xi_star = [0 0 0 1 0 0]';
+    shorten = [];
+    force = [];
+    for lm=0:0.01:1
+        u_xi = -lm * u_xi_init;
+        q0 = zeros(ndof_xi+ndof_rho, 1);
+        q = Octopus.statics(q0, u_xi, u_rho);
+        q_xi = q(1:ndof_xi,:);
+        q_rho = q(ndof_xi+1:end, :);
+        [g, ~] = Octopus.FwdKinematics(q_xi, q_rho);
+        deltaL = L - g(end-3, 4);
+        shorten = [shorten; deltaL];
+        force = [force; lm*4];
+    end
+    stiff_len = [stiff_len, shorten];
+    stiff_force = [stiff_force, force];
 
-%% dynamics
-dt = 0.01;
-tmax = 2.5;
+    stiff_info{i} = ['P = ' num2str(-P)];
+    i = i + 1;
+end
 
-qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
-[t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, uqt_rho, 'ode15s', dt, tmax);
-save("./Custom/results/reaching.mat", "t", "qqd");
-Octopus.plotqqd(t, qqd, 'Octopus_reaching');
+%% plot
+figure(1)
+for j=1:i-1
+    plot(stiff_len(:, j), stiff_force(:, j));
+    hold on
+end
+grid on;
+legend(stiff_info);
+xlabel('\delta L (m)');
+ylabel('F (N)');
+title('Stiffening effect');
+if ~exist('./figures', 'dir')
+    mkdir('./figures');
+end
+exportgraphics(gcf, './figures/AxialStiff.pdf','ContentType','vector');
 
 %% usefull functions
 function LOM = createLOM(OctopusLink)
