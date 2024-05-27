@@ -12,7 +12,7 @@ Octopus = OctopusArm(OctopusLink, Damped=true, ...
 ndof_xi = Octopus.ndof_xi;
 ndof_rho = Octopus.ndof_rho;
 
-%% assign actuation load
+%% reaching 
 Fmax = 4;
 Fmin = 0.2;
 fstart = 0.2;
@@ -53,7 +53,6 @@ xi_star = [0 0 0 1 0 0]';
 dt = 0.01;
 tmax = 2.5;
 
-% reaching
 qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
 [t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, uqt_rho, 'ode15s', dt, tmax);
 save("./Custom/results/reaching.mat", "t", "qqd");
