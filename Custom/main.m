@@ -26,7 +26,7 @@ n_sact = LOM.get_n_sact();
 uqt_xi = cell(n_sact, 1);
 uqt_xi{1} = @(t)LMrelease(t, Xs, Fmax, Fmin, Tp, fstart, fend);
 for i = 2:n_sact
-    uqt_xi{i} = @(t)zeros(nip, 1);
+    uqt_xi{i} = @(t)LMcontract(t, Xs, Fmin, Tp, fstart, fend);
 end
 
 u_xi = zeros(nip, n_sact);

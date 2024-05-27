@@ -13,14 +13,17 @@ bp_s = 0.2;
 bp_e = 0.8;
 Tp = 2;
 LM = [];
+LMrest = [];
 TM = [];
 
 % get values
 for ts=t
     uLM = LMrelease(ts, Xs', Fmax, Fmin, Tp, bp_s, bp_e);
+    oLM = LMcontract(ts, Xs', Fmin, Tp, bp_s, bp_e);
     uTM = TMcontract(ts, Xs', Pmax, fend, Tp);
 
     LM = [LM uLM];
+    LMrest = [LMrest oLM];
     TM = [TM uTM];
 end
 
@@ -44,6 +47,20 @@ end
 exportgraphics(gcf, './figures/LMrelease.pdf','ContentType','vector');
 
 figure(2)
+for i=1:length(Xs)
+    curr_LMrest = -LMrest(i, :);
+    LMinfo{i} = ['s = ' num2str(Xs(i))];
+    plot(t, curr_LMrest);
+    hold on
+end
+grid on;
+legend(LMinfo);
+xlabel('time');
+ylabel('F');
+title('LM contract propagation');
+exportgraphics(gcf, './figures/LMcontract.pdf','ContentType','vector');
+
+figure(3)
 for j=1:length(Xs)
     curr_TM = -TM(j, :);
     TMinfo{j} = ['s = ' num2str(Xs(j))];
