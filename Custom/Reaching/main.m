@@ -94,6 +94,6 @@ function LOM = createLOM(OctopusLink)
 end
 
 function TM = createTM()
-    act = Radial(0, 0.7);
+    act = Radial(0, 1);
     TM = RadialActuation(act);
 end
