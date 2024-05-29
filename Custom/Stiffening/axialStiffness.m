@@ -6,9 +6,9 @@ OctopusLink = SorosimLink('Stiffness.json');
 LOM = createLOM(OctopusLink);
 TM = createTM();
 Octopus = SorosimLinkage(OctopusLink, Damped=true, ...
-                                  Gravity=false, Water=true, PointForce=false, ...
-                                  ActuationL=true, ActuationR=true, ...
-                                  CableActuator=LOM, RadialActuator=TM);
+                         Gravity=false, Water=true, PointForce=false, ...
+                         ActuationL=true, ActuationR=true, ...
+                         CableActuator=LOM, RadialActuator=TM);
 ndof_xi = Octopus.ndof_xi;
 ndof_rho = Octopus.ndof_rho;
 
@@ -18,50 +18,37 @@ nip = Octopus.Twists(2).nip;
 n_sact = LOM.get_n_sact();
 L = Octopus.Link.L;
 
-u_xi_init = ones(n_sact, 1);
+Fmax = 0.1;
 
 % TM
-Pmax = 20e3; % maximum boundary stress, Pa
+Pmax = 1.5e3; % maximum boundary stress, Pa
 u_rho_init = 1;
 stiff_len = [];
 stiff_force = [];
 
-i = 1;
-for tm = 0:0.2:1
-    P = -Pmax*tm;
-    u_rho = P * u_rho_init;
+[UTM, ULM] = meshgrid(0:0.2:1, 0:0.2:1);
+UTM = Pmax * UTM;
+ULM = Fmax * ULM;
 
-    shorten = [];
-    force = [];
-    for lm=0:0.1:1
-        u_xi = -lm * u_xi_init;
-        q0 = zeros(ndof_xi+ndof_rho, 1);
-        q = Octopus.statics(q0, u_xi, u_rho);
-        q_xi = q(1:ndof_xi,:);
-        q_rho = q(ndof_xi+1:end, :);
-        [g, ~] = Octopus.FwdKinematics(q_xi, q_rho);
-        deltaL = L - g(end-3, 4);
-        shorten = [shorten; deltaL];
-        force = [force; lm*4];
-    end
-    stiff_len = [stiff_len, shorten];
-    stiff_force = [stiff_force, force];
+DeltaL = arrayfun(@(lm, tm)getShortening(Octopus,ndof_xi,ndof_rho,n_sact,lm,tm), ULM, UTM);
 
-    stiff_info{i} = ['P = ' num2str(-P)];
-    i = i + 1;
-end
 
-%% plot
+%% plot diagram
 figure(1)
-for j=1:i-1
-    plot(stiff_len(:, j), stiff_force(:, j));
-    hold on
-end
+AxialForce = ULM * 4;
+pcolor(100 * DeltaL, AxialForce, UTM);
+hold on;
+shading interp;
+colorbarHandle = colorbar;
+title(colorbarHandle, 'TM load (Pa)');
+
+% customize the plot
 grid on;
-legend(stiff_info);
-xlabel('\delta L (m)');
+set(gca,'DataAspectRatio',[5 1 1])
+xlim([0, 3]);
+title('Contour Plot of Axial Stiffness');
+xlabel('\Delta L (cm)');
 ylabel('F (N)');
-title('Stiffening effect');
 if ~exist('./figures', 'dir')
     mkdir('./figures');
 end
@@ -105,4 +92,15 @@ end
 function TM = createTM()
     act = Radial(0, 1);
     TM = RadialActuation(act);
+end
+
+function deltaL = getShortening(Octopus,ndof_xi,ndof_rho, n_sact, lm, tm)
+    q0 = zeros(ndof_xi+ndof_rho, 1);
+    u_xi = -ones(n_sact, 1) * lm;
+    u_rho = -tm;
+    q = Octopus.statics(q0, u_xi, u_rho);
+    q_xi = q(1:ndof_xi,:);
+    q_rho = q(ndof_xi+1:end, :);
+    [g, ~] = Octopus.FwdKinematics(q_xi, q_rho);
+    deltaL = Octopus.Link.L - g(end-3, 4);
 end
