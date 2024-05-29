@@ -2,7 +2,7 @@
     "length": 0.5,
     "base_radius": 0.015,
     "tip_radius": 0.015,
-    "young": 110e3,
+    "young": 10e3,
     "poisson": 0.5,
     "density": 1e3,
     "viscousity": 300,
