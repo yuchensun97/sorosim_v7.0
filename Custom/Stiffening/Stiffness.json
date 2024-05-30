@@ -13,5 +13,5 @@
     "motion_order": [0, 0, 0, 2, 0, 0],
     "inflation": 1,
     "inflation_order": 1,
-    "basisType": "dirichlet"
+    "basisType": "neumann"
 }
