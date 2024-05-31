@@ -51,7 +51,7 @@ xi_star = [0 0 0 1 0 0]';
 
 %% dynamics
 dt = 0.01;
-tmax = 2.5;
+tmax = 2.2;
 
 qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
 [t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, uqt_rho, 'ode15s', dt, tmax);
