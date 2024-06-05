@@ -30,7 +30,7 @@ Xs = 0:dXs:1;
 
 arm_length = [];
 bp_vel = [];
-
+bp_pos = [];
 
 for i = 1:length(t)
     tt = t(i);
@@ -40,6 +40,8 @@ for i = 1:length(t)
     max_curve = 0;
     J_xi_here = zeros(6, ndof_xi);
     J_xi_bp = zeros(6, ndof_xi);
+    g_here = eye(4);
+    g_bp = zeros(4, 4);
     for j = 1:length(Xs)
         xx = Xs(j);
         Bh_ = Bh_xi(xx+Z, B_xi_dof, B_xi_odr);
@@ -47,13 +49,15 @@ for i = 1:length(t)
         Gamma_ = dXs * L * xi_;
         BGamma_ = dXs * L * Bh_;
         [gh, TGamma_] = variable_expmap_gTg(Gamma_);
+        g_here = g_here * gh;
         TBGamma_ = TGamma_*BGamma_;
         J_xi_here = dinamico_Adjoint(ginv(gh))*(J_xi_here + TBGamma_);
         
         k = xi_(2);
-        if abs(k) > max_curve
+        if k<0 && abs(k) > max_curve
             max_curve = abs(k);
             J_xi_bp = J_xi_here;
+            g_bp = g_here;
         end
 
         ds = sqrt(xi_(4).^2 + xi_(6).^2) * dXs * L;
@@ -68,6 +72,10 @@ for i = 1:length(t)
     
     vel_curr = norm(eta_curr(4:end));
     bp_vel = [bp_vel; vel_curr];
+
+    % get bend point position
+    bp_pos_now = g_bp([1, 3], 4);
+    bp_pos = [bp_pos bp_pos_now];
 end
 
 %% plot the arm length and bend point velocity
@@ -92,3 +100,20 @@ xlabel('Time (s)');
 ylabel('Bend Point Velocity (m/s)');
 title('Bend Point Velocity vs Time');
 exportgraphics(gcf, './figures/bp_velocity.pdf','ContentType','vector');
+
+%%
+figure(3);
+plot(100 * bp_pos(1,:), 100 * bp_pos(2, :));
+hold on;
+line([0 100 * bp_pos(1, 1)], [0 100 * bp_pos(2, 1)]);
+hold on;
+line([0 100 * bp_pos(1, end)], [0 100 * bp_pos(2, end)]);
+
+grid on;
+xlabel('X (cm)');
+ylabel('Y (cm)');
+title('Bend point position');
+axis equal
+xlim([0 50]);
+ylim([-4, 12]);
+exportgraphics(gcf, './figures/bp_pos_rho.pdf','ContentType','vector');

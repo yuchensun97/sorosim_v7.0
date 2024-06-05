@@ -17,6 +17,7 @@ function ux = LMcontract(t, Xs, Fmax, Tp, bp_s, bp_e)
         alpha = Fmax;
     end
 
-    ux = alpha * exp(-(Xs-mu).^2/(2*0.17^2));
+    % ux = alpha * exp(-(Xs-mu).^2/(2*0.17^2));
+    ux = alpha * (1- 1./(1+exp(-200*(Xs-mu))));
     ux = -ux;
 end
