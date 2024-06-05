@@ -102,18 +102,18 @@ title('Bend Point Velocity vs Time');
 exportgraphics(gcf, './figures/bp_velocity.pdf','ContentType','vector');
 
 %%
-figure(3);
-plot(100 * bp_pos(1,:), 100 * bp_pos(2, :));
-hold on;
-line([0 100 * bp_pos(1, 1)], [0 100 * bp_pos(2, 1)]);
-hold on;
-line([0 100 * bp_pos(1, end)], [0 100 * bp_pos(2, end)]);
-
-grid on;
-xlabel('X (cm)');
-ylabel('Y (cm)');
-title('Bend point position');
-axis equal
-xlim([0 50]);
-ylim([-4, 12]);
-exportgraphics(gcf, './figures/bp_pos_rho.pdf','ContentType','vector');
+% figure(3);
+% plot(100 * bp_pos(1,:), 100 * bp_pos(2, :));
+% hold on;
+% line([0 100 * bp_pos(1, 1)], [0 100 * bp_pos(2, 1)]);
+% hold on;
+% line([0 100 * bp_pos(1, end)], [0 100 * bp_pos(2, end)]);
+% 
+% grid on;
+% xlabel('X (cm)');
+% ylabel('Y (cm)');
+% title('Bend point position');
+% axis equal
+% xlim([0 50]);
+% ylim([-4, 12]);
+% exportgraphics(gcf, './figures/bp_pos.pdf','ContentType','vector');

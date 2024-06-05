@@ -17,8 +17,9 @@ function [sigma,gamma]= EG_xi_bar(Link, Xs)
     G    = Link.G;
     E    = Link.E;
     Eta  = Link.Eta;
+    Lam = Link.Lamda;
     for ii=1:np
-        sigma(ii) = (E-2*G)*A_p(ii);
+        sigma(ii) = 2 * Lam *A_p(ii);
         gamma(ii) = 4*Eta*A_p(ii);
     end
     

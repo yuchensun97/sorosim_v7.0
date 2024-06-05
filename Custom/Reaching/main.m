@@ -33,7 +33,7 @@ u_xi = zeros(nip, n_sact);
 u_xi(:, 1) = uqt_xi{1}(0);
 
 % TM
-Pmax = 18e3; % maximum boundary stress, Pa
+Pmax = 20e3; % maximum boundary stress, Pa
 uqt_rho = @(t)TMcontract(t, Xs, Pmax, fend, Tp);
 
 %% statics

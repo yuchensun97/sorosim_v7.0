@@ -3,7 +3,7 @@
     "base_radius": 0.015,
     "tip_radius": 0.004,
     "young": 1.1e5,
-    "poisson": 0.5,
+    "poisson": 0.49,
     "density": 1e3,
     "viscousity": 300,
     "cs": 40,
@@ -11,7 +11,7 @@
     "scale": 0.1122,
     "motion": [0, 1, 0, 1, 0, 1],
     "motion_order": [0, 10, 0, 1, 0, 0],
-    "inflation": 0,
+    "inflation": 1,
     "inflation_order": 6,
     "basisType": "neumann"
 }
