@@ -20,7 +20,7 @@ L = Octopus.Link.L;
 E = Octopus.Link.E;
 G = Octopus.Link.G;
 A = pi * (Octopus.Link.r_base)^2;
-Ke = 0.01 * (E - (E-2*G)^2/(4*G)) * A/L; % passive axial stiffness, Neumann BC, N/cm
+Ke = 0.01 * E * A/L; % passive axial stiffness, Neumann BC, N/cm
 
 Fmax = 0.125;
 

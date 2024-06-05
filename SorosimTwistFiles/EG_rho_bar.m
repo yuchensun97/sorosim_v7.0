@@ -15,9 +15,10 @@ function [sigma,gamma]= EG_rho_bar(Link, Xs)
     gamma = zeros(np,1); %damping
     
     G    = Link.G; % shear
+    Lam = Link.Lamda; 
     Eta  = Link.Eta;
     for ii=1:np
-        sigma(ii) = 4*G*A_p(ii);
+        sigma(ii) = 4*(G + Lam)*A_p(ii);
         gamma(ii) = 8*Eta*A_p(ii);
     end
     

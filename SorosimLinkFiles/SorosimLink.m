@@ -19,6 +19,7 @@ classdef SorosimLink
         E          %Young's modulus [Pa]
         Poi        %Poisson's ratio, scalar
         G          %Shear modulus [Pa]
+        Lamda      %first Lame constant [Pa]
         Rho0       %density of the material [kg/m^3]
         Eta        %viscosity [Pa.s]
 
@@ -107,11 +108,10 @@ classdef SorosimLink
                 Li.B_xi = [data.motion data.motion_order];
                 Li.B_rho = [data.inflation data.inflation_order];
                 Li.E = data.young;
-                % if data.inflation == 1
-                %     Li.E = 12/11 * Li.E;
-                % end
                 Li.Poi = data.poisson;
                 Li.G = Li.E/(2*(1+Li.Poi));
+                Li.Lamda = Li.E*Li.Poi/((1+Li.Poi)*(1-2*Li.Poi));
+                % Li.Lamda = Li.G;
                 Li.Rho0 = data.density;
                 Li.Eta = data.viscousity;
                 Li.color = rand(1,3);
