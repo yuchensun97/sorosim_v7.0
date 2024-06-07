@@ -22,10 +22,10 @@ G = Octopus.Link.G;
 A = pi * (Octopus.Link.r_base)^2;
 Ke = 0.01 * E * A/L; % passive axial stiffness, Neumann BC, N/cm
 
-Fmax = 0.125;
+Fmax = 1.25;
 
 % TM
-Pmax = 1.5e3; % maximum boundary stress, Pa
+Pmax = 8e3; % maximum boundary stress, Pa
 u_rho_init = 1;
 stiff_len = [];
 stiff_force = [];
@@ -54,30 +54,30 @@ hold on;
 
 % plot active stiffness
 F1 = 2 * Ke.*d; % 2*Ke
-validIdx1 = (F1 >= 0 & F1 <= 0.5);
+validIdx1 = (F1 >= 0 & F1 <= 5);
 tm1 = interp(d(validIdx1), F1(validIdx1));
 h1 = plot(d, F1, 'g-','LineWidth', 2);
 
 F2 = Fe + (Ke * 2 .* d.^2);
-validIdx2 = (F2 >= 0 & F2 <= 0.5);
+validIdx2 = (F2 >= 0 & F2 <= 5);
 tm2 = interp(d(validIdx2), F2(validIdx2));
 h2 = plot(d, F2, 'm-', 'LineWidth', 2);
 
-F3 = 0.5 .* sin(pi/6 .* d);
-validIdx3 = (F3 >= 0 & F3 <=0.5);
-tm3 = interp(d(validIdx3), F3(validIdx3));
-h3 = plot(d, F3, 'b-', 'LineWidth',2);
+% F3 = 0.5 .* sin(pi/6 .* d);
+% validIdx3 = (F3 >= 0 & F3 <=0.5);
+% tm3 = interp(d(validIdx3), F3(validIdx3));
+% h3 = plot(d, F3, 'b-', 'LineWidth',2);
 
 % customize the plot
 grid on;
-set(gca,'DataAspectRatio',[5 1 1])
+% set(gca,'DataAspectRatio',[5 1 1])
 xlim([0, 3]);
-ylim([0, 0.5]);
+ylim([0, 5]);
 title('Contour Plot of Axial Stiffness');
 xlabel('Axial Displacement (cm)');
 ylabel('LM Loads (N)');
-legend([h0, h1, h2, h3], ...
-        {'$k_e$', '$2k_e$', '$k_a$', '$k_d$'},...
+legend([h0, h1, h2], ...
+        {'$k_e$', '$2k_e$', '$k_a$'},...
         'Interpreter', 'latex', 'Location', 'southeast');
 if ~exist('./figures', 'dir')
     mkdir('./figures');
@@ -86,19 +86,19 @@ exportgraphics(gcf, './figures/AxialStiff.pdf','ContentType','vector');
 
 %% plot F-TM load diagram
 figure(2)
-f0 = plot(0:0.1:0.5, zeros(1, 6), 'r-', 'LineWidth', 2);
+f0 = plot(0:1:5, zeros(1, 6), 'r-', 'LineWidth', 2);
 hold on
 f1 = plot(F1(validIdx1), tm1, 'g-', 'LineWidth', 2);
 hold on
 f2 = plot(F2(validIdx2), tm2, 'm-', 'LineWidth', 2);
 hold on
-f3 = plot(F3(validIdx3), tm3, 'b-', 'LineWidth', 2);
+% f3 = plot(F3(validIdx3), tm3, 'b-', 'LineWidth', 2);
 grid on
 title('LM vs TM loads of Tunable Stiffness');
 xlabel('LM loads (N)');
 ylabel('TM loads (Pa)');
-legend([f0, f1, f2, f3], ...
-        {'$k_e$','$2k_e$', '$k_a$', '$k_d$'},...
+legend([f0, f1, f2], ...
+        {'$k_e$','$2k_e$', '$k_a$'},...
         'Interpreter', 'latex', 'Location', 'southeast');
 exportgraphics(gcf, './figures/AxialStiffFTM.pdf','ContentType','vector');
 
@@ -146,6 +146,6 @@ function deltaL = getShortening(Octopus,ndof_xi,ndof_rho, n_sact, lm, tm)
     q = Octopus.statics(q0, u_xi, u_rho);
     q_xi = q(1:ndof_xi,:);
     q_rho = q(ndof_xi+1:end, :);
-    [g, ~] = Octopus.FwdKinematics(q_xi, q_rho);
+    [g, rho] = Octopus.FwdKinematics(q_xi, q_rho);
     deltaL = Octopus.Link.L - g(end-3, 4);
 end

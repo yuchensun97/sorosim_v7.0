@@ -22,8 +22,10 @@ B_xi_odr = Octopus.Twists(2).B_xi_odr;
 B_rho_odr = Octopus.Twists(2).B_rho_odr;
 xi_star = [0 0 0 1 0 0]';
 rho_star = 1;
+r_fn = Octopus.Link.r_fn;
 
 Xs = 0:0.01:1;
+vol = [];
 
 %% plot \nu_2 and \rho
 n = length(t);
@@ -37,13 +39,24 @@ for i=1:n
 
     nu2 = [];
     rho = [];
+    r = [];
+    r0 = [];
+    nu3 = [];
     for xx=Xs
         xi_ = Bh_xi(xx, B_xi_dof, B_xi_odr)*q_xi + xi_star;
         rho_ = Bh_rho(xx, B_rho_dof, B_rho_odr)*q_rho + rho_star;
+        r0_ = r_fn(xx);
+        r_ = rho_ * r0_;
+        r0 = [r0; r0_];
         nu2 = [nu2; xi_(2)];
+        nu3 = [nu3; xi_(4)];
         rho = [rho; rho_];
+        r = [r; r_];
     end
-    % legendInfo{i} = ['t = ' num2str(tt)];
+    
+    curr_vol = sum(r.^2 .* nu3)/sum(r0.^2) - 1;
+    vol = [vol; curr_vol];
+
     figure(f1);
     plot(Xs, -nu2);
     hold on;
@@ -51,7 +64,6 @@ for i=1:n
     figure(f2);
     plot(Xs, rho);
     hold on;
-    
 end
 
 figure(f1);
@@ -71,3 +83,10 @@ grid on;
 xlabel('Xs');
 ylabel('\rho');
 exportgraphics(gcf, './figures/rho_over_time.pdf','ContentType','vector');
+
+figure;
+plot(t, 100 * vol);
+grid on;
+xlabel('time (s)');
+ylabel('Volume Change (%)');
+exportgraphics(gcf, './figures/vol_over_time.pdf','ContentType','vector');

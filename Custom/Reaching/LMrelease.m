@@ -13,6 +13,7 @@ function ux = LMrelease(t, Xs, Fmax, Fmin, Tp, bp_s, bp_e)
     if t < Tp
         mu = (bp_e-bp_s)/Tp * t + bp_s; % propangation function
         alpha = (Fmax-Fmin)/Tp^2 * t^2 - 2 * (Fmax-Fmin)/Tp * t + Fmax;
+        % alpha = -(Fmax-Fmin)/Tp*t+Fmax;
     else
         mu = bp_e;
         alpha = Fmin;
