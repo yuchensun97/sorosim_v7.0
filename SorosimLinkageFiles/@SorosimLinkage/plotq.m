@@ -104,6 +104,7 @@ function fh = plotq(Tr, q_xi, q_rho)
 
     r_fn = Tr.Link.r_fn;
     r = r_fn(0);
+    rho_here = Bh_rho(Xs(1), B_rho_dof, B_rho_odr)*q_rho + rho_starfn(Xs(1));
     theta = linspace(0, 2*pi, n_r);
     x = zeros(1, n_r);
     y = rho_here*r*cos(theta);

@@ -111,7 +111,6 @@ classdef SorosimLink
                 Li.Poi = data.poisson;
                 Li.G = Li.E/(2*(1+Li.Poi));
                 Li.Lamda = Li.E*Li.Poi/((1+Li.Poi)*(1-2*Li.Poi));
-                % Li.Lamda = Li.G;
                 Li.Rho0 = data.density;
                 Li.Eta = data.viscousity;
                 Li.color = rand(1,3);
