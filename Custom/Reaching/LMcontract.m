@@ -1,4 +1,4 @@
-function ux = LMcontract(t, Xs, Fmax, Tp, bp_s, bp_e)
+function ux = LMcontract(t, Xs, Fmax, Fmin, Tp, bp_s, bp_e)
     % Inputs:
     %   t    -- scalar, time
     %   Xs   -- (nip, 1) vector, integration points
@@ -11,13 +11,14 @@ function ux = LMcontract(t, Xs, Fmax, Tp, bp_s, bp_e)
 
     if t < Tp
         mu = (bp_e-bp_s)/Tp * t + bp_s; % propangation function
-        alpha = Fmax;
+        % alpha = Fmax;
+        alpha = -(Fmax-Fmin)/Tp*t+Fmax;
     else
         mu = bp_e;
-        alpha = Fmax;
+        alpha = Fmin;
     end
 
     % ux = alpha * exp(-(Xs-mu).^2/(2*0.17^2));
-    ux = alpha * (1- 1./(1+exp(-200*(Xs-mu))));
+    ux = alpha * (1- 1./(1+exp(-40*(Xs-mu))));
     ux = -ux;
 end

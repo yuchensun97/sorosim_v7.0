@@ -19,6 +19,7 @@ function ux = LMrelease(t, Xs, Fmax, Fmin, Tp, bp_s, bp_e)
         alpha = Fmin;
     end
 
-    ux = alpha * exp(-(Xs-mu).^2/(2*0.17^2));
+    % ux = alpha * exp(-(Xs-mu).^2/(2*0.17^2));
+    ux = alpha * (1- 1./(1+exp(-40*(Xs-mu))));
     ux = -ux;
 end
