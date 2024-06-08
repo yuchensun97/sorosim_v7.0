@@ -24,9 +24,9 @@ n_sact = LOM.get_n_sact();
 
 % LM
 uqt_xi = cell(n_sact, 1);
-uqt_xi{1} = @(t)LMrelease(t, Xs, 0.8, 0.08, 2, 0.3, 0.9);
+uqt_xi{1} = @(t)LMrelease(t, Xs, 0.2, 0.02, 2.5, 0.3, 0.9);
 for i = 2:n_sact
-    uqt_xi{i} = @(t)LMcontract(t, Xs, 0.64, 0.15, 2, 0.15, 0.6);
+    uqt_xi{i} = @(t)LMcontract(t, Xs, 0.218, 0.048, 2.5, 0.183, 0.65);
 end
 
 u_xi = zeros(nip, n_sact);
@@ -35,8 +35,8 @@ for i = 1:4
 end
 
 % TM
-Pmax = 25e2; % maximum boundary stress, Pa
-uqt_rho = @(t)TMcontract(t, Xs, Pmax, 2, 0.3, 0.7);
+Pmax = 7.9e2; % maximum boundary stress, Pa
+uqt_rho = @(t)TMcontract(t, Xs, Pmax, 3, 0.28, 0.7);
 u_rho = uqt_rho(0);
 
 %% statics
@@ -54,7 +54,7 @@ xi_star = [0 0 0 1 0 0]';
 
 %% dynamics
 dt = 0.01;
-tmax = 2.5;
+tmax = 3.5;
 
 qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
 [t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, uqt_rho, 'ode15s', dt, tmax);
