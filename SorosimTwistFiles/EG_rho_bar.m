@@ -21,7 +21,7 @@ function [sigma,gamma]= EG_rho_bar(Link, Xs)
         sigma(ii) = 4*(G + Lam)*A_p(ii);
         gamma(ii) = 8*Eta*A_p(ii);
         % gamma(ii) = 0;
-        gamma(ii) = 4 * Eta * A_p(ii);
+        gamma(ii) = 2 * Eta * A_p(ii);
     end
     
 end %eof
