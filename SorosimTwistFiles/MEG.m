@@ -32,7 +32,7 @@ function [Ms,Es,Gs]= MEG(Link, Xs)
     for ii=1:np
         Ms((ii-1)*6+1:ii*6,:) = Rho0*diag([Ix_p(ii),Iy_p(ii),Iz_p(ii),A_p(ii),A_p(ii),A_p(ii)]);
         Es((ii-1)*6+1:ii*6,:) = diag([G*Ix_p(ii),E*Iy_p(ii),E*Iz_p(ii),elastic *A_p(ii),G*A_p(ii),G*A_p(ii)]);
-        Gs((ii-1)*6+1:ii*6,:) = Eta*diag([Ix_p(ii), 3*Iy_p(ii), 3*Iz_p(ii), 3*A_p(ii), A_p(ii), A_p(ii)]);
+        Gs((ii-1)*6+1:ii*6,:) = Eta*diag([Ix_p(ii), 3*Iy_p(ii), 3*Iz_p(ii), 2*A_p(ii), A_p(ii), A_p(ii)]);
     end
     
 end %eof
