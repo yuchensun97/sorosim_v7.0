@@ -26,7 +26,7 @@ n_sact = LOM.get_n_sact();
 uqt_xi = cell(n_sact, 1);
 uqt_xi{1} = @(t)LMrelease(t, Xs, 0.2, 0.02, 2.5, 0.3, 0.9);
 for i = 2:n_sact
-    uqt_xi{i} = @(t)LMcontract(t, Xs, 0.218, 0.048, 2.5, 0.183, 0.65);
+    uqt_xi{i} = @(t)LMcontract(t, Xs, 0.218, 0.05, 2.5, 0.183, 0.65);
 end
 
 u_xi = zeros(nip, n_sact);
@@ -35,7 +35,7 @@ for i = 1:4
 end
 
 % TM
-Pmax = 7.9e2; % maximum boundary stress, Pa
+Pmax = 8e2; % maximum boundary stress, Pa
 uqt_rho = @(t)TMcontract(t, Xs, Pmax, 3, 0.28, 0.7);
 u_rho = uqt_rho(0);
 
