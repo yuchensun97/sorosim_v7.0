@@ -20,8 +20,8 @@ function [sigma,gamma]= EG_xi_bar(Link, Xs)
     Lam = Link.Lamda;
     for ii=1:np
         sigma(ii) = 2 * Lam *A_p(ii);
-        % gamma(ii) = 4*Eta*A_p(ii);
-        gamma(ii) = 0;
+        gamma(ii) = 4*Eta*A_p(ii);
+        % gamma(ii) = 0;
     end
     
 end %eof

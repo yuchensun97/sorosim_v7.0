@@ -5,7 +5,7 @@
     "young": 2000,
     "poisson": 0.499,
     "density": 1e3,
-    "viscousity": 300,
+    "viscousity": 120,
     "cs": 40,
     "points": 18,
     "scale": 0.1122,
