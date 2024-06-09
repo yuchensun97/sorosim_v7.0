@@ -63,10 +63,11 @@ validIdx2 = (F2 >= 0 & F2 <= 5);
 tm2 = interp(d(validIdx2), F2(validIdx2));
 h2 = plot(d, F2, 'm-', 'LineWidth', 2);
 
-% F3 = 0.5 .* sin(pi/6 .* d);
-% validIdx3 = (F3 >= 0 & F3 <=0.5);
-% tm3 = interp(d(validIdx3), F3(validIdx3));
-% h3 = plot(d, F3, 'b-', 'LineWidth',2);
+F3 = linspace(0, 5, length(d));
+validIdx3 = (F3 >= 0 & F3 <= 5);
+d3 = zeros(1,length(d));
+tm3 = interp(d3(validIdx3), F3(validIdx3));
+h3 = plot(d3, F3, 'k-', 'LineWidth', 3);
 
 % customize the plot
 grid on;
@@ -76,8 +77,8 @@ ylim([0, 5]);
 title('Contour Plot of Axial Stiffness');
 xlabel('Axial Displacement (cm)');
 ylabel('LM Loads (N)');
-legend([h0, h1, h2], ...
-        {'$k_e$', '$2k_e$', '$k_a$'},...
+legend([h0, h1, h2, h3], ...
+        {'$k_e$', '$2k_e$', '$k_a$', '$k_d$'},...
         'Interpreter', 'latex', 'Location', 'southeast');
 if ~exist('./figures', 'dir')
     mkdir('./figures');
@@ -92,13 +93,13 @@ f1 = plot(F1(validIdx1), tm1, 'g-', 'LineWidth', 2);
 hold on
 f2 = plot(F2(validIdx2), tm2, 'm-', 'LineWidth', 2);
 hold on
-% f3 = plot(F3(validIdx3), tm3, 'b-', 'LineWidth', 2);
+f3 = plot(F3(validIdx3), tm3, 'k-', 'LineWidth', 2);
 grid on
 title('LM vs TM loads of Tunable Stiffness');
 xlabel('LM loads (N)');
 ylabel('TM loads (Pa)');
-legend([f0, f1, f2], ...
-        {'$k_e$','$2k_e$', '$k_a$'},...
+legend([f0, f1, f2, f3], ...
+        {'$k_e$','$2k_e$', '$k_a$', '$k_d$'},...
         'Interpreter', 'latex', 'Location', 'southeast');
 exportgraphics(gcf, './figures/AxialStiffFTM.pdf','ContentType','vector');
 
