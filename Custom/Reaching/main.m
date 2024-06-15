@@ -37,6 +37,7 @@ end
 % TM
 Pmax = 8e2; % maximum boundary stress, Pa
 uqt_rho = @(t)TMcontract(t, Xs, Pmax, 3, 0.28, 0.7);
+% uqt_rho = @(t)zeros(nip, 1);
 u_rho = uqt_rho(0);
 
 %% statics
@@ -46,6 +47,7 @@ qb = Octopus.statics(q0, u_xi, u_rho);
 qb_xi = qb(1:ndof_xi,:);
 qb_rho = qb(ndof_xi+1:end, :);
 fb = Octopus.plotq(qb_xi, qb_rho);
+[g, rho] = Octopus.FwdKinematics(qb_xi, qb_rho);
 
 Bh_xi = Octopus.Twists(2).Bh_xi;
 B_xi_dof = Octopus.Twists(2).B_xi_dof;
@@ -55,7 +57,7 @@ xi_star = [0 0 0 1 0 0]';
 %% dynamics
 dt = 0.01;
 tmax = 3.5;
-
+% 
 qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
 [t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, uqt_rho, 'ode15s', dt, tmax);
 save("./Custom/results/reaching.mat", "t", "qqd");

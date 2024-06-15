@@ -31,7 +31,7 @@ function fh = plotq(Tr, q_xi, q_rho)
     if PlottingParameters.Light
         camlight(PlottingParameters.Az_light, PlottingParameters.El_light)
     end
-
+    view(0, 0);
     axis equal
     grid on
     hold on

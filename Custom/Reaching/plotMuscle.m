@@ -18,9 +18,9 @@ TM = [];
 
 % get values
 for ts=t
-    uLM = LMrelease(ts, Xs', Fmax, Fmin, Tp, bp_s, bp_e);
-    oLM = LMcontract(ts, Xs', Fmin, Tp, bp_s, bp_e);
-    uTM = TMcontract(ts, Xs', Pmax, fend, Tp);
+    uLM = LMrelease(ts, Xs', 0.2, 0.02, 2.5, 0.3, 0.9);
+    oLM = LMcontract(ts, Xs', 0.218, 0.05, 2.5, 0.183, 0.65);
+    uTM = TMcontract(ts, Xs', 8e2, 3, 0.28, 0.7);
 
     LM = [LM uLM];
     LMrest = [LMrest oLM];
