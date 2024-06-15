@@ -70,7 +70,7 @@ figure(f1);
 grid on;
 % legend(legendInfo);
 xlabel('Xs');
-ylabel('\nu_2');
+ylabel('\kappa_2');
 
 if ~exist('./figures', 'dir')
     mkdir('./figures');

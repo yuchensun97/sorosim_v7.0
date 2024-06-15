@@ -19,6 +19,7 @@ n_sact = LOM.get_n_sact();
 L = Octopus.Link.L;
 E = Octopus.Link.E;
 G = Octopus.Link.G;
+nu = Octopus.Link.Poi;
 A = pi * (Octopus.Link.r_base)^2;
 Ke = 0.01 * E * A/L; % passive axial stiffness, Neumann BC, N/cm
 
@@ -94,12 +95,16 @@ hold on
 f2 = plot(F2(validIdx2), tm2, 'm-', 'LineWidth', 2);
 hold on
 f3 = plot(F3(validIdx3), tm3, 'k-', 'LineWidth', 2);
+lm0 = 0:0.5:5;
+tm0 = lm0/nu;
+tm0 = tm0/(2*A);
+f4 = plot(lm0, tm0, 'b--', 'LineWidth', 2);
 grid on
 title('LM vs TM loads of Tunable Stiffness');
 xlabel('LM loads (N)');
 ylabel('TM loads (Pa)');
-legend([f0, f1, f2, f3], ...
-        {'$k_e$','$2k_e$', '$k_a$', '$k_d$'},...
+legend([f0, f1, f2, f3, f4], ...
+        {'$k_e$','$2k_e$', '$k_a$', '$k_d$', 'analytical $k_d$'},...
         'Interpreter', 'latex', 'Location', 'southeast');
 exportgraphics(gcf, './figures/AxialStiffFTM.pdf','ContentType','vector');
 
