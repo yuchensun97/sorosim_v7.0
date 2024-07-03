@@ -58,19 +58,19 @@ for i=1:n
     vol = [vol; curr_vol];
 
     figure(f1);
-    plot(Xs, -nu2);
+    plot(Xs, -nu2, 'b-');
     hold on;
     
     figure(f2);
-    plot(Xs, rho);
+    plot(Xs, rho, 'b-');
     hold on;
 end
 
 figure(f1);
 grid on;
 % legend(legendInfo);
-xlabel('Xs');
-ylabel('\kappa_2');
+xlabel('$X=s/L$', 'Interpreter','latex', 'FontSize', 20);
+ylabel('$\kappa_2$', 'Interpreter','latex','FontSize',20);
 
 if ~exist('./figures', 'dir')
     mkdir('./figures');
@@ -80,8 +80,8 @@ exportgraphics(gcf, './figures/nu_over_time.pdf','ContentType','vector');
 figure(f2);
 grid on;
 % legend(legendInfo);
-xlabel('Xs');
-ylabel('\rho');
+xlabel('$X=s/L$', 'Interpreter','latex', 'FontSize', 20);
+ylabel('$\rho$', 'Interpreter','latex','FontSize',20);
 exportgraphics(gcf, './figures/rho_over_time.pdf','ContentType','vector');
 
 figure;
