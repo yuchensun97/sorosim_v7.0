@@ -54,7 +54,7 @@ for i = 1:length(t)
         J_xi_here = dinamico_Adjoint(ginv(gh))*(J_xi_here + TBGamma_);
         
         k = xi_(2);
-        if k<0 && abs(k) > max_curve
+        if abs(k) < 40 && abs(k) > max_curve && xx<0.95
             max_curve = abs(k);
             J_xi_bp = J_xi_here;
             g_bp = g_here;
@@ -80,11 +80,19 @@ end
 
 %% plot the arm length and bend point velocity
 figure(1);
-plot(t, arm_length);
+fl = fit(t, 100 * arm_length, 'poly5');
+l_fit = fl(t);
+plot(t, 100 *arm_length, '-*');
+set(gca,'FontSize',20, 'FontName', 'Times New Roman')
+hold on
+plot(t, l_fit, '-', 'LineWidth', 4);
+hold off
+
 grid on;
-xlabel('Time (s)');
-ylabel('Arm Length (m)');
-title('Arm Length vs Time');
+legend('simulation', 'fit', 'Location','southeast');
+xlabel('$t$ (s)', 'Interpreter','latex', 'FontSize',20);
+ylabel('$L(t)$ (cm)', 'Interpreter','latex', 'FontSize',20);
+% title('Arm Length vs Time');
 
 if ~exist('./figures', 'dir')
     mkdir('./figures');
@@ -93,27 +101,39 @@ exportgraphics(gcf, './figures/arm_length.pdf','ContentType','vector');
 
 %%
 figure(2);
-plot(t, bp_vel);
+fv = fit(t, 100 * bp_vel, 'poly5');
+bp_vel_fit = fv(t);
+plot(t, 100* bp_vel, '-*');
+set(gca,'FontSize',20, 'FontName', 'Times New Roman')
+hold on
+plot(t, bp_vel_fit, '-', 'LineWidth', 4);
+hold off
 
 grid on;
-xlabel('Time (s)');
-ylabel('Bend Point Velocity (m/s)');
-title('Bend Point Velocity vs Time');
+legend('simulation', 'fit');
+xlabel('$t$ (s)', 'Interpreter','latex', 'FontSize',20);
+ylabel('$u_b(t)$ (cm/s)', 'Interpreter','latex', 'FontSize',20);
+% title('Bend Point Velocity vs Time');
 exportgraphics(gcf, './figures/bp_velocity.pdf','ContentType','vector');
 
 %%
-% figure(3);
-% plot(100 * bp_pos(1,:), 100 * bp_pos(2, :));
-% hold on;
-% line([0 100 * bp_pos(1, 1)], [0 100 * bp_pos(2, 1)]);
-% hold on;
-% line([0 100 * bp_pos(1, end)], [0 100 * bp_pos(2, end)]);
-% 
-% grid on;
-% xlabel('X (cm)');
-% ylabel('Y (cm)');
-% title('Bend point position');
-% axis equal
-% xlim([0 50]);
-% ylim([-4, 12]);
-% exportgraphics(gcf, './figures/bp_pos.pdf','ContentType','vector');
+figure(3);
+x = 100 * bp_pos(1,:);
+y = 100 * bp_pos(2, :);
+f = fit(x', y', 'poly5');
+x_fit = linspace(min(x), max(x), 1000)';
+y_fit = f(x_fit);
+bp_pos_fit = [x_fit y_fit]';
+d_bp = sum(vecnorm(bp_pos_fit(:, 2:end) - bp_pos_fit(:, 1:end-1)));
+plot(x, y, '-*');
+set(gca,'FontSize',20, 'FontName', 'Times New Roman')
+hold on
+plot( x', f(x'), '-', 'LineWidth',4);
+hold off
+
+grid on;
+legend('simulation', 'fit');
+xlabel('$X$ (cm)', 'Interpreter','latex', 'FontSize',20);
+ylabel('$Y$ (cm)', 'Interpreter','latex', 'FontSize',20);
+axis equal
+exportgraphics(gcf, './figures/bp_pos.pdf','ContentType','vector');

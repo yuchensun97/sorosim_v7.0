@@ -3,14 +3,8 @@ clear;
 close;
 %% starts
 % initialization
-t = 0:0.01:3;
-Xs = 0:0.1:1;
-Fmax = 4;
-Fmin = 0.20;
-Pmax = 20e3;
-fend = 1;
-bp_s = 0.2;
-bp_e = 0.8;
+t = 0:0.25:3.5;
+Xs = 0:0.01:1;
 Tp = 2;
 LM = [];
 LMrest = [];
@@ -28,18 +22,20 @@ for ts=t
 end
 
 %% plot
+font_size = 20;
 figure(1)
-for i=1:length(Xs)
-    curr_LM = -LM(i, :);
-    LMinfo{i} = ['s = ' num2str(Xs(i))];
-    plot(t, curr_LM);
+for i=1:length(t)
+    curr_LM = -LM(:, i);
+    % LMinfo{i} = ['s = ' num2str(Xs(i))];
+    plot(Xs, curr_LM, 'b-','LineWidth',2);
     hold on
 end
 grid on;
-legend(LMinfo);
-xlabel('time');
-ylabel('F');
-title('LM release propagation');
+% legend(LMinfo);
+ylim([0, 0.25]);
+xlabel('$X=s/L$', 'Interpreter','latex','FontSize', font_size);
+ylabel('$u_1$', 'Interpreter','latex', 'FontSize', font_size);
+% title('LM 1 release propagation');
 
 if ~exist('./figures', 'dir')
     mkdir('./figures');
@@ -47,31 +43,29 @@ end
 exportgraphics(gcf, './figures/LMrelease.pdf','ContentType','vector');
 
 figure(2)
-for i=1:length(Xs)
-    curr_LMrest = -LMrest(i, :);
-    LMinfo{i} = ['s = ' num2str(Xs(i))];
-    plot(t, curr_LMrest);
+for i=1:length(t)
+    curr_LMrest = -LMrest(:, i);
+    % LMinfo{i} = ['s = ' num2str(Xs(i))];
+    plot(Xs, curr_LMrest,'b-', 'LineWidth',2);
     hold on
 end
 grid on;
-legend(LMinfo);
-xlabel('time');
-ylabel('F');
-title('LM contract propagation');
+% legend(LMinfo);
+xlabel('$X=s/L$', 'Interpreter','latex', 'FontSize', font_size);
+ylabel('$u_2$', 'Interpreter','latex', 'FontSize', font_size);
+% title('LM contract propagation');
 exportgraphics(gcf, './figures/LMcontract.pdf','ContentType','vector');
 
 figure(3)
-for j=1:length(Xs)
-    curr_TM = -TM(j, :);
-    TMinfo{j} = ['s = ' num2str(Xs(j))];
-    plot(t, curr_TM);
+for i=1:length(t)
+    curr_TM = -TM(:, i);
+    % TMinfo{j} = ['s = ' num2str(Xs(j))];
+    plot(Xs, curr_TM, 'b-', 'LineWidth', 2);
     hold on
 end
 grid on;
-legend(TMinfo);
-xlabel('time');
-ylabel('P');
-title('TM contract propagation');
+% legend(TMinfo);
+xlabel('$X=s/L$', 'Interpreter','latex', 'FontSize', font_size);
+ylabel('$u_3$', 'Interpreter','latex', 'FontSize', font_size);
+% title('TM contract propagation');
 exportgraphics(gcf, './figures/TMcontract.pdf','ContentType','vector');
-
-%% TODO: plot LM and TM over space, label the time
