@@ -1,6 +1,7 @@
 clc;
 clear;
 close all;
+
 %% create Link
 OctopusLink = SorosimLink('Octopus.json');
 LOM = createLOM(OctopusLink);
@@ -37,7 +38,7 @@ end
 % TM
 Pmax = 8e2; % maximum boundary stress, Pa
 uqt_rho = @(t)TMcontract(t, Xs, Pmax, 3, 0.28, 0.7);
-% uqt_rho = @(t)zeros(nip, 1);
+uqt_rho = @(t)zeros(nip, 1);
 u_rho = uqt_rho(0);
 
 %% statics
@@ -61,7 +62,7 @@ tmax = 3.5;
 qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
 [t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, uqt_rho, 'ode15s', dt, tmax);
 save("./Custom/results/reaching.mat", "t", "qqd");
-Octopus.plotqqd(t, qqd, 'Octopus_reaching');
+Octopus.plotqqd(t, qqd, 'Octopus_reaching_classic');
 
 %% usefull functions
 function LOM = createLOM(OctopusLink)
