@@ -35,6 +35,7 @@ function plotqqd(Tr, t, qqd, filename)
     ylabel('Y (m)')
     zlabel('Z (m)') 
     axis([PlottingParameters.X_lim PlottingParameters.Y_lim PlottingParameters.Z_lim]);
+    axis off
     drawnow
 
     n_r = Tr.Link.n_r;
@@ -62,7 +63,7 @@ function plotqqd(Tr, t, qqd, filename)
 
     for tt = 0:1/FrameRate:tmax
         delete(findobj('type', 'patch'));
-        title(strcat('t= ', num2str(tt)));
+        % title(strcat('t= ', num2str(tt)));
 
         qqdtt = interp1(t, qqd, tt);
         q_xi = qqdtt(:,1:Tr.ndof_xi)';

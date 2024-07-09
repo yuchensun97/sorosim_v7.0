@@ -38,6 +38,7 @@ ULM = Fmax * ULM;
 DeltaL = arrayfun(@(lm, tm)getShortening(Octopus,ndof_xi,ndof_rho,n_sact,lm,tm), ULM, UTM);
 
 %% plot stiffness diagram
+font_size = 26;
 figure(1)
 AxialForce = ULM * 4;
 interp = scatteredInterpolant(100 * DeltaL(:), AxialForce(:), UTM(:));
@@ -45,7 +46,7 @@ pcolor(100 * DeltaL, AxialForce, UTM);
 hold on;
 shading interp;
 colorbarHandle = colorbar;
-title(colorbarHandle, 'TM load (Pa)');
+title(colorbarHandle, '$P$ (Pa)', 'Interpreter', 'latex', 'FontSize', font_size);
 
 % plot passive stiffness
 d = 0:0.1:3;
@@ -75,12 +76,14 @@ grid on;
 % set(gca,'DataAspectRatio',[5 1 1])
 xlim([0, 3]);
 ylim([0, 5]);
-title('Contour Plot of Axial Stiffness');
-xlabel('Axial Displacement (cm)');
-ylabel('LM Loads (N)');
+% title('Contour Plot of Axial Stiffness');
+set(gca,'FontSize',font_size, 'FontName', 'Times New Roman',...
+    'OuterPosition', [0, 0, 1, 0.97]);
+xlabel('$\Delta L$(cm)', 'Interpreter','latex', 'FontSize',font_size);
+ylabel('$F$ (N)', 'Interpreter', 'latex', 'FontSize', font_size);
 legend([h0, h1, h2, h3], ...
         {'$k_e$', '$2k_e$', '$k_a$', '$k_d$'},...
-        'Interpreter', 'latex', 'Location', 'southeast');
+        'Interpreter', 'latex', 'FontSize', font_size, 'Location', 'southeast');
 if ~exist('./figures', 'dir')
     mkdir('./figures');
 end
@@ -100,12 +103,13 @@ tm0 = lm0/nu;
 tm0 = tm0/(2*A);
 f4 = plot(lm0, tm0, 'b--', 'LineWidth', 2);
 grid on
-title('LM vs TM loads of Tunable Stiffness');
-xlabel('LM loads (N)');
-ylabel('TM loads (Pa)');
+% title('LM vs TM loads of Tunable Stiffness');
+set(gca,'FontSize',font_size, 'FontName', 'Times New Roman');
+xlabel('$F$ (N)', 'Interpreter','latex','FontSize',font_size);
+ylabel('$P$ (Pa)', 'Interpreter','latex','FontSize',font_size);
 legend([f0, f1, f2, f3, f4], ...
-        {'$k_e$','$2k_e$', '$k_a$', '$k_d$', 'analytical $k_d$'},...
-        'Interpreter', 'latex', 'Location', 'southeast');
+        {'$k_e$','$2k_e$', '$k_a$', '$k_d$', '$^a k_d$'},...
+        'Interpreter', 'latex','FontSize', font_size, 'Location', 'northwest');
 exportgraphics(gcf, './figures/AxialStiffFTM.pdf','ContentType','vector');
 
 %% usefull functions

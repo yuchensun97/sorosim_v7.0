@@ -69,8 +69,9 @@ end
 figure(f1);
 grid on;
 % legend(legendInfo);
-xlabel('$X=s/L$', 'Interpreter','latex', 'FontSize', 20);
-ylabel('$\kappa_2$', 'Interpreter','latex','FontSize',20);
+set(gca,'FontSize',28, 'FontName', 'Times New Roman');
+xlabel('$X=s/L$', 'Interpreter','latex', 'FontSize', 28);
+ylabel('$\kappa_2$', 'Interpreter','latex','FontSize',28);
 
 if ~exist('./figures', 'dir')
     mkdir('./figures');
@@ -80,8 +81,9 @@ exportgraphics(gcf, './figures/nu_over_time.pdf','ContentType','vector');
 figure(f2);
 grid on;
 % legend(legendInfo);
-xlabel('$X=s/L$', 'Interpreter','latex', 'FontSize', 20);
-ylabel('$\rho$', 'Interpreter','latex','FontSize',20);
+set(gca,'FontSize',28, 'FontName', 'Times New Roman');
+xlabel('$X=s/L$', 'Interpreter','latex', 'FontSize', 28);
+ylabel('$\rho$', 'Interpreter','latex','FontSize',28);
 exportgraphics(gcf, './figures/rho_over_time.pdf','ContentType','vector');
 
 figure;

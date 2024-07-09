@@ -22,7 +22,7 @@ for ts=t
 end
 
 %% plot
-font_size = 20;
+font_size = 28;
 figure(1)
 for i=1:length(t)
     curr_LM = -LM(:, i);
@@ -33,6 +33,7 @@ end
 grid on;
 % legend(LMinfo);
 ylim([0, 0.25]);
+set(gca,'FontSize',font_size, 'FontName', 'Times New Roman');
 xlabel('$X=s/L$', 'Interpreter','latex','FontSize', font_size);
 ylabel('$u_1$', 'Interpreter','latex', 'FontSize', font_size);
 % title('LM 1 release propagation');
@@ -51,6 +52,7 @@ for i=1:length(t)
 end
 grid on;
 % legend(LMinfo);
+set(gca,'FontSize',font_size, 'FontName', 'Times New Roman');
 xlabel('$X=s/L$', 'Interpreter','latex', 'FontSize', font_size);
 ylabel('$u_2$', 'Interpreter','latex', 'FontSize', font_size);
 % title('LM contract propagation');
@@ -65,6 +67,7 @@ for i=1:length(t)
 end
 grid on;
 % legend(TMinfo);
+set(gca,'FontSize',font_size, 'FontName', 'Times New Roman');
 xlabel('$X=s/L$', 'Interpreter','latex', 'FontSize', font_size);
 ylabel('$u_3$', 'Interpreter','latex', 'FontSize', font_size);
 % title('TM contract propagation');

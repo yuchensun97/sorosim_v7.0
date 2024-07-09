@@ -83,15 +83,15 @@ figure(1);
 fl = fit(t, 100 * arm_length, 'poly5');
 l_fit = fl(t);
 plot(t, 100 *arm_length, '-*');
-set(gca,'FontSize',20, 'FontName', 'Times New Roman')
+set(gca,'FontSize',28, 'FontName', 'Times New Roman')
 hold on
 plot(t, l_fit, '-', 'LineWidth', 4);
 hold off
 
 grid on;
-legend('simulation', 'fit', 'Location','southeast');
-xlabel('$t$ (s)', 'Interpreter','latex', 'FontSize',20);
-ylabel('$L(t)$ (cm)', 'Interpreter','latex', 'FontSize',20);
+legend('sim', 'fit', 'Location','southeast');
+xlabel('$t$ (s)', 'Interpreter','latex', 'FontSize',28);
+ylabel('$L(t)$ (cm)', 'Interpreter','latex', 'FontSize',28);
 % title('Arm Length vs Time');
 
 if ~exist('./figures', 'dir')
@@ -104,15 +104,15 @@ figure(2);
 fv = fit(t, 100 * bp_vel, 'poly5');
 bp_vel_fit = fv(t);
 plot(t, 100* bp_vel, '-*');
-set(gca,'FontSize',20, 'FontName', 'Times New Roman')
+set(gca,'FontSize',28, 'FontName', 'Times New Roman');
 hold on
 plot(t, bp_vel_fit, '-', 'LineWidth', 4);
 hold off
 
 grid on;
-legend('simulation', 'fit');
-xlabel('$t$ (s)', 'Interpreter','latex', 'FontSize',20);
-ylabel('$u_b(t)$ (cm/s)', 'Interpreter','latex', 'FontSize',20);
+legend('sim', 'fit');
+xlabel('$t$ (s)', 'Interpreter','latex', 'FontSize',28);
+ylabel('$u_b(t)$ (cm/s)', 'Interpreter','latex', 'FontSize',28);
 % title('Bend Point Velocity vs Time');
 exportgraphics(gcf, './figures/bp_velocity.pdf','ContentType','vector');
 
@@ -126,14 +126,14 @@ y_fit = f(x_fit);
 bp_pos_fit = [x_fit y_fit]';
 d_bp = sum(vecnorm(bp_pos_fit(:, 2:end) - bp_pos_fit(:, 1:end-1)));
 plot(x, y, '-*');
-set(gca,'FontSize',20, 'FontName', 'Times New Roman')
+set(gca,'FontSize',28, 'FontName', 'Times New Roman')
 hold on
 plot( x', f(x'), '-', 'LineWidth',4);
 hold off
 
 grid on;
-legend('simulation', 'fit');
-xlabel('$X$ (cm)', 'Interpreter','latex', 'FontSize',20);
-ylabel('$Y$ (cm)', 'Interpreter','latex', 'FontSize',20);
+legend('sim', 'fit');
+xlabel('$X$ (cm)', 'Interpreter','latex', 'FontSize',28);
+ylabel('$Y$ (cm)', 'Interpreter','latex', 'FontSize',28);
 axis equal
 exportgraphics(gcf, './figures/bp_pos.pdf','ContentType','vector');
