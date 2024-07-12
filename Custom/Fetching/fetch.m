@@ -13,25 +13,20 @@ Octopus = OctopusArm(OctopusLink, Damped=true, ...
 ndof_xi = Octopus.ndof_xi;
 ndof_rho = Octopus.ndof_rho;
 
-%% reaching 
-Fmax = 0.4;
-Fmin = 0.02;
-fstart = 0.2;
-fend = 0.8; % cable force end at fend
-Tp = 1.5;
+%% fetching
 Xs = Octopus.Twists(2).Xs;
 nip = Octopus.Twists(2).nip;
 n_sact = LOM.get_n_sact();
 
-% LM
+% TODO: test statics
 uqt_xi = cell(n_sact, 1);
-uqt_xi{1} = @(t)LMrelease(t, Xs, 0.2, 0.02, 2.5, 0.3, 0.9);
-for i = 2:n_sact
+uqt_xi{1} = @(t)LMrelease(t, Xs, 0.25, 0.02, 2.5, 0.3, 0.9);
+for i = 2:4
     uqt_xi{i} = @(t)LMcontract(t, Xs, 0.218, 0.05, 2.5, 0.183, 0.65);
 end
 
 u_xi = zeros(nip, n_sact);
-for i = 1:4
+for i = 1:n_sact
     u_xi(:, i) = uqt_xi{i}(0);
 end
 
@@ -41,28 +36,12 @@ uqt_rho = @(t)TMcontract(t, Xs, Pmax, 3, 0.28, 0.7);
 uqt_rho = @(t)zeros(nip, 1);
 u_rho = uqt_rho(0);
 
-%% statics
-% starts from bending position
 q0 = zeros(ndof_xi+ndof_rho, 1);
 qb = Octopus.statics(q0, u_xi, u_rho);
 qb_xi = qb(1:ndof_xi,:);
 qb_rho = qb(ndof_xi+1:end, :);
 fb = Octopus.plotq(qb_xi, qb_rho);
 [g, rho] = Octopus.FwdKinematics(qb_xi, qb_rho);
-
-Bh_xi = Octopus.Twists(2).Bh_xi;
-B_xi_dof = Octopus.Twists(2).B_xi_dof;
-B_xi_ord = Octopus.Twists(2).B_xi_odr;
-xi_star = [0 0 0 1 0 0]';
-
-%% dynamics
-dt = 0.01;
-tmax = 3.5;
-% 
-qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
-[t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, uqt_rho, 'ode15s', dt, tmax);
-save("./Custom/results/reaching.mat", "t", "qqd");
-Octopus.plotqqd(t, qqd, 'Octopus_reaching_classic');
 
 %% usefull functions
 function LOM = createLOM(OctopusLink)
@@ -93,8 +72,17 @@ function LOM = createLOM(OctopusLink)
     LM3 = Cable(LM3_y, LM3_z);
     LM4 = Cable(LM4_y, LM4_z);
 
-    LOM = CableActuation(LM1, LM2, LM3, LM4);
+    % TODO: setup oblique muscles
+    OM1_x = @(X)0.8*(rb-(rb-rt)*X) * cos(- 12 * pi * X);
+    OM1_y = @(X)0.8*(rb-(rb-rt)*X) * sin(- 12 * pi * X);
 
+    OM2_x = @(X)0.8*(rb-(rb-rt)*X) * cos(pi + 12 * pi * X);
+    OM2_y = @(X)0.8*(rb-(rb-rt)*X) * sin(pi + 12 * pi * X);
+
+    OM1 = Cable(OM1_x, OM1_y);
+    OM2 = Cable(OM2_x, OM2_y);
+
+    LOM = CableActuation(LM1, LM2, LM3, LM4, OM1, OM2);
 end
 
 function TM = createTM()
