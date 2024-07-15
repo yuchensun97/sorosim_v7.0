@@ -1,4 +1,4 @@
-function ux = OM(t, Xs, Fmax, Tp, bp)
+function ux = OM(t, Xs, Fmax, Ts, Tp, bp)
 % Inputs:
     %   t    -- scalar, time
     %   Xs   -- (nip, 1) vector, integration points
@@ -20,10 +20,14 @@ function ux = OM(t, Xs, Fmax, Tp, bp)
     % X = t- Xs(Xs < fend)/fend*Tp;
     % ux(Xs < fend) = -Pmax*heaviside(X).*(1-exp(-(c*X).^2));
 
-    mu = bp;
-    if t < Tp
-        alpha = Fmax / Tp * t;
+    if t < Ts
+        mu = 0;
+        alpha = 0;
+    elseif t < Tp
+        mu = bp/(Tp-Ts) * (t-Ts);
+        alpha = Fmax;
     else
+        mu = bp;
         alpha = Fmax;
     end
 
