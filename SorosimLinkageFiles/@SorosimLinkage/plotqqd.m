@@ -27,7 +27,9 @@ function plotqqd(Tr, t, qqd, filename)
     if PlottingParameters.Light
         camlight(PlottingParameters.Az_light,PlottingParameters.El_light)
     end
-    view(0,0);
+    % view(0,0);
+    % view(45,45);
+    view(150, 10);
     axis equal
     grid on
     hold on
@@ -35,7 +37,7 @@ function plotqqd(Tr, t, qqd, filename)
     ylabel('Y (m)')
     zlabel('Z (m)') 
     axis([PlottingParameters.X_lim PlottingParameters.Y_lim PlottingParameters.Z_lim]);
-    axis off
+    axis on
     drawnow
 
     n_r = Tr.Link.n_r;

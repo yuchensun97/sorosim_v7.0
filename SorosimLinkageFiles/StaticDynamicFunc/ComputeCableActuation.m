@@ -9,6 +9,7 @@ function Bq_xi = ComputeCableActuation(Tr, dc, dcp, q_xi, q_rho)
     nip = Twists.nip;
     ndof_xi = Twists.dof_xi;
     ndof_rho = Twists.dof_rho;
+    dcp = dcp/ld;
 
     for ii = 1:nip
         if Ws(ii)>0
