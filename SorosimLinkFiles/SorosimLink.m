@@ -124,10 +124,11 @@ classdef SorosimLink
                 Li.r_tip = 0.02;
                 Li.r_fn = @(X1) X1.*(Li.r_tip - Li.r_base) + Li.r_base;
                 Li.E = 1e6;
-                Li.Poi = 0.5;
+                Li.Poi = 0.49;
                 Li.G = Li.E/(2*(1+Li.Poi));
                 Li.Rho0 = 1000;
                 Li.Eta = 1e4;
+                Li.Lamda = Li.E*Li.Poi/((1+Li.Poi)*(1-2*Li.Poi));
                 Li.color = rand(1,3);
                 Li.n_l = 25;
                 Li.n_r = 18;

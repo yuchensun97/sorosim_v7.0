@@ -9,9 +9,9 @@
     "cs": 40,
     "points": 18,
     "scale": 0.1122,
-    "motion": [0, 1, 0, 1, 0, 0],
-    "motion_order": [0, 10, 0, 4, 0, 0],
+    "motion": [1, 1, 1, 1, 0, 0],
+    "motion_order": [4, 4, 4, 2, 0, 0],
     "inflation": 1,
-    "inflation_order": 4,
+    "inflation_order": 2,
     "basisType": "neumann"
 }
