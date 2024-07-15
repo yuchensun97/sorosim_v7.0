@@ -1,4 +1,4 @@
-function ux = LM(t, Xs, Fmax, Tp, bp)
+function ux = LM(t, Xs, Fmax, Fmin, Tp, bp, be)
 % Inputs:
     %   t    -- scalar, time
     %   Xs   -- (nip, 1) vector, integration points
@@ -20,13 +20,14 @@ function ux = LM(t, Xs, Fmax, Tp, bp)
     % X = t- Xs(Xs < fend)/fend*Tp;
     % ux(Xs < fend) = -Pmax*heaviside(X).*(1-exp(-(c*X).^2));
 
-    mu = bp;
     if t < Tp
-        alpha = Fmax / Tp * t;
+        mu = (bp-be) / Tp * t + be;
+        alpha = (Fmax - Fmin)/Tp * t + Fmin;
     else
+        mu = bp;
         alpha = Fmax;
     end
 
-    ux = alpha * (1- 1./(1+exp(-40*(Xs-mu))));
+    ux = alpha * (1- 1./(1+exp(-200*(Xs-mu))));
     ux = -ux;
 end
