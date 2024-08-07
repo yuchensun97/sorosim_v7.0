@@ -56,6 +56,7 @@ Octopus.plotqqd(t, qqd, 'Octopus_fetching_LM');
 
 % TODO: plot the time stamp
 
+
 %% usefull functions
 function LOM = createLOM(OctopusLink)
     % create longitudinal and oblique muscles
