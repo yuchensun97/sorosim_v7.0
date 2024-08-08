@@ -8,6 +8,7 @@ function plotqnew(Tr, t, qqd, stamps, filename)
 
     % get the number of time steps
     PlottingParameters = Tr.PlotParameters;
+    FrameRate = PlottingParameters.FrameRateValue;
 
     tmax = max(t);
     lt = length(0:1/FrameRate:tmax);
@@ -28,7 +29,7 @@ function plotqnew(Tr, t, qqd, stamps, filename)
      if PlottingParameters.Light
          camlight(PlottingParameters.Az_light, PlottingParameters.El_light)
      end
-    %  view(0, 0);
+     view(30, 40);
      axis equal
      grid on
      hold on
@@ -77,7 +78,7 @@ function plotqnew(Tr, t, qqd, stamps, filename)
         r = r_fn(0);
         theta = linspace(0, 2*pi, n_r);
         if dof_rho ~= 0
-            rho_here = B_rho_dof*q_rho + B_rho_odr;
+            rho_here = Bh_rho(Xs(1), B_rho_dof, B_rho_odr)*q_rho + rho_starfn(Xs(1));
         else
             rho_here = 1;
         end
@@ -155,7 +156,11 @@ function plotqnew(Tr, t, qqd, stamps, filename)
         Zpatch(:, i_patch) = z_here';
 
         if k <= length(stamps) && abs(tt-stamps(k))<1/(FrameRate*2)
-            patch(Xpatch, Ypatch, Zpatch, color, 'EdgeColor', 'none', 'FaceAlpha', 0.5);
+            alpha = 0.3;
+            if k== length(stamps)
+                alpha = 1;
+            end
+            patch(Xpatch, Ypatch, Zpatch, color, 'EdgeColor', 'none', 'FaceAlpha', alpha);
             k = k + 1;
         end
     end
