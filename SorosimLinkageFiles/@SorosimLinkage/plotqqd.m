@@ -7,7 +7,6 @@ function plotqqd(Tr, t, qqd, filename)
 
     PlottingParameters = Tr.PlotParameters;
 
-    tic
     tmax = max(t);
     if ~exist('./videos', 'dir')
         mkdir('./videos');
