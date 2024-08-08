@@ -1,10 +1,17 @@
-function plotqnew(Tr, q)
+function plotqnew(Tr, t, qqd, stamps, filename)
     % plot the arm posture at different time steps
-    % input
-    %  q: (t, ndof) matrix
+    close all
+
+    if nargin<=4
+        filename = 'snapshots';
+    end
 
     % get the number of time steps
     PlottingParameters = Tr.PlotParameters;
+
+    tmax = max(t);
+    lt = length(0:1/FrameRate:tmax);
+    ptip = NaN(3, lt);
 
     if PlottingParameters.ClosePrevious
         close all
@@ -36,7 +43,6 @@ function plotqnew(Tr, q)
  
      dof_xi = Tr.Twists(2).dof_xi;
      dof_rho = Tr.Twists(2).dof_rho;
-     xi_starfn = Tr.Twists(2).xi_starfn;
      rho_starfn = Tr.Twists(2).rho_starfn;
      Bh_xi = Tr.Twists(2).Bh_xi;
      Bh_rho = Tr.Twists(2).Bh_rho;
@@ -54,12 +60,14 @@ function plotqnew(Tr, q)
  
      r_fn = Tr.Link.r_fn;
 
-     nt = size(q, 1);
+     k = 1; % index for the time stamps
+     it = 1; % index for the tip position
 
-     for tt=0:nt
+    for tt=0:1/FrameRate:tmax
         % delete(findobj('type', 'patch'));
-        q_xi = q(tt, 1:Tr.ndof_xi)';
-        q_rho = q(tt, Tr.ndof_xi+1:Tr.ndof_rho+Tr.ndof_xi)';
+        qqdtt = interp1(t, qqd, tt);
+        q_xi = qqdtt(:, 1:Tr.ndof_xi)';
+        q_rho = qqdtt(:, Tr.ndof_xi+1:Tr.ndof_rho+Tr.ndof_xi)';
 
         Xpatch = zeros(n_r, (n_r-1)*(n_l-2)+2);
         Ypatch = zeros(n_r, (n_r-1)*(n_l-2)+2);
@@ -139,11 +147,22 @@ function plotqnew(Tr, q)
             y_pre = y_here;
             z_pre = z_here;
         end
+        ptip(:, it) = g_here(1:3, 4);
+        it = it+1;
 
         Xpatch(:, i_patch) = x_here';
         Ypatch(:, i_patch) = y_here';
         Zpatch(:, i_patch) = z_here';
 
-        patch(Xpatch, Ypatch, Zpatch, color, 'EdgeColor', 'none', 'FaceAlpha', 0.5);
-     end
+        if k <= length(stamps) && abs(tt-stamps(k))<1/(FrameRate*2)
+            patch(Xpatch, Ypatch, Zpatch, color, 'EdgeColor', 'none', 'FaceAlpha', 0.5);
+            k = k + 1;
+        end
+    end
+
+    % plot the tip trajectory
+    plot3(ptip(1, :), ptip(2, :), ptip(3, :), 'r', 'LineWidth', 2)
+
+    % save the figure
+    exportgraphics(fh, filename, 'ContentType', 'vector')
 end

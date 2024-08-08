@@ -51,11 +51,9 @@ tmax = 8;
 % 
 qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
 [t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, uqt_rho, 'ode15s', dt, tmax);
-save("./Custom/results/fetching.mat", "t", "qqd");
-Octopus.plotqqd(t, qqd, 'Octopus_fetching_LM');
-
-% TODO: plot the time stamp
-
+% save("./Custom/results/fetching.mat", "t", "qqd");
+% Octopus.plotqqd(t, qqd, 'Octopus_fetching_LM');
+Octopus.plotqnew(t, qqd,[0, 2, 4, 6, 8], './figures/snapshots.pdf');
 
 %% usefull functions
 function LOM = createLOM(OctopusLink)
