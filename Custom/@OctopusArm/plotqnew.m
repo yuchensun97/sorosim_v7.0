@@ -24,7 +24,7 @@ function plotqnew(Tr, t, qqd, stamps, filename)
     set(gca, 'CameraPosition', PlottingParameters.CameraPosition,...
         'CameraTarget', PlottingParameters.CameraTarget,...
         'CameraUpVector', PlottingParameters.CameraUpVector,...
-        'FontSize', 18)
+        'FontSize', 28, 'FontName', 'Times New Roman');
  
      if PlottingParameters.Light
          camlight(PlottingParameters.Az_light, PlottingParameters.El_light)
@@ -33,9 +33,9 @@ function plotqnew(Tr, t, qqd, stamps, filename)
      axis equal
      grid on
      hold on
-     xlabel('S (m)')
-     ylabel('X1 (m)')
-     zlabel('X2 (m)')
+     xlabel('$S$ (m)', 'Interpreter', 'latex', 'FontSize', 28);
+     ylabel('$X_1$ (m)', 'Interpreter', 'latex', 'FontSize', 28);
+     zlabel('$X_2$ (m)', 'Interpreter', 'latex', 'FontSize', 28);
 
      axis([PlottingParameters.X_lim PlottingParameters.Y_lim PlottingParameters.Z_lim])
 
