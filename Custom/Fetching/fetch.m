@@ -25,7 +25,7 @@ for i = 2:4
 end
 
 uqt_xi{5} = @(t)OM(t, Xs, 0.1, 6, 8, 0.6);
-% uqt_xi{5} = @(t)zeros(nip,1);
+uqt_xi{5} = @(t)zeros(nip,1);
 uqt_xi{6} = @(t)zeros(nip,1);
 
 u_xi = zeros(nip, n_sact);
@@ -47,13 +47,13 @@ qb_rho = qb(ndof_xi+1:end, :);
 
 %% dynamics
 dt = 0.01;
-tmax = 8;
+tmax = 9;
 % 
 qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
 [t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, uqt_rho, 'ode15s', dt, tmax);
 % save("./Custom/results/fetching.mat", "t", "qqd");
 % Octopus.plotqqd(t, qqd, 'Octopus_fetching_LM');
-Octopus.plotqnew(t, qqd,[0, 2, 4, 6, 8], './figures/snapshots.pdf');
+Octopus.plotqnew(t, qqd,[0, 6, 9], './figures/snapshots_collide.pdf');
 
 %% usefull functions
 function LOM = createLOM(OctopusLink)
