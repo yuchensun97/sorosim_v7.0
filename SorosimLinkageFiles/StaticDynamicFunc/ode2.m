@@ -19,7 +19,7 @@ function Y = ode2(odefun,tspan,y0,varargin)
     %         plot(tspan,y(:,1));
     %     solves the system y' = vdp1(t,y) with a constant step size of 0.1, 
     %     and plots the first component of the solution.   
-    %
+    %  Author: Anup Teejo Mathew 
     
     if ~isnumeric(tspan)
       error('TSPAN should be a vector of integration steps.');

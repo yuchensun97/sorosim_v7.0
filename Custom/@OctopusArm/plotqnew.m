@@ -167,7 +167,15 @@ function plotqnew(Tr, t, qqd, stamps, filename)
 
     % plot the tip trajectory
     plot3(ptip(1, :), ptip(2, :), ptip(3, :), 'r', 'LineWidth', 2)
+    axis tight
+    % Get the current axis limits
+ylim_current = ylim;
+
+% Adjust the X1 axis limits slightly to avoid overlap
+ylim([ylim_current(1), ylim_current(2) + 0.02]); % Adjust the second value slightly
+
+    pause(0.2);
 
     % save the figure
-    exportgraphics(fh, filename, 'ContentType', 'vector')
+    exportgraphics(fh, filename, 'ContentType', 'image')
 end

@@ -1,5 +1,6 @@
 classdef SorosimLink
     %SorosimLink rigid joint and a body
+    %   author: Yuchen Sun 
     %   modified from Anup Mathew 02.03.2022
     
     properties
