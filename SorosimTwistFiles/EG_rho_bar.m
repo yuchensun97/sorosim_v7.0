@@ -1,6 +1,6 @@
 %This function computes Ms, Es, and Gs for a given Xs for the jth division
 %of a link. Modified from Anup Mathew (15.12.2022)
-
+% author: Yuchen Sun
 function [sigma,gamma]= EG_rho_bar(Link, Xs)
     np = length(Xs);
     r_fn     = Link.r_fn;

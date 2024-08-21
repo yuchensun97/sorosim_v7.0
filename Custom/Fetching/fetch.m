@@ -53,7 +53,7 @@ qqd_r = [qb; zeros(ndof_xi+ndof_rho,1)];
 [t, qqd] = Octopus.dynamics(qqd_r, uqt_xi, uqt_rho, 'ode15s', dt, tmax);
 % save("./Custom/results/fetching.mat", "t", "qqd");
 % Octopus.plotqqd(t, qqd, 'Octopus_fetching_LM');
-Octopus.plotqnew(t, qqd,[0, 6, 9], './figures/snapshots_fetch.pdf');
+Octopus.plotqnew(t, qqd,[0, 6, 9], './figures/snapshots.png');
 
 %% usefull functions
 function LOM = createLOM(OctopusLink)

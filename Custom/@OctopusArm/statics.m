@@ -1,5 +1,5 @@
 function q = statics(Tr, qu0, u_xi, u_rho)
-
+    % wrapper function for static equilibrium problem
     n_sact = Tr.n_sact;
     n_ract = Tr.n_ract;
 

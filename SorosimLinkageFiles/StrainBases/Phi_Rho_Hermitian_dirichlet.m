@@ -1,5 +1,5 @@
 function Phi_Rho = Phi_Rho_Hermitian_dirichlet(X, Bdof, Bodr)
-    %PHI_Rho_Hermitian generate the basis function of Legendre
+    %PHI_Rho_Hermitian generate the basis function of dirichlet boundary condition
 %   X -- varites from 0 to 1
 %   Bdof -- tells if the inflation ratio is on or off
 %   eg. Bdof = 1 implies that the inflation ratio is on

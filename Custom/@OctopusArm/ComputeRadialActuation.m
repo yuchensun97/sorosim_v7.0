@@ -1,7 +1,7 @@
 function Bq_rho = ComputeRadialActuation(Tr, rc, u_rho)
     % Compute the actuation loads for the cable
     % rc: (n_ract, 2) vector, radial actuation location
-    % u_xi: (nip, 1), the actuation loads at intergration points
+    % u_rho: (nip, 1), the actuation loads at intergration points
     % returns:
     % Bq_rho: ndof_rho x 1, the actuation loads in q-space
     Bq_rho = zeros(Tr.ndof_rho, Tr.n_ract);

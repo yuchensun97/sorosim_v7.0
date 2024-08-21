@@ -3,6 +3,7 @@ function ux = LMcontract(t, Xs, Fmax, Fmin, Tp, bp_s, bp_e)
     %   t    -- scalar, time
     %   Xs   -- (nip, 1) vector, integration points
     %   Fmax -- scalar, maximum force applied to the cable
+    %   Fmin -- scalar, minimum force applied to the cable
     %   Tp -- scalar, propagation time
     %   bp_s -- scalar, initial bend point
     %   bp_e -- scalar, final bend point
