@@ -27,3 +27,6 @@ If you wish to use this code for your research, please properly cite the followi
   keywords={Robots;Mathematical models;Strain;Soft robotics;Robot kinematics;Matlab;Analytical models},
   doi={10.1109/MRA.2022.3202488}}
 ```
+
+## License
+This project is licensed under the [MIT License](LICENSE).
