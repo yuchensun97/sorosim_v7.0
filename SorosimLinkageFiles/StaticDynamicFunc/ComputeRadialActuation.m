@@ -7,6 +7,16 @@ function Bq_rho = ComputeRadialActuation(Tr, rc)
     r_fn = Tr.Link.r_fn;
     ld = Tr.Link.L;
 
+    %TODO 15/01/25: add shape == squre case
+    a = 0;
+    if Tr.Link.shape == "circular"
+        a = pi; % shape param
+    else if Tr.Link.shape == "square"
+        a = 1;
+    else
+        error("Unsupported shape");
+    end
+    
     j = 1; % index of rc intervals
     for ii = 1:nsig
         if Xs(ii)>=rc(j,1) && Xs(ii)<=rc(j,2)
@@ -14,7 +24,7 @@ function Bq_rho = ComputeRadialActuation(Tr, rc)
                 % do the integration
                 z = r_fn(Xs(ii));
                 B_rho_here = B_rho(ii, :);
-                Bq_rho(:,j) = Bq_rho(:,j)+2*pi*(ld*Ws(ii)*B_rho_here'*z^2);
+                Bq_rho(:,j) = Bq_rho(:,j)+2*a*(ld*Ws(ii)*B_rho_here'*z^2);
             end
         end
         if Xs(ii) > rc(j, 2)

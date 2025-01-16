@@ -9,10 +9,23 @@ function [Ms,Es,Gs]= MEG(Link, Xs)
     for ii=1:np
         r_nGauss(ii) = r_fn(Xs(ii));
     end
-    Iy_p = (pi/4)*r_nGauss.^4;
+
+    %deal with different shape
+    if Link.shape == "circular"
+        % For circular cross-section
+        Iy_p = (pi/4)*r_nGauss.^4;
+        A_p  = pi*r_nGauss.^2;
+    elseif Link.shape == "square"
+        % For rectangular cross-section, assuming r_fn returns [width, height]
+        Iy_p = r_nGauss.^4/12;
+        A_p = r_nGauss.^2;
+    else
+        error('Unsupported shape');
+    end
+
     Iz_p = Iy_p;
     Ix_p = Iy_p+Iz_p;
-    A_p  = pi*r_nGauss.^2;
+    
     
     Ms = zeros(6*np,6); %inertia
     Es = zeros(6*np,6); %stiffness

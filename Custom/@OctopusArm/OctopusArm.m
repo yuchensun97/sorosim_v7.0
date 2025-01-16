@@ -3,6 +3,9 @@ classdef OctopusArm < SorosimLinkage
     % Deal with the case when the actuation loads are functions of both time and space
     methods
         function Tr = OctopusArm(Link, varargin)
+            if Link.shape != "circular"
+                error("Unsupported shape for octopus arm");
+            end
             Tr@SorosimLinkage(Link, varargin{:});
         end
     end

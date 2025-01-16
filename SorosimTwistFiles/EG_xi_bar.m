@@ -9,7 +9,15 @@ function [sigma,gamma]= EG_xi_bar(Link, Xs)
     for ii=1:np
         r_nGauss(ii) = r_fn(Xs(ii));
     end
-    A_p  = pi*r_nGauss.^2;
+
+    if Link.shape == "circular"
+        A_p  = pi*r_nGauss.^2;
+    else if Link.shape == "square"
+        A_p  = r_nGauss.^2;
+    else
+        error('Unsupported shape');
+    end
+    
     
     sigma = zeros(np,1); %stiffness
     gamma = zeros(np,1); %damping

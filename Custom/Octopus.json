@@ -1,5 +1,6 @@
 {
     "length": 0.5,
+    "shape": "circular",
     "base_radius": 0.015,
     "tip_radius": 0.004,
     "young": 2000,

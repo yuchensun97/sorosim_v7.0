@@ -2,6 +2,10 @@
 
 function M_added = addedMass(Tr)
 
+    if Tr.Link.shape != "circular"
+        error("Unsupported shape: only circular is allowed in env")
+    end
+
     rho_w = Tr.rho_w;
     r_fn = Tr.Link.r_fn;
     nip = Tr.Twists(2).nip;

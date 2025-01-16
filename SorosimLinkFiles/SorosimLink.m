@@ -7,6 +7,9 @@ classdef SorosimLink
         %General Properties
         npie=2;    %number of pieces. 2 for soft link
 
+        %cross-section shape
+        shape;
+
         %Geometric Properties
         L          %length of the link
         r_fn          %radius as a function of X1 (X1=X/L, X1 varies from 0 to 1)[m]
@@ -100,6 +103,7 @@ classdef SorosimLink
 
                 %assign values
                 Li.basisType = data.basisType;
+                Li.shape = data.shape;
                 Li.L = data.length;
                 r_base = data.base_radius;
                 r_tip = data.tip_radius;
@@ -118,6 +122,9 @@ classdef SorosimLink
                 Li.n_l = data.cs;
                 Li.n_r = data.points;
                 A0 = pi*r_base^2;
+                if data.shape == "square"
+                    A0 = r_base^2;
+                end
 
             elseif nargin == 0
                 Li.L = 0.5;

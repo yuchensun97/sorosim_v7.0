@@ -1,6 +1,9 @@
 % compute the dragging/lifting matrix in referenced configuration
 
 function DL = dragging(Tr)
+    if Tr.Link.shape != "circular"
+        error("Unsupported shape: only circular is allowed in env")
+    end
     Cdx = 0;
     Cdy = 1.1;
     Cdz = Cdy;

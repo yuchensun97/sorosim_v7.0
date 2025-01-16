@@ -6,7 +6,7 @@ OctopusLink = SorosimLink('Stiffness.json');
 LOM = createLOM(OctopusLink);
 TM = createTM();
 Octopus = SorosimLinkage(OctopusLink, Damped=true, ...
-                         Gravity=false, Water=true, PointForce=false, ...
+                         Gravity=false, Water=false, PointForce=false, ...
                          ActuationL=true, ActuationR=true, ...
                          CableActuator=LOM, RadialActuator=TM);
 ndof_xi = Octopus.ndof_xi;
@@ -20,7 +20,7 @@ L = Octopus.Link.L;
 E = Octopus.Link.E;
 G = Octopus.Link.G;
 nu = Octopus.Link.Poi;
-A = pi * (Octopus.Link.r_base)^2;
+A = Octopus.Link.r_base^2;
 Ke = 0.01 * E * A/L; % passive axial stiffness, Neumann BC, N/cm
 
 Fmax = 1.25;
@@ -87,7 +87,7 @@ legend([h0, h1, h2, h3], ...
 if ~exist('./figures', 'dir')
     mkdir('./figures');
 end
-exportgraphics(gcf, './figures/AxialStiff.pdf','ContentType','vector');
+exportgraphics(gcf, './figures/AxialStiff_square.pdf','ContentType','vector');
 
 %% plot F-TM load diagram
 figure(2)
@@ -110,7 +110,7 @@ ylabel('$P$ (Pa)', 'Interpreter','latex','FontSize',font_size);
 legend([f0, f1, f2, f3, f4], ...
         {'$k_e$','$2k_e$', '$k_a$', '$k_d$', '$^a k_d$'},...
         'Interpreter', 'latex','FontSize', font_size, 'Location', 'northwest');
-exportgraphics(gcf, './figures/AxialStiffFTM.pdf','ContentType','vector');
+exportgraphics(gcf, './figures/AxialStiffFTM_square.pdf','ContentType','vector');
 
 %% usefull functions
 function LOM = createLOM(OctopusLink)
