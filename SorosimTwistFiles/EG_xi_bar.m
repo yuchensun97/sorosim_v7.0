@@ -12,7 +12,7 @@ function [sigma,gamma]= EG_xi_bar(Link, Xs)
 
     if Link.shape == "circular"
         A_p  = pi*r_nGauss.^2;
-    else if Link.shape == "square"
+    elseif Link.shape == "square"
         A_p  = r_nGauss.^2;
     else
         error('Unsupported shape');

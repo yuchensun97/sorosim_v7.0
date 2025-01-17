@@ -11,7 +11,7 @@ function Bq_rho = ComputeRadialActuation(Tr, rc)
     a = 0;
     if Tr.Link.shape == "circular"
         a = pi; % shape param
-    else if Tr.Link.shape == "square"
+    elseif Tr.Link.shape == "square"
         a = 1;
     else
         error("Unsupported shape");
