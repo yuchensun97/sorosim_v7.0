@@ -9,11 +9,15 @@ The detailed description of the model are available from the author upon reasona
 If you wish to use this code for your research, please properly cite the following paper.
 
 ```
-@unpublished{sun_realtime_2024,
-  author       = {Sun, Yuchen and Mathew, Anup Teejo and Afgran, Imran and Renda, Federico and Laschi, Cecilia},
-  title        = {Real-time dynamic Modelling of Soft Manipulators with Cross-section Inflation: Application to the Octopus Arm},
-  year         = {2024},
-  note         = {Currently under review.},
+@article{sun2025real,
+  title={Real-time dynamics of soft manipulators with cross-sectional inflation: application to the octopus muscular hydrostat},
+  author={Sun, Yuchen and Mathew, Anup Teejo and Afgan, Imran and Renda, Federico and Laschi, Cecilia},
+  journal={Proceedings of the Royal Society A},
+  volume={481},
+  number={2314},
+  pages={20240642},
+  year={2025},
+  publisher={The Royal Society}
 }
 
 @ARTICLE{9895355,
