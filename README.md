@@ -1,6 +1,6 @@
 # Sorosim 7.0
 
-This is a `MATLAB` implementation of the **Real-time dynamic model of Soft Manipulators with Cross-section Inflation**. The source code is modified from the original work of [SoRoSim](https://github.com/Ikhlas-Ben-Hmida/SoRoSim) to include the cross-sectional inflation effect of the classic Cosserat rod model using the Geometric Variable Strain (GVS) approach.
+This is a `MATLAB` implementation of the [**Real-time dynamics of soft manipulators with cross-sectional inflation: application to the octopus muscular hydrostat**](https://doi.org/10.1098/rspa.2024.0642). The source code is modified from the original work of [SoRoSim](https://github.com/Ikhlas-Ben-Hmida/SoRoSim) to include the cross-sectional inflation effect of the classic Cosserat rod model using the Geometric Variable Strain (GVS) approach.
 
 We provide three examples to demonstrate the capability of the model, which can be found in the `./Custon` folder. The examples include the stiffness tuning of a soft manipulator, the dynamic simulation of a octopus'arm reaching movement, and the fetching motion.
 
